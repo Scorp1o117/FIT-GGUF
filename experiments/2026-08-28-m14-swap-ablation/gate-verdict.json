@@ -1,0 +1,36 @@
+{
+  "delta_rope": 0.01,
+  "fit50": {
+    "term_oe": -0.00169,
+    "term_bl": 0.07558,
+    "S50": 0.03695,
+    "per_domain_effect": {
+      "wiki_test": -0.04793,
+      "wiki_valid": -0.06698,
+      "chinese": 0.01393,
+      "code": 0.07896,
+      "agent_chat": 0.11511
+    },
+    "gate1_mechanism": true,
+    "gate2_domain_robustness": false,
+    "gate2_worst_regression_cell": "oe-fit75/wiki_test",
+    "gate2_worst_regression_percent": 20.55,
+    "gate3_negative_control": true,
+    "macro_kl": {
+      "O": 0.099687,
+      "B": 0.096165,
+      "OE": 0.099855,
+      "BL": 0.103433,
+      "SHUF": 0.103444
+    }
+  },
+  "fit75_secondary": {
+    "term_oe": -0.02769,
+    "term_bl": 0.01855,
+    "S75": -0.00457,
+    "within_rope_prediction": true,
+    "s50_gt_s75_prediction": true
+  },
+  "all_pass": false,
+  "decision": "NOT ACCEPTED: early/late position is not the confirmed mechanism"
+}

@@ -1,0 +1,642 @@
+{
+  "kind": "m14-crossover",
+  "name": "m14-oe-fit50",
+  "overrides": [
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.8.attn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.1.attn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.2.attn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.9.attn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.5.attn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.4.attn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.10.attn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.31.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.15.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.27.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.23.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.19.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.4.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.2.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.9.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.5.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.13.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.18.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.6.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.12.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.17.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.8.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.10.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.1.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.14.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.30.ffn_down.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.27.ffn_down.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.28.ffn_down.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.29.ffn_down.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.31.ffn_down.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.27.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.6.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.29.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.14.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.11.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.13.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.10.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.30.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.28.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.9.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.15.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.31.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.12.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.28.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.10.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.13.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.9.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.30.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.11.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.15.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.29.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.14.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.27.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.12.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.31.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.9.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.5.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.14.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.6.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.18.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.22.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.13.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.17.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.12.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.0.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.8.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.10.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.16.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.20.ssm_out.weight",
+      "to_qtype": "iq4_xs"
+    }
+  ],
+  "schema_version": 1,
+  "stats": {
+    "added_bytes": 455802880,
+    "exchanged_classes": 7,
+    "per_class": {
+      "attn_gate/iq3_s->iq4_xs": 22364160,
+      "attn_q/iq3_s->iq4_xs": 31948800,
+      "attn_qkv/q4_k->q5_k": 85196800,
+      "ffn_down/iq3_s->iq4_xs": 45260800,
+      "ffn_gate/iq3_s->iq4_xs": 117678080,
+      "ffn_up/iq3_s->iq4_xs": 108625920,
+      "ssm_out/iq3_s->iq4_xs": 44728320
+    },
+    "removed_bytes": 455802880
+  }
+}

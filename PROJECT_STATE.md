@@ -8,12 +8,10 @@ between standard llama.cpp presets.
 
 ## Current milestone
 
-M13 complete - the preregistered budget-conditional rule (r<0.5 original,
-r>=0.5 v0.1b) was NOT accepted on the third holdout set: FIT-25 and FIT-50
-directions reproduced and the composite rule beat both pure strategies, but
-the FIT-75 direction flipped to a statistical tie. The preregistered failure
-branch (role-matched early/late block swap ablation) is the only permitted
-next step.
+M14 complete - the preregistered role-matched crossover ablation rejected the
+early/late position mechanism (Gate 2 failed on wiki domains) while confirming
+the M13 FIT-75 tie and the saturation picture on a fourth holdout set. The
+allocation effect is domain-structured and interaction-laden, not positional.
 
 ## Verified facts
 
@@ -194,23 +192,25 @@ reported uncertainty while KL and Same-top retain consistent direction.
 
 ## Current task
 
-Record the M13 failure and prepare the preregistered failure branch: the
-role-matched early/late block swap ablation for attribution. The
-budget-conditional rule is not accepted; the 0.50 threshold and all recipes
-stay frozen.
+Record the M14 rejection and run the matched random-seed baseline at
+FIT-25/FIT-75 (next queued milestone; at FIT-75 it directly tests the
+allocation-sensitivity-collapse hypothesis behind the repeated O/B ties).
 
 ## Next task
 
-Design, preregister, and run the role-matched early/late block swap ablation
-(the only permitted next step after the M13 gate failure). Only after that
-attribution settles may the project revisit allocator design or move to M14/M15
-(more random seeds; second model family).
+After the random-seed baseline: write the D-0021 allocator freeze for the
+first cross-model validation (granite-4.2-8b is already downloaded to
+/run/media/s117/OS/Models/granite-4.2-8b) and only then evaluate FIT on it.
+Per external review: Granite quality results must not be seen before the
+freeze is committed; a cross-model failure must be recorded as a failure,
+not tuned away.
 
 ## Acceptance status
 
-Not accepted. M0-M12 complete; M13 preregistered rule validation FAILED gate 1
-(FIT-75 direction). Positive allocation evidence now stands as: v0.1b
-confirmed at FIT-50 on untouched data (M11); the composite budget rule beats
-both pure strategies on fresh data but is not accepted because the FIT-75
-direction is unstable. Attribution work (role-matched swap) is required
-before any deployment claim.
+Not accepted. M0-M14 complete. Positive allocation evidence stands exactly
+here: v0.1b confirmed at FIT-50 on untouched data (M11); original utility
+owns FIT-25; FIT-75 is a practical tie reproduced on two independent holdout
+sets (M13, M14); the positional mechanism was rejected by the M14 crossover
+gates; the composite budget rule is not accepted (M13). Remaining for any
+deployment claim: matched random-seed variance baseline, then the frozen
+cross-model validation.

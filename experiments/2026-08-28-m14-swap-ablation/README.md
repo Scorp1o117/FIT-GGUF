@@ -141,3 +141,81 @@ Secondary, ungated preregistered predictions: S75 within ±1% of zero
   `m14-results.json`; the verdict is computed mechanically by
   `scripts/evaluate_m14_gate.py`. Elapsed seconds are wall-clock from log
   timestamps; max RSS is not instrumented.
+
+## Provenance verification (executed)
+
+- BF16 source SHA-256 re-verified: `8a033407…` OK.
+- All five new artifacts match their skeletons' predicted sizes byte-for-byte
+  (zero-byte error), independently confirming the per-class exact-byte
+  exchanges. SHUF-50 exchanges the same 455,802,880 bytes as O→E across the
+  same 7 classes; its removal set differs (the addition pools were too small
+  to admit an alternative, per the frozen construction rule).
+- Holdout-4 BF16 reference PPL: wiki_test 7.2388 ± 0.20529,
+  wiki_valid 7.6618 ± 0.23057, Chinese 8.3616 ± 0.31233, code 4.6871 ± 0.13900,
+  agent_chat 6.5797 ± 0.21795. Regenerated references reproduced identical
+  PPLs across two independent runs (deterministic).
+- Fourth holdout set verified disjoint from M9/M11/M13 slices.
+
+## Results
+
+Mean KL divergence on holdout-4 (lower is better):
+
+| Domain | O50 | B50 | O→E50 | B→L50 | SHUF50 | O75 | B75 | O→E75 | B→L75 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| wiki_test | 0.032311 | 0.039076 | 0.034512 | 0.037992 | 0.038933 | 0.022569 | 0.026814 | 0.027206 | 0.023473 |
+| wiki_valid | 0.038149 | 0.045812 | 0.041189 | 0.043326 | 0.048628 | 0.028848 | 0.032290 | 0.034728 | 0.031246 |
+| Chinese | 0.205105 | 0.195855 | 0.204858 | 0.201075 | 0.203271 | 0.176356 | 0.163419 | 0.163833 | 0.164180 |
+| code | 0.117684 | 0.106189 | 0.118924 | 0.124077 | 0.122583 | 0.092344 | 0.090420 | 0.095216 | 0.102172 |
+| agent_chat | 0.105184 | 0.093891 | 0.099792 | 0.110694 | 0.103806 | 0.079904 | 0.087740 | 0.090113 | 0.087046 |
+| Macro | 0.099687 | 0.096165 | 0.099855 | 0.103433 | 0.103444 | 0.080004 | 0.080137 | 0.082219 | 0.081623 |
+
+## Preregistered gate verdict
+
+- **Gate 1 (mechanism): PASS.** S50 = +3.70% ≥ 1% (term O→E = -0.17%,
+  term B→L = +7.56%); min term within the -1% bound.
+- **Gate 2 (domain robustness): FAIL.** The synthetic early-location effect is
+  below -1% in both wiki domains (-4.79%, -6.70%) and passes only in Chinese,
+  code, and agent_chat (3 of 5, needing 4). The 25% cell guard itself held
+  (worst +20.55% at O→E-75/wiki_test).
+- **Gate 3 (negative control): PASS.** O→E beats the matched shuffle by 3.59%
+  macro — the specific exchange, not any re-randomization, carries the effect.
+
+**Decision: NOT ACCEPTED (Gate 2 failed).** Per the frozen rule: early/late
+position is NOT confirmed as the mechanism of v0.1b's FIT-50 advantage. No
+allocator promotion; no threshold or quarter-weight changes; proceed to the
+matched random-seed baseline with attribution unresolved.
+
+Secondary preregistered predictions — both CONFIRMED: S75 = -0.46% lies inside
+the ±1% ROPE (saturation), and S50 > S75.
+
+## Interpretation (diagnostic, not gate-relevant)
+
+The crossover arms are strikingly asymmetric, and the per-domain effects
+explain why the aggregate S50 passed while Gate 2 failed:
+
+- **O→E is macro-neutral** (-0.17%): moving 456 MB of original's late
+  upgrades into early slots, within role/transition classes, changes nothing
+  on aggregate — but it trades wiki (worse by 6.8%/8.0%) against agent_chat
+  (better by 5.1%). This is the same wiki/non-wiki trade-off the allocators
+  show, reproduced inside a single skeleton.
+- **B→L is strongly harmful** (+7.56% worse than B, and worse than O itself):
+  giving up v0.1b's specific early upgrades craters every non-wiki domain
+  (code +16.8%, agent_chat +17.9% versus B) while both wiki domains slightly
+  improve.
+- **SHUF ≈ B→L** (0.103444 vs 0.103433): a same-distribution random
+  instantiation lands exactly at the B→L level — position distribution alone
+  does not produce the effect; the identities carried by the planners matter.
+
+Combined reading: the allocation effect is **domain-structured and
+interaction-laden**, not positional. Early placement of v0.1b's chosen tensors
+helps non-wiki domains; wiki prefers the original's late-concentrated set;
+and the value of an upgrade set depends on the rest of the recipe (B→L much
+worse than O despite O→E being neutral, given the same exchanged bytes in the
+opposite direction). A single scalar "early vs late" story cannot capture this,
+which is precisely why the preregistered domain gate rejected it.
+
+Also notable on the fourth holdout set: B75 remains a statistical tie with O75
+(0.080137 vs 0.080004, +0.17%), independently reproducing the M13 FIT-75 tie.
+
+Machine records: `holdout4-slices.json`, `m14-results.json`,
+`gate-verdict.json`, `recipe-overlap.json`.

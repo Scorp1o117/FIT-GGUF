@@ -1,0 +1,424 @@
+{
+  "kind": "m14-crossover",
+  "name": "m14-bl-fit50",
+  "overrides": [
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.63.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.39.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.43.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.55.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.51.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.59.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.35.attn_q.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.54.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.50.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.48.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.60.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.61.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.58.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.57.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.56.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.49.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.62.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.53.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.52.attn_qkv.weight",
+      "to_qtype": "q5_k"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.48.ffn_down.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.39.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.49.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.48.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.40.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.52.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.50.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.53.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.51.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.38.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.34.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.42.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.46.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.45.ffn_gate.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.38.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.40.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.49.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.42.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.34.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.39.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.51.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.52.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.46.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.50.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.48.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    },
+    {
+      "block": null,
+      "delta_bytes": null,
+      "from_qtype": "iq3_m",
+      "origin": "swap",
+      "role": null,
+      "tensor": "blk.45.ffn_up.weight",
+      "to_qtype": "iq4_xs"
+    }
+  ],
+  "schema_version": 1,
+  "stats": {
+    "added_bytes": 358727680,
+    "exchanged_classes": 5,
+    "per_class": {
+      "attn_q/iq3_s->iq4_xs": 44728320,
+      "attn_qkv/q4_k->q5_k": 78643200,
+      "ffn_down/iq3_s->iq4_xs": 9052160,
+      "ffn_gate/iq3_s->iq4_xs": 117678080,
+      "ffn_up/iq3_s->iq4_xs": 108625920
+    },
+    "removed_bytes": 358727680
+  }
+}

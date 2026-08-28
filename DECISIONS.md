@@ -382,3 +382,35 @@ block swap ablation; the 0.50 threshold, quarter weights, and all recipes
 remain frozen. Near the upper budget the allocator choice is within noise of
 the IQ4_XS ceiling, and v0.1b's FIT-75 advantage is treated as partly
 adaptive until the swap ablation attributes it.
+
+## D-0020: Reject positional attribution after the M14 crossover
+
+Reason:
+An allocation mechanism claim must survive a domain-robustness gate, not only
+an aggregate score. The preregistered bidirectional crossover (O->E, B->L,
+matched shuffle; transition- and byte-matched per role) produced a positive
+aggregate early-location score (S50 = +3.70%) that is carried entirely by the
+B->L arm (+7.56%), while O->E is macro-neutral (-0.17%) and both wiki domains
+show strongly negative synthetic effects. Gate 2 required 4-of-5 non-negative
+domains and got 3.
+
+Alternatives:
+Accept on S50 alone, reinterpret the wiki regressions as noise, or drop the
+negative-control gate.
+
+Evidence:
+`experiments/2026-08-28-m14-swap-ablation/`: O->E macro 0.099855 vs O 0.099687
+(-0.17%); B->L 0.103433 vs B 0.096165 (+7.56%); SHUF 0.103444 - statistically
+identical to B->L and 3.59% worse than O->E. Per-domain synthetic effects:
+wiki_test -4.79%, wiki_valid -6.70%, Chinese +1.39%, code +7.90%,
+agent_chat +11.51%. All artifacts matched skeleton predicted sizes exactly;
+holdout-4 was disjoint from all prior sets. Secondary predictions confirmed:
+S75 = -0.46% (within the +-1% ROPE; saturation), S50 > S75.
+
+Status:
+Accepted as a rejection of the positional mechanism. The allocation effect is
+domain-structured (wiki vs non-wiki) and interaction-laden (the value of an
+upgrade set depends on the rest of the recipe; O->E neutral while B->L is
+harmful for the same exchanged bytes in the opposite direction). No allocator
+promotion, no threshold or quarter-weight changes. Next: matched random seeds
+at FIT-25/75, then the D-0021 freeze before the first cross-model validation.

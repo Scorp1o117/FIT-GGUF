@@ -1,24 +1,23 @@
 # FIT-GGUF Handoff
 
-Date: 2026-08-28 (updated after M13 by the GLM-5.3-Flash session)
+Date: 2026-08-29 (updated after M14 by the GLM-5.3-Flash session)
 
 ## Read this first
 
-The repository is past M13. M0-M13 are complete. Do not restart source
+The repository is past M14. M0-M14 are complete. Do not restart source
 conversion, imatrix profiling, preset quantization, the five-domain M9 curve,
-the M11 holdout validation, or the M13 budget-rule test. The current open
-question, per D-0019: the preregistered budget-conditional rule was REJECTED
-on the third holdout set (FIT-75 direction flipped to a statistical tie). The
-preregistered failure branch - the role-matched early/late block swap
-ablation - is the only permitted next step. The 0.50 threshold, quarter
-weights, and all recipes are frozen; v0.1b is confirmed only at FIT-50
-(M11), and the composite rule's fresh-data win does not override the failed
-direction gate.
+the M11 holdout validation, the M13 budget-rule test, or the M14 crossover.
+The current open question, per D-0020: the positional (early-vs-late)
+mechanism was REJECTED by the crossover gates - the allocation effect is
+domain-structured (wiki vs non-wiki) and interaction-laden. v0.1b remains
+confirmed only at FIT-50 (M11); FIT-75 is a practical tie reproduced on three
+independent holdout sets; the 0.50 threshold, quarter weights, and all
+recipes are frozen.
 
 Canonical status and evidence:
 
 - `PROJECT_STATE.md` - concise source of truth;
-- `DECISIONS.md` - decisions D-0001 through D-0019;
+- `DECISIONS.md` - decisions D-0001 through D-0020;
 - `experiments/2026-08-28-m9-fit-curve/README.md` - accepted formal curve;
 - `experiments/2026-08-28-m10-ablation/README.md` - random and block diagnosis;
 - `experiments/2026-08-28-m11-holdout/README.md` - preregistered holdout
@@ -26,7 +25,10 @@ Canonical status and evidence:
 - `experiments/2026-08-28-m12-block-balanced-curve/README.md` - v0.1b curve
   extension showing the budget-dependent trade-off;
 - `experiments/2026-08-28-m13-budget-rule/README.md` - preregistered
-  budget-rule validation and its rejection (D-0019).
+  budget-rule validation and its rejection (D-0019);
+- `experiments/2026-08-28-m14-swap-ablation/README.md` - crossover ablation
+  rejecting the positional mechanism (D-0020), with the recipe-overlap
+  diagnostic (byte-Jaccard 0.328/0.464/0.689 at 25/50/75).
 
 ## Environment and provenance
 
@@ -121,20 +123,34 @@ both pure strategies (0.084581 vs 0.086414/0.086988); but FIT-75 flipped to a
 failure branch is the role-matched early/late block swap ablation. See
 D-0019.
 
+## M14 result (positional mechanism rejected)
+
+The preregistered bidirectional crossover on a fourth holdout set: S50 = +3.70%
+but carried entirely by the harmful B->L arm (+7.56%); O->E is macro-neutral
+(-0.17%) while trading wiki against non-wiki; the matched shuffle lands at the
+harmful arm's level; both wiki domains fail the domain gate (3-of-5 non-negative,
+needing 4). NOT ACCEPTED per the frozen rule. Secondary predictions confirmed:
+S75 = -0.46% within the +-1% ROPE, S50 > S75. See D-0020.
+
 ## Exact next step
 
-1. Preregister and run the role-matched early/late block swap ablation - the
-   frozen M13 failure branch and the only permitted next step. It must
-   attribute WHERE v0.1b's confirmed FIT-50 gain comes from (which block
-   roles/positions) before any deployment or promotion claim.
-2. Do not move the 0.50 threshold, do not tune quarter weights, do not change
+1. Run the matched random-seed baseline at FIT-25/FIT-75 (at FIT-75 it tests
+   the allocation-sensitivity-collapse hypothesis directly: if fresh random
+   seeds cluster at the O/B tie level, high-budget insensitivity is confirmed).
+   Preregister it before running, as always.
+2. Then commit the D-0021 allocator freeze and only afterwards evaluate FIT on
+   the cross-model validation target. granite-4.2-8b (four safetensors shards,
+   ~17.6 GB) is already downloaded to
+   `/run/media/s117/OS/Models/granite-4.2-8b`; do NOT look at FIT quality
+   results on it before the freeze is committed. A cross-model failure is
+   recorded as a failure, not tuned away.
+3. Do not move the 0.50 threshold, do not tune quarter weights, do not change
    the optimizer family, and do not begin optimizer v2 without a new
    preregistered gate.
-3. Only after the attribution settles: M14 (matched random seeds at
-   FIT-25/FIT-75) and M15 (second model family - the user plans to download
-   ibm-granite/granite-4.2-8b into a models/ folder for cross-model testing).
-4. Keep using the retained M9/M11/M13 reference logits only with their
-   matching slices; never mix.
+4. Keep using retained reference logits only with their matching slices;
+   never mix. Note: the M11 and M13 KLD reference files were deleted in the
+   M14 disk cleanup (slices retained; regenerate with the recorded commands
+   if needed).
 
 ## Storage and reproducibility
 
@@ -142,9 +158,15 @@ Large GGUFs, KLD files, and raw logs are intentionally ignored by Git. Recipes,
 hashes, parsed JSON, and reports are tracked. The random GGUFs are fully
 reproducible from their retained tensor-type files: the M11 rebuild reproduced
 all three M10 SHA-256 values exactly. Retained artifacts: BF16 source, M9
-references, original FIT-25/50/75, block-balanced FIT-50/25/75, and the three
-rebuilt random FIT-50 GGUFs (about 24 GB free-headroom change; check `df`
-before adding artifacts).
+references, original FIT-25/50/75, block-balanced FIT-50/25/75, the three
+rebuilt random FIT-50 GGUFs, and the five M14 crossover GGUFs.
 
-The initial Git commit (a16d7ab) covered M0-M12; M13 preregistration
-(f5f93cc) and M13 results are committed incrementally.
+Disk note (2026-08-29): the M14 quantizations filled the OS drive; to recover
+space the three M8-era intermediate artifacts (FIT-12.25GiB/13GiB/13.75GiB,
+fully reproducible from their retained M7 recipes) and the M11/M13 KLD
+reference files (regenerable from the retained slices and BF16 source) were
+deleted, about 80 GB. Check `df` before adding artifacts; about 71 GB was
+free after cleanup and downloads.
+
+Commits: a16d7ab (M0-M12), f5f93cc (M13 prereg), 414aaa6 (M13 results),
+5836443 (M14 prereg + overlap diagnostic), then M14 results; incremental.
