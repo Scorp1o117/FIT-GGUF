@@ -51,6 +51,26 @@ Secondary budget (saturation diagnostic, ungated):
 Predicted sizes of every new artifact must equal their skeleton's predicted
 size exactly (per-class byte-exact exchanges); a mismatch blocks execution.
 
+## Deterministic exchange construction (frozen before any generation)
+
+Per (role, transition) class:
+
+1. Removal pool = skeleton's late-block upgrades in the class (O→E) or
+   skeleton's early-block upgrades (B→L); addition pool = the other plan's
+   opposite-half upgrades in the same class whose tensors are NOT upgraded in
+   the skeleton.
+2. Find the maximum total byte sum s achievable simultaneously by a subset of
+   the removal pool and a subset of the addition pool (exact subset-sum
+   equality; integer DP on gcd-scaled values). Classes with s = 0 are skipped.
+3. Subsets are reconstructed greedily over items ordered by tensor name
+   (canonical plans) or by SHA-256 of `m14-shuffle-50:<tensor>` (the shuffle
+   control), both ascending. If both orders yield the same unique subset, the
+   control keeps it — the control differs only where alternatives exist.
+
+The O→E and B→L per-class exchange totals are those maximum values; SHUF-50
+reuses exactly O→E's per-class totals s. Predicted artifact size must equal
+the skeleton's predicted size byte-for-byte.
+
 ## Data: fourth holdout set (untouched)
 
 Five new 64 KiB slices from the same sources, disjoint from the M9, M11, and
