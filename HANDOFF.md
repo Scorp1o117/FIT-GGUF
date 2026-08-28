@@ -170,9 +170,12 @@ M11), the five M14 crossover GGUFs (SHA-256 archived in
 `experiments/2026-08-28-m14-swap-ablation/artifact-hashes.txt`), and the
 M9/M11/M13/M14 KLD reference files (regenerable from the retained slices;
 M9 KLD hashes are pinned in the M9 README). Determinism of both the
-quantization and reference pipelines has been proven repeatedly. The retained
-safetensors source under `test-Models/` and the calibration dataset are
-project inputs and stay. Check `df` before adding artifacts; about 170 GB
+quantization and reference pipelines has been proven repeatedly. The safetensors source and the calibration dataset are project inputs. On
+2026-08-29 the duplicate copies under `test-Models/` were removed and replaced
+with symlinks to the canonical copies under
+`/run/media/s117/OS/Models/` (verified identical by full-file `cmp` on
+shards and per-file size sets; the calibration nested git repos are the same
+commit with the same local state). Check `df` before adding artifacts; about 170 GB
 was free after the 2026-08-29 cleanup.
 
 Commits: a16d7ab (M0-M12), f5f93cc (M13 prereg), 414aaa6 (M13 results),
