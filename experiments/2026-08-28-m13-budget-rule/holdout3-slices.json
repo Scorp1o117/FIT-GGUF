@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "slice_chars": 65536,
+  "slices": {
+    "wiki_test": {
+      "source": "/run/media/s117/OS/Models/eval-data/wikitext-2-raw/wiki.test.raw",
+      "prior_offsets_chars": {
+        "m9": 0,
+        "m11": 655360
+      },
+      "m13_offset_chars": 983040,
+      "chars": 65536,
+      "bytes": 65621,
+      "sha256": "10c4c0d235d802d8b20b658a1c09b3d65ac64f3be30f3413261646e7e8373a8f",
+      "cjk_fraction": 0.0,
+      "prior_windows_found": 0
+    },
+    "wiki_valid": {
+      "source": "/run/media/s117/OS/Models/eval-data/wikitext-2-raw/wiki.valid.raw",
+      "prior_offsets_chars": {
+        "m9": 0,
+        "m11": 655360
+      },
+      "m13_offset_chars": 983040,
+      "chars": 65536,
+      "bytes": 65630,
+      "sha256": "51a893daa405fefda50b364ebb7206acfbeb47a0f26fdb5d4523beb789a6a9cb",
+      "cjk_fraction": 0.0,
+      "prior_windows_found": 0
+    },
+    "chinese": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/combined_cn_medium.parquet",
+      "prior_offsets_chars": {
+        "m9": 3173914,
+        "m11": 4000000
+      },
+      "m13_offset_chars": 6500000,
+      "chars": 65536,
+      "bytes": 70968,
+      "sha256": "c631c34c6f496b017338e1af34b3c68d4817cc57457667477f5b63bc65151062",
+      "cjk_fraction": 0.0377,
+      "prior_windows_found": 0
+    },
+    "code": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/code_medium.parquet",
+      "prior_offsets_chars": {
+        "m9": 12536883,
+        "m11": 18000000
+      },
+      "m13_offset_chars": 28000000,
+      "chars": 65536,
+      "bytes": 65536,
+      "sha256": "ee78221336b80a4ef2917e941d49d3a0eb3d9769b77ffcaac59e614c92411e02",
+      "cjk_fraction": 0.0,
+      "prior_windows_found": 0
+    },
+    "agent_chat": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/agentworld_clean_quick.txt",
+      "prior_offsets_chars": {
+        "m9": 998087,
+        "m11": 400000
+      },
+      "m13_offset_chars": 1200000,
+      "chars": 65536,
+      "bytes": 65583,
+      "sha256": "582148caf1680026c8cbdca45ebfe6fe17216710a320244a8d504fcf22fc2007",
+      "cjk_fraction": 0.0,
+      "prior_windows_found": 0
+    }
+  }
+}

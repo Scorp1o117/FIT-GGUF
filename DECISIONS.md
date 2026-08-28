@@ -356,3 +356,29 @@ original utility; v0.1b is supported only at FIT-50/FIT-75. Any
 budget-conditional selection rule, quarter-weight adaptation, or optimizer-v2
 work requires a new preregistered gate with untouched holdout validation
 before acceptance.
+
+## D-0019: Reject the budget-conditional rule on the third holdout set
+
+Reason:
+A deployable rule must reproduce its direction on untouched data at every
+point it claims. The preregistered rule `r<0.5 -> original, r>=0.5 -> v0.1b`
+reproduced at FIT-25 and FIT-50 and beat both pure strategies on the 15-cell
+composite, but the FIT-75 direction flipped from M12's -4.75% to a +0.21%
+statistical tie on the third holdout set, failing preregistered gate 1.
+
+Alternatives:
+Accept on composite strength alone, reinterpret the FIT-75 tie as "close
+enough", or move the 0.50 threshold after seeing results.
+
+Evidence:
+`experiments/2026-08-28-m13-budget-rule/`: gate 1 fit75 false (0.069907 vs
+0.070056 macro KL), gate 2 passed (0.084581 vs 0.086414/0.086988), gate 3
+passed (+24.48% worst cell, near the 25% bound). All six artifacts were
+hash-verified before evaluation; slices were disjoint from both prior sets.
+
+Status:
+Accepted as a rejection. The failure branch is the role-matched early/late
+block swap ablation; the 0.50 threshold, quarter weights, and all recipes
+remain frozen. Near the upper budget the allocator choice is within noise of
+the IQ4_XS ceiling, and v0.1b's FIT-75 advantage is treated as partly
+adaptive until the swap ablation attributes it.

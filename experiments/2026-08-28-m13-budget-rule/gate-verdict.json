@@ -1,0 +1,33 @@
+{
+  "macro_kl_per_budget": {
+    "fit25/orig": 0.09764880000000001,
+    "fit25/v01b": 0.10487139999999999,
+    "fit50/orig": 0.0916846,
+    "fit50/v01b": 0.08603720000000001,
+    "fit75/orig": 0.0699074,
+    "fit75/v01b": 0.0700558
+  },
+  "selection": {
+    "fit25": "orig",
+    "fit50": "v01b",
+    "fit75": "v01b"
+  },
+  "gate1_direction": {
+    "fit25": true,
+    "fit50": true,
+    "fit75": false
+  },
+  "gate2_composite": {
+    "rule_15cell_macro": 0.0845806,
+    "all_original_macro": 0.0864136,
+    "all_v01b_macro": 0.08698813333333333,
+    "pass": true
+  },
+  "gate3_worst_cell": {
+    "cell": "fit50/wiki_test",
+    "regression_percent": 24.47844637340002,
+    "pass": true
+  },
+  "all_pass": false,
+  "decision": "NOT ACCEPTED: role-matched early/late block swap ablation is the only permitted next step"
+}

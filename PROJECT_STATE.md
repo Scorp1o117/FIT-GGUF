@@ -8,9 +8,12 @@ between standard llama.cpp presets.
 
 ## Current milestone
 
-M12 complete - the v0.1b curve is evaluated at FIT-25/50/75. M11 confirmed
-v0.1b on untouched holdout data at FIT-50; the allocation trade-off is
-budget-dependent.
+M13 complete - the preregistered budget-conditional rule (r<0.5 original,
+r>=0.5 v0.1b) was NOT accepted on the third holdout set: FIT-25 and FIT-50
+directions reproduced and the composite rule beat both pure strategies, but
+the FIT-75 direction flipped to a statistical tie. The preregistered failure
+branch (role-matched early/late block swap ablation) is the only permitted
+next step.
 
 ## Verified facts
 
@@ -56,7 +59,7 @@ budget-dependent.
   incomplete tensor sequences, inconsistent totals, conflicting summaries, and
   aggregate differences beyond display-rounding tolerance.
 - The parser, size predictor, profiler, planner, candidate generator, optimizer,
-  and llama.cpp recipe writer have 41 passing unit tests, including Qwen3.5
+  and llama.cpp recipe writer have 43 passing unit tests, including Qwen3.5
   attention, FFN, and SSM tensor names. They deliberately treat printed MiB values as rounded
   display measurements rather than exact file-size predictions.
 - IQ3_S, IQ3_M, and IQ4_XS dry-run assignments were compared with three full
@@ -125,6 +128,16 @@ budget-dependent.
   FIT-75 (macro -4.75%, wins Chinese/code/agent_chat). The allocation
   trade-off is therefore budget-dependent; the original utility still owns
   FIT-25.
+- M13 (preregistered budget-rule validation, third holdout set): rule
+  `r<0.5 -> original, r>=0.5 -> v0.1b` with gates frozen and committed before
+  execution. FIT-25 direction reproduced (original -6.89%), FIT-50 direction
+  reproduced (v0.1b -6.16%), and the composite 15-cell rule macro beat both
+  pure strategies (0.084581 vs 0.086414 all-original and 0.086988 all-v0.1b),
+  but the FIT-75 direction did NOT reproduce: original 0.069907 vs v0.1b
+  0.070056 (+0.21%, statistical tie). Gate 1 failed, so the rule was NOT
+  accepted; per the frozen failure branch the role-matched early/late block
+  swap ablation is the only permitted next step, and the 0.50 threshold is
+  untouchable.
 
 ## Experimental results
 
@@ -181,21 +194,23 @@ reported uncertainty while KL and Same-top retain consistent direction.
 
 ## Current task
 
-Record the budget-dependence finding and decide the next allocator
-investigation. Completed: M11 holdout confirmation and M12 curve extension.
+Record the M13 failure and prepare the preregistered failure branch: the
+role-matched early/late block swap ablation for attribution. The
+budget-conditional rule is not accepted; the 0.50 threshold and all recipes
+stay frozen.
 
 ## Next task
 
-Candidate next steps, none started: (a) preregister and validate a
-budget-conditional allocator-selection rule (original utility below a budget
-threshold, v0.1b above it) on fresh holdouts; (b) role-matched early/late
-block swap ablation to sharpen attribution; (c) second model family for
-generalization. Optimizer-v2 complexity remains blocked until one of these is
-preregistered.
+Design, preregister, and run the role-matched early/late block swap ablation
+(the only permitted next step after the M13 gate failure). Only after that
+attribution settles may the project revisit allocator design or move to M14/M15
+(more random seeds; second model family).
 
 ## Acceptance status
 
-Not accepted. M0-M9 complete; M10 diagnosis complete; M11 holdout
-confirmation complete (v0.1b positive allocation evidence at FIT-50 only);
-M12 curve extension complete. The overall positive-allocation claim is
-budget-dependent and the project is not finished.
+Not accepted. M0-M12 complete; M13 preregistered rule validation FAILED gate 1
+(FIT-75 direction). Positive allocation evidence now stands as: v0.1b
+confirmed at FIT-50 on untouched data (M11); the composite budget rule beats
+both pure strategies on fresh data but is not accepted because the FIT-75
+direction is unstable. Attribution work (role-matched swap) is required
+before any deployment claim.
