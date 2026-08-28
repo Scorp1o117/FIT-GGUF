@@ -161,12 +161,19 @@ all three M10 SHA-256 values exactly. Retained artifacts: BF16 source, M9
 references, original FIT-25/50/75, block-balanced FIT-50/25/75, the three
 rebuilt random FIT-50 GGUFs, and the five M14 crossover GGUFs.
 
-Disk note (2026-08-29): the M14 quantizations filled the OS drive; to recover
-space the three M8-era intermediate artifacts (FIT-12.25GiB/13GiB/13.75GiB,
-fully reproducible from their retained M7 recipes) and the M11/M13 KLD
-reference files (regenerable from the retained slices and BF16 source) were
-deleted, about 80 GB. Check `df` before adding artifacts; about 71 GB was
-free after cleanup and downloads.
+Disk policy (owner-directed, 2026-08-29): only the six curve artifacts are
+kept on disk - original FIT-25/50/75 and block-balanced FIT-25/50/75, plus
+the BF16 source. Everything else quantized is reproducible from retained
+tensor-type files and deleted after evaluation: the M8 intermediates, the
+three random FIT-50 GGUFs (hashes in the M10 records; rebuilt bit-exactly in
+M11), the five M14 crossover GGUFs (SHA-256 archived in
+`experiments/2026-08-28-m14-swap-ablation/artifact-hashes.txt`), and the
+M9/M11/M13/M14 KLD reference files (regenerable from the retained slices;
+M9 KLD hashes are pinned in the M9 README). Determinism of both the
+quantization and reference pipelines has been proven repeatedly. The retained
+safetensors source under `test-Models/` and the calibration dataset are
+project inputs and stay. Check `df` before adding artifacts; about 170 GB
+was free after the 2026-08-29 cleanup.
 
 Commits: a16d7ab (M0-M12), f5f93cc (M13 prereg), 414aaa6 (M13 results),
 5836443 (M14 prereg + overlap diagnostic), then M14 results; incremental.
