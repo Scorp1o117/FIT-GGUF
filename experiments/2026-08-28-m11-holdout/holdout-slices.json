@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "slice_chars": 65536,
+  "slices": {
+    "wiki_test": {
+      "source": "/run/media/s117/OS/Models/eval-data/wikitext-2-raw/wiki.test.raw",
+      "original_offset_chars": 0,
+      "holdout_offset_chars": 655360,
+      "chars": 65536,
+      "bytes": 65602,
+      "sha256": "08b6781ffbfea4f135f8b7510addb63bd74bc1c1d2372bc285ffbd5ffa9e9883",
+      "cjk_fraction": 0.0,
+      "original_windows_found_in_holdout": 0
+    },
+    "wiki_valid": {
+      "source": "/run/media/s117/OS/Models/eval-data/wikitext-2-raw/wiki.valid.raw",
+      "original_offset_chars": 0,
+      "holdout_offset_chars": 655360,
+      "chars": 65536,
+      "bytes": 65634,
+      "sha256": "ae88004644198606224a32d336351ce99593aeb75bc038e9f60bc3bf3503e15a",
+      "cjk_fraction": 0.0,
+      "original_windows_found_in_holdout": 0
+    },
+    "chinese": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/combined_cn_medium.parquet",
+      "original_offset_chars": 3173914,
+      "holdout_offset_chars": 4000000,
+      "chars": 65536,
+      "bytes": 72931,
+      "sha256": "1d5f126644f3d979b0586b370ed6b40d48b11e9ed2abf2ccede765506cbdf0c6",
+      "cjk_fraction": 0.0513,
+      "original_windows_found_in_holdout": 0
+    },
+    "code": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/code_medium.parquet",
+      "original_offset_chars": 12536883,
+      "holdout_offset_chars": 18000000,
+      "chars": 65536,
+      "bytes": 65566,
+      "sha256": "be6622da5d7e3787ac8d83a802a7f6174fcadcdab781d40d6e4d963442888200",
+      "cjk_fraction": 0.0,
+      "original_windows_found_in_holdout": 0
+    },
+    "agent_chat": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/agentworld_clean_quick.txt",
+      "original_offset_chars": 998087,
+      "holdout_offset_chars": 400000,
+      "chars": 65536,
+      "bytes": 65684,
+      "sha256": "26b8382730c1cbff38890222958276f2c023fe62b39e27fef05da4454ed1e5e0",
+      "cjk_fraction": 0.0005,
+      "original_windows_found_in_holdout": 0
+    }
+  }
+}

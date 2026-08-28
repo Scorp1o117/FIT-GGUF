@@ -1,0 +1,87 @@
+{
+  "actual_bytes": 13828987872,
+  "block_span": 16,
+  "parameters": {
+    "batch_size": 512,
+    "gpu_layers": 99,
+    "n_ctx": 512,
+    "threads": 16
+  },
+  "results": {
+    "agent_chat": {
+      "base_ppl": 6.761478,
+      "base_ppl_uncertainty": 0.212221,
+      "elapsed_seconds": 67.52,
+      "max_rss_kb": 1519072,
+      "mean_kld": 0.092399,
+      "mean_kld_uncertainty": 0.007945,
+      "ppl": 6.692623,
+      "ppl_delta": -0.068855,
+      "ppl_delta_uncertainty": 0.049607,
+      "ppl_uncertainty": 0.205666,
+      "same_top_percent": 91.99,
+      "same_top_percent_uncertainty": 0.296
+    },
+    "chinese": {
+      "base_ppl": 10.427744,
+      "base_ppl_uncertainty": 0.403828,
+      "elapsed_seconds": 66.26,
+      "max_rss_kb": 1519380,
+      "mean_kld": 0.159104,
+      "mean_kld_uncertainty": 0.012109,
+      "ppl": 10.082394,
+      "ppl_delta": -0.34535,
+      "ppl_delta_uncertainty": 0.116303,
+      "ppl_uncertainty": 0.389826,
+      "same_top_percent": 89.712,
+      "same_top_percent_uncertainty": 0.347
+    },
+    "code": {
+      "base_ppl": 4.943986,
+      "base_ppl_uncertainty": 0.150981,
+      "elapsed_seconds": 69.16,
+      "max_rss_kb": 1518452,
+      "mean_kld": 0.142717,
+      "mean_kld_uncertainty": 0.010749,
+      "ppl": 4.904504,
+      "ppl_delta": -0.039483,
+      "ppl_delta_uncertainty": 0.043955,
+      "ppl_uncertainty": 0.146275,
+      "same_top_percent": 91.85,
+      "same_top_percent_uncertainty": 0.303
+    },
+    "wiki_test": {
+      "base_ppl": 5.611612,
+      "base_ppl_uncertainty": 0.149789,
+      "elapsed_seconds": 61.28,
+      "max_rss_kb": 1518612,
+      "mean_kld": 0.037874,
+      "mean_kld_uncertainty": 0.001081,
+      "ppl": 5.694029,
+      "ppl_delta": 0.082417,
+      "ppl_delta_uncertainty": 0.019255,
+      "ppl_uncertainty": 0.149066,
+      "same_top_percent": 91.853,
+      "same_top_percent_uncertainty": 0.308
+    },
+    "wiki_valid": {
+      "base_ppl": 5.461536,
+      "base_ppl_uncertainty": 0.14522,
+      "elapsed_seconds": 63.59,
+      "max_rss_kb": 1519528,
+      "mean_kld": 0.035114,
+      "mean_kld_uncertainty": 0.001657,
+      "ppl": 5.523209,
+      "ppl_delta": 0.061674,
+      "ppl_delta_uncertainty": 0.018674,
+      "ppl_uncertainty": 0.144152,
+      "same_top_percent": 92.347,
+      "same_top_percent_uncertainty": 0.299
+    }
+  },
+  "schema_version": 1,
+  "selected_count": 336,
+  "sha256": "7cfa1b91600115c046cb9afcae8347adc7de5a77b0d880b47a956cb8a4799a07",
+  "strategy": "block_balanced_imatrix",
+  "target_bytes": 13831691232
+}

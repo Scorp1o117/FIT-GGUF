@@ -1,0 +1,53 @@
+{
+  "macro_kl": {
+    "fit50": 0.088518,
+    "block-balanced-fit50": 0.0836336,
+    "random-v1": 0.08879440000000001,
+    "random-v2": 0.0889044,
+    "random-v3": 0.0836978,
+    "random_mean": 0.0871322
+  },
+  "per_domain": {
+    "wiki_test": {
+      "fit50": 0.031732,
+      "v01b": 0.036882,
+      "random_mean": 0.03416433333333333,
+      "v01b_vs_fit50": "+16.23%",
+      "v01b_vs_random_mean": "+7.95%"
+    },
+    "wiki_valid": {
+      "fit50": 0.033148,
+      "v01b": 0.035963,
+      "random_mean": 0.03666333333333333,
+      "v01b_vs_fit50": "+8.49%",
+      "v01b_vs_random_mean": "-1.91%"
+    },
+    "chinese": {
+      "fit50": 0.156337,
+      "v01b": 0.14249,
+      "random_mean": 0.15297033333333335,
+      "v01b_vs_fit50": "-8.86%",
+      "v01b_vs_random_mean": "-6.85%"
+    },
+    "code": {
+      "fit50": 0.111544,
+      "v01b": 0.102015,
+      "random_mean": 0.10349633333333334,
+      "v01b_vs_fit50": "-8.54%",
+      "v01b_vs_random_mean": "-1.43%"
+    },
+    "agent_chat": {
+      "fit50": 0.109829,
+      "v01b": 0.100818,
+      "random_mean": 0.10836666666666667,
+      "v01b_vs_fit50": "-8.20%",
+      "v01b_vs_random_mean": "-6.97%"
+    }
+  },
+  "gate_A_confirmatory_win": true,
+  "gate_B_beats_random": true,
+  "gate_B_domain_wins": 4,
+  "gate_C_max_regression_percent_vs_fit50": 16.22967351569391,
+  "gate_C_pass": true,
+  "decision": "CONFIRMED extend to FIT-25/FIT-75"
+}

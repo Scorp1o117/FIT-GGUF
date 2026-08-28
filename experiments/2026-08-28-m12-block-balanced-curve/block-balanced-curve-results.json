@@ -1,0 +1,155 @@
+{
+  "parameters": {
+    "batch_size": 512,
+    "gpu_layers": 99,
+    "n_ctx": 512,
+    "threads": 16
+  },
+  "results": {
+    "block-balanced-fit25": {
+      "agent_chat": {
+        "base_ppl": 6.761478,
+        "base_ppl_uncertainty": 0.212221,
+        "elapsed_seconds": 64.12,
+        "max_rss_kb": null,
+        "mean_kld": 0.115107,
+        "mean_kld_uncertainty": 0.009131,
+        "ppl": 6.856992,
+        "ppl_delta": 0.095514,
+        "ppl_delta_uncertainty": 0.058328,
+        "ppl_uncertainty": 0.213381,
+        "same_top_percent": 91.159,
+        "same_top_percent_uncertainty": 0.309
+      },
+      "chinese": {
+        "base_ppl": 10.427744,
+        "base_ppl_uncertainty": 0.403828,
+        "elapsed_seconds": 58.6,
+        "max_rss_kb": null,
+        "mean_kld": 0.190217,
+        "mean_kld_uncertainty": 0.012802,
+        "ppl": 10.370033,
+        "ppl_delta": -0.057711,
+        "ppl_delta_uncertainty": 0.128276,
+        "ppl_uncertainty": 0.405365,
+        "same_top_percent": 88.81,
+        "same_top_percent_uncertainty": 0.36
+      },
+      "code": {
+        "base_ppl": 4.943986,
+        "base_ppl_uncertainty": 0.150981,
+        "elapsed_seconds": 61.36,
+        "max_rss_kb": null,
+        "mean_kld": 0.165253,
+        "mean_kld_uncertainty": 0.011435,
+        "ppl": 4.896589,
+        "ppl_delta": -0.047397,
+        "ppl_delta_uncertainty": 0.048245,
+        "ppl_uncertainty": 0.145237,
+        "same_top_percent": 91.483,
+        "same_top_percent_uncertainty": 0.309
+      },
+      "wiki_test": {
+        "base_ppl": 5.611612,
+        "base_ppl_uncertainty": 0.149789,
+        "elapsed_seconds": 61.68,
+        "max_rss_kb": null,
+        "mean_kld": 0.047161,
+        "mean_kld_uncertainty": 0.001251,
+        "ppl": 5.794591,
+        "ppl_delta": 0.182979,
+        "ppl_delta_uncertainty": 0.021137,
+        "ppl_uncertainty": 0.152127,
+        "same_top_percent": 91.284,
+        "same_top_percent_uncertainty": 0.317
+      },
+      "wiki_valid": {
+        "base_ppl": 5.461536,
+        "base_ppl_uncertainty": 0.14522,
+        "elapsed_seconds": 58.97,
+        "max_rss_kb": null,
+        "mean_kld": 0.04187,
+        "mean_kld_uncertainty": 0.001454,
+        "ppl": 5.601065,
+        "ppl_delta": 0.139529,
+        "ppl_delta_uncertainty": 0.0199,
+        "ppl_uncertainty": 0.146266,
+        "same_top_percent": 91.752,
+        "same_top_percent_uncertainty": 0.309
+      }
+    },
+    "block-balanced-fit75": {
+      "agent_chat": {
+        "base_ppl": 6.761478,
+        "base_ppl_uncertainty": 0.212221,
+        "elapsed_seconds": 61.96,
+        "max_rss_kb": null,
+        "mean_kld": 0.077396,
+        "mean_kld_uncertainty": 0.007315,
+        "ppl": 6.919424,
+        "ppl_delta": 0.157946,
+        "ppl_delta_uncertainty": 0.047507,
+        "ppl_uncertainty": 0.218931,
+        "same_top_percent": 92.906,
+        "same_top_percent_uncertainty": 0.28
+      },
+      "chinese": {
+        "base_ppl": 10.427744,
+        "base_ppl_uncertainty": 0.403828,
+        "elapsed_seconds": 56.38,
+        "max_rss_kb": null,
+        "mean_kld": 0.13069,
+        "mean_kld_uncertainty": 0.010517,
+        "ppl": 10.948886,
+        "ppl_delta": 0.521142,
+        "ppl_delta_uncertainty": 0.118585,
+        "ppl_uncertainty": 0.440513,
+        "same_top_percent": 91.085,
+        "same_top_percent_uncertainty": 0.326
+      },
+      "code": {
+        "base_ppl": 4.943986,
+        "base_ppl_uncertainty": 0.150981,
+        "elapsed_seconds": 58.67,
+        "max_rss_kb": null,
+        "mean_kld": 0.121871,
+        "mean_kld_uncertainty": 0.010171,
+        "ppl": 5.043356,
+        "ppl_delta": 0.099369,
+        "ppl_delta_uncertainty": 0.042425,
+        "ppl_uncertainty": 0.155568,
+        "same_top_percent": 92.855,
+        "same_top_percent_uncertainty": 0.285
+      },
+      "wiki_test": {
+        "base_ppl": 5.611612,
+        "base_ppl_uncertainty": 0.149789,
+        "elapsed_seconds": 58.4,
+        "max_rss_kb": null,
+        "mean_kld": 0.025852,
+        "mean_kld_uncertainty": 0.001053,
+        "ppl": 5.688399,
+        "ppl_delta": 0.076787,
+        "ppl_delta_uncertainty": 0.017212,
+        "ppl_uncertainty": 0.151289,
+        "same_top_percent": 93.359,
+        "same_top_percent_uncertainty": 0.28
+      },
+      "wiki_valid": {
+        "base_ppl": 5.461536,
+        "base_ppl_uncertainty": 0.14522,
+        "elapsed_seconds": 56.54,
+        "max_rss_kb": null,
+        "mean_kld": 0.023862,
+        "mean_kld_uncertainty": 0.001385,
+        "ppl": 5.509554,
+        "ppl_delta": 0.048018,
+        "ppl_delta_uncertainty": 0.014768,
+        "ppl_uncertainty": 0.146361,
+        "same_top_percent": 93.789,
+        "same_top_percent_uncertainty": 0.271
+      }
+    }
+  },
+  "schema_version": 1
+}

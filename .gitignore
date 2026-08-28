@@ -1,0 +1,27 @@
+# Local model and calibration assets
+/test-Models/
+/imatrix_unsloth.gguf
+
+# Prebuilt llama.cpp runtime
+/tools/llama-b10666-rocm/
+/third_party/llama.cpp/
+
+# Generated model and evaluation artifacts
+*.gguf
+*.safetensors
+*.bin
+*.log
+/experiments/**/artifacts/
+
+# Python and test caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor and OS files
+.DS_Store
+*.swp
+*~

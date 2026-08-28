@@ -1,0 +1,246 @@
+{
+  "fit50_actual_bytes": 13831486432,
+  "fit50_selected_count": 323,
+  "parameters": {
+    "batch_size": 512,
+    "gpu_layers": 99,
+    "n_ctx": 512,
+    "threads": 16
+  },
+  "schema_version": 1,
+  "seeds": {
+    "m10-fit50-v1": {
+      "actual_bytes": 13831672672,
+      "results": {
+        "agent_chat": {
+          "base_ppl": 6.761478,
+          "base_ppl_uncertainty": 0.212221,
+          "elapsed_seconds": 66.52,
+          "max_rss_kb": 1645740,
+          "mean_kld": 0.120448,
+          "mean_kld_uncertainty": 0.009494,
+          "ppl": 7.222981,
+          "ppl_delta": 0.461503,
+          "ppl_delta_uncertainty": 0.066891,
+          "ppl_uncertainty": 0.2326,
+          "same_top_percent": 91.266,
+          "same_top_percent_uncertainty": 0.308
+        },
+        "chinese": {
+          "base_ppl": 10.427744,
+          "base_ppl_uncertainty": 0.403828,
+          "elapsed_seconds": 62.77,
+          "max_rss_kb": 1645812,
+          "mean_kld": 0.181432,
+          "mean_kld_uncertainty": 0.01271,
+          "ppl": 11.438649,
+          "ppl_delta": 1.010905,
+          "ppl_delta_uncertainty": 0.145233,
+          "ppl_uncertainty": 0.463435,
+          "same_top_percent": 89.268,
+          "same_top_percent_uncertainty": 0.354
+        },
+        "code": {
+          "base_ppl": 4.943986,
+          "base_ppl_uncertainty": 0.150981,
+          "elapsed_seconds": 65.01,
+          "max_rss_kb": 1645876,
+          "mean_kld": 0.156387,
+          "mean_kld_uncertainty": 0.010555,
+          "ppl": 4.942127,
+          "ppl_delta": -0.00186,
+          "ppl_delta_uncertainty": 0.050733,
+          "ppl_uncertainty": 0.148293,
+          "same_top_percent": 91.642,
+          "same_top_percent_uncertainty": 0.306
+        },
+        "wiki_test": {
+          "base_ppl": 5.611612,
+          "base_ppl_uncertainty": 0.149789,
+          "elapsed_seconds": 67.06,
+          "max_rss_kb": 1644780,
+          "mean_kld": 0.040089,
+          "mean_kld_uncertainty": 0.001181,
+          "ppl": 5.74629,
+          "ppl_delta": 0.134678,
+          "ppl_delta_uncertainty": 0.019845,
+          "ppl_uncertainty": 0.151686,
+          "same_top_percent": 91.942,
+          "same_top_percent_uncertainty": 0.306
+        },
+        "wiki_valid": {
+          "base_ppl": 5.461536,
+          "base_ppl_uncertainty": 0.14522,
+          "elapsed_seconds": 70.59,
+          "max_rss_kb": 1644032,
+          "mean_kld": 0.038671,
+          "mean_kld_uncertainty": 0.00169,
+          "ppl": 5.587397,
+          "ppl_delta": 0.125861,
+          "ppl_delta_uncertainty": 0.019961,
+          "ppl_uncertainty": 0.146746,
+          "same_top_percent": 92.271,
+          "same_top_percent_uncertainty": 0.3
+        }
+      },
+      "selected_count": 209,
+      "sha256": "dba2ec218beeed0cc47fc54bbc76c9ae97d4e24298931d940da29b7365f94892"
+    },
+    "m10-fit50-v2": {
+      "actual_bytes": 13831684832,
+      "results": {
+        "agent_chat": {
+          "base_ppl": 6.761478,
+          "base_ppl_uncertainty": 0.212221,
+          "elapsed_seconds": 67.75,
+          "max_rss_kb": 1520020,
+          "mean_kld": 0.09811,
+          "mean_kld_uncertainty": 0.008198,
+          "ppl": 7.192089,
+          "ppl_delta": 0.430611,
+          "ppl_delta_uncertainty": 0.057069,
+          "ppl_uncertainty": 0.233213,
+          "same_top_percent": 91.598,
+          "same_top_percent_uncertainty": 0.302
+        },
+        "chinese": {
+          "base_ppl": 10.427744,
+          "base_ppl_uncertainty": 0.403828,
+          "elapsed_seconds": 62.77,
+          "max_rss_kb": 1519476,
+          "mean_kld": 0.177001,
+          "mean_kld_uncertainty": 0.011775,
+          "ppl": 11.298817,
+          "ppl_delta": 0.871072,
+          "ppl_delta_uncertainty": 0.136349,
+          "ppl_uncertainty": 0.459447,
+          "same_top_percent": 89.281,
+          "same_top_percent_uncertainty": 0.354
+        },
+        "code": {
+          "base_ppl": 4.943986,
+          "base_ppl_uncertainty": 0.150981,
+          "elapsed_seconds": 67.04,
+          "max_rss_kb": 1519156,
+          "mean_kld": 0.14265,
+          "mean_kld_uncertainty": 0.009696,
+          "ppl": 5.258151,
+          "ppl_delta": 0.314164,
+          "ppl_delta_uncertainty": 0.048812,
+          "ppl_uncertainty": 0.165237,
+          "same_top_percent": 91.924,
+          "same_top_percent_uncertainty": 0.302
+        },
+        "wiki_test": {
+          "base_ppl": 5.611612,
+          "base_ppl_uncertainty": 0.149789,
+          "elapsed_seconds": 61.43,
+          "max_rss_kb": 1518436,
+          "mean_kld": 0.034097,
+          "mean_kld_uncertainty": 0.000987,
+          "ppl": 5.737565,
+          "ppl_delta": 0.125953,
+          "ppl_delta_uncertainty": 0.018977,
+          "ppl_uncertainty": 0.15224,
+          "same_top_percent": 92.207,
+          "same_top_percent_uncertainty": 0.302
+        },
+        "wiki_valid": {
+          "base_ppl": 5.461536,
+          "base_ppl_uncertainty": 0.14522,
+          "elapsed_seconds": 63.63,
+          "max_rss_kb": 1520140,
+          "mean_kld": 0.035933,
+          "mean_kld_uncertainty": 0.002167,
+          "ppl": 5.5558,
+          "ppl_delta": 0.094264,
+          "ppl_delta_uncertainty": 0.01906,
+          "ppl_uncertainty": 0.146937,
+          "same_top_percent": 92.625,
+          "same_top_percent_uncertainty": 0.294
+        }
+      },
+      "selected_count": 256,
+      "sha256": "2fd1a30b1b671cc223085d920d88f3239b9580d7076852ade74ebab9fcfcfeb4"
+    },
+    "m10-fit50-v3": {
+      "actual_bytes": 13831684832,
+      "results": {
+        "agent_chat": {
+          "base_ppl": 6.761478,
+          "base_ppl_uncertainty": 0.212221,
+          "elapsed_seconds": 68.44,
+          "max_rss_kb": 1519336,
+          "mean_kld": 0.096606,
+          "mean_kld_uncertainty": 0.008377,
+          "ppl": 6.839106,
+          "ppl_delta": 0.077628,
+          "ppl_delta_uncertainty": 0.052474,
+          "ppl_uncertainty": 0.214965,
+          "same_top_percent": 91.931,
+          "same_top_percent_uncertainty": 0.297
+        },
+        "chinese": {
+          "base_ppl": 10.427744,
+          "base_ppl_uncertainty": 0.403828,
+          "elapsed_seconds": 61.38,
+          "max_rss_kb": 1519688,
+          "mean_kld": 0.153582,
+          "mean_kld_uncertainty": 0.010954,
+          "ppl": 10.758388,
+          "ppl_delta": 0.330643,
+          "ppl_delta_uncertainty": 0.121817,
+          "ppl_uncertainty": 0.427711,
+          "same_top_percent": 90.34,
+          "same_top_percent_uncertainty": 0.338
+        },
+        "code": {
+          "base_ppl": 4.943986,
+          "base_ppl_uncertainty": 0.150981,
+          "elapsed_seconds": 65.42,
+          "max_rss_kb": 1519656,
+          "mean_kld": 0.146783,
+          "mean_kld_uncertainty": 0.010855,
+          "ppl": 4.977204,
+          "ppl_delta": 0.033217,
+          "ppl_delta_uncertainty": 0.046266,
+          "ppl_uncertainty": 0.150437,
+          "same_top_percent": 91.838,
+          "same_top_percent_uncertainty": 0.303
+        },
+        "wiki_test": {
+          "base_ppl": 5.611612,
+          "base_ppl_uncertainty": 0.149789,
+          "elapsed_seconds": 66.55,
+          "max_rss_kb": 1519352,
+          "mean_kld": 0.037374,
+          "mean_kld_uncertainty": 0.001203,
+          "ppl": 5.765185,
+          "ppl_delta": 0.153573,
+          "ppl_delta_uncertainty": 0.019895,
+          "ppl_uncertainty": 0.153113,
+          "same_top_percent": 91.917,
+          "same_top_percent_uncertainty": 0.307
+        },
+        "wiki_valid": {
+          "base_ppl": 5.461536,
+          "base_ppl_uncertainty": 0.14522,
+          "elapsed_seconds": 64.16,
+          "max_rss_kb": 1519876,
+          "mean_kld": 0.03591,
+          "mean_kld_uncertainty": 0.001504,
+          "ppl": 5.58156,
+          "ppl_delta": 0.120024,
+          "ppl_delta_uncertainty": 0.01901,
+          "ppl_uncertainty": 0.147555,
+          "same_top_percent": 91.942,
+          "same_top_percent_uncertainty": 0.306
+        }
+      },
+      "selected_count": 258,
+      "sha256": "c0a119b8961bdec5402f41ee29fede3659e2005c90dc02434191dbafbd7dce40"
+    }
+  },
+  "strategy": "deterministic_random_sha256_priority",
+  "target_bytes": 13831691232
+}
