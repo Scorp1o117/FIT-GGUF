@@ -1,0 +1,339 @@
+{
+  "budgets": {
+    "fit25": {
+      "byte_jaccard": 0.3281,
+      "intersection_bytes": 308039680,
+      "split": {
+        "orig": {
+          "early_bytes": 49039360,
+          "late_bytes": 573573120,
+          "upgrade_bytes": 622612480,
+          "upgrades": 235
+        },
+        "v01b": {
+          "early_bytes": 307906560,
+          "late_bytes": 316426240,
+          "upgrade_bytes": 624332800,
+          "upgrades": 252
+        }
+      },
+      "union_bytes": 938905600
+    },
+    "fit50": {
+      "byte_jaccard": 0.4643,
+      "intersection_bytes": 792309760,
+      "split": {
+        "orig": {
+          "early_bytes": 172083200,
+          "late_bytes": 1078528000,
+          "upgrade_bytes": 1250611200,
+          "upgrades": 323
+        },
+        "v01b": {
+          "early_bytes": 627886080,
+          "late_bytes": 620226560,
+          "upgrade_bytes": 1248112640,
+          "upgrades": 336
+        }
+      },
+      "union_bytes": 1706414080
+    },
+    "fit75": {
+      "byte_jaccard": 0.6885,
+      "intersection_bytes": 1528811520,
+      "split": {
+        "orig": {
+          "early_bytes": 633784320,
+          "late_bytes": 1241466880,
+          "upgrade_bytes": 1875251200,
+          "upgrades": 404
+        },
+        "v01b": {
+          "early_bytes": 933693440,
+          "late_bytes": 940288000,
+          "upgrade_bytes": 1873981440,
+          "upgrades": 411
+        }
+      },
+      "union_bytes": 2220421120
+    }
+  },
+  "early_max_block": 31,
+  "exchange_availability": {
+    "fit25": {
+      "BL_direction": {
+        "attn_gate/iq3_s->iq4_xs": {
+          "orig_early": 22364160,
+          "v01b_late": 38338560
+        },
+        "attn_k/iq3_s->iq4_xs": {
+          "orig_early": 4259840,
+          "v01b_late": 4259840
+        },
+        "attn_q/iq3_s->iq4_xs": {
+          "orig_early": 6389760,
+          "v01b_late": 0
+        },
+        "attn_qkv/q4_k->q5_k": {
+          "orig_early": 0,
+          "v01b_late": 45875200
+        },
+        "attn_v/q4_k->q5_k": {
+          "orig_early": 5242880,
+          "v01b_late": 5242880
+        },
+        "ffn_down/iq3_s->iq4_xs": {
+          "orig_early": 0,
+          "v01b_late": 144834560
+        },
+        "ssm_alpha/iq3_s->iq4_xs": {
+          "orig_early": 599040,
+          "v01b_late": 599040
+        },
+        "ssm_beta/iq3_s->iq4_xs": {
+          "orig_early": 599040,
+          "v01b_late": 599040
+        },
+        "ssm_out/iq3_s->iq4_xs": {
+          "orig_early": 9584640,
+          "v01b_late": 76677120
+        }
+      },
+      "OE_direction": {
+        "attn_gate/iq3_s->iq4_xs": {
+          "orig_late": 76677120,
+          "v01b_early": 76677120
+        },
+        "attn_k/iq3_s->iq4_xs": {
+          "orig_late": 4259840,
+          "v01b_early": 4259840
+        },
+        "attn_q/iq3_s->iq4_xs": {
+          "orig_late": 0,
+          "v01b_early": 44728320
+        },
+        "attn_qkv/q4_k->q5_k": {
+          "orig_late": 65536000,
+          "v01b_early": 131072000
+        },
+        "attn_v/q4_k->q5_k": {
+          "orig_late": 5242880,
+          "v01b_early": 5242880
+        },
+        "ffn_down/iq3_s->iq4_xs": {
+          "orig_late": 153886720,
+          "v01b_early": 0
+        },
+        "ffn_gate/iq3_s->iq4_xs": {
+          "orig_late": 99573760,
+          "v01b_early": 0
+        },
+        "ffn_up/iq3_s->iq4_xs": {
+          "orig_late": 90521600,
+          "v01b_early": 0
+        },
+        "ssm_alpha/iq3_s->iq4_xs": {
+          "orig_late": 599040,
+          "v01b_early": 599040
+        },
+        "ssm_beta/iq3_s->iq4_xs": {
+          "orig_late": 599040,
+          "v01b_early": 599040
+        },
+        "ssm_out/iq3_s->iq4_xs": {
+          "orig_late": 76677120,
+          "v01b_early": 44728320
+        }
+      }
+    },
+    "fit50": {
+      "BL_direction": {
+        "attn_gate/iq3_s->iq4_xs": {
+          "orig_early": 54312960,
+          "v01b_late": 76677120
+        },
+        "attn_k/iq3_s->iq4_xs": {
+          "orig_early": 4259840,
+          "v01b_late": 4259840
+        },
+        "attn_q/iq3_s->iq4_xs": {
+          "orig_early": 19169280,
+          "v01b_late": 6389760
+        },
+        "attn_qkv/q4_k->q5_k": {
+          "orig_early": 65536000,
+          "v01b_late": 78643200
+        },
+        "attn_v/q4_k->q5_k": {
+          "orig_early": 5242880,
+          "v01b_late": 5242880
+        },
+        "ffn_down/iq3_s->iq4_xs": {
+          "orig_early": 0,
+          "v01b_late": 262512640
+        },
+        "ffn_gate/iq3_s->iq4_xs": {
+          "orig_early": 0,
+          "v01b_late": 54312960
+        },
+        "ffn_up/iq3_s->iq4_xs": {
+          "orig_early": 0,
+          "v01b_late": 54312960
+        },
+        "ssm_alpha/iq3_s->iq4_xs": {
+          "orig_early": 599040,
+          "v01b_late": 599040
+        },
+        "ssm_beta/iq3_s->iq4_xs": {
+          "orig_early": 599040,
+          "v01b_late": 599040
+        },
+        "ssm_out/iq3_s->iq4_xs": {
+          "orig_early": 22364160,
+          "v01b_late": 76677120
+        }
+      },
+      "OE_direction": {
+        "attn_gate/iq3_s->iq4_xs": {
+          "orig_late": 76677120,
+          "v01b_early": 76677120
+        },
+        "attn_k/iq3_s->iq4_xs": {
+          "orig_late": 4259840,
+          "v01b_early": 4259840
+        },
+        "attn_q/iq3_s->iq4_xs": {
+          "orig_late": 51118080,
+          "v01b_early": 51118080
+        },
+        "attn_qkv/q4_k->q5_k": {
+          "orig_late": 157286400,
+          "v01b_early": 150732800
+        },
+        "attn_v/q4_k->q5_k": {
+          "orig_late": 5242880,
+          "v01b_early": 5242880
+        },
+        "ffn_down/iq3_s->iq4_xs": {
+          "orig_late": 271564800,
+          "v01b_early": 45260800
+        },
+        "ffn_gate/iq3_s->iq4_xs": {
+          "orig_late": 217251840,
+          "v01b_early": 117678080
+        },
+        "ffn_up/iq3_s->iq4_xs": {
+          "orig_late": 217251840,
+          "v01b_early": 108625920
+        },
+        "ssm_alpha/iq3_s->iq4_xs": {
+          "orig_late": 599040,
+          "v01b_early": 599040
+        },
+        "ssm_beta/iq3_s->iq4_xs": {
+          "orig_late": 599040,
+          "v01b_early": 599040
+        },
+        "ssm_out/iq3_s->iq4_xs": {
+          "orig_late": 76677120,
+          "v01b_early": 67092480
+        }
+      }
+    },
+    "fit75": {
+      "BL_direction": {
+        "attn_gate/iq3_s->iq4_xs": {
+          "orig_early": 76677120,
+          "v01b_late": 76677120
+        },
+        "attn_k/iq3_s->iq4_xs": {
+          "orig_early": 4259840,
+          "v01b_late": 4259840
+        },
+        "attn_q/iq3_s->iq4_xs": {
+          "orig_early": 51118080,
+          "v01b_late": 25559040
+        },
+        "attn_qkv/q4_k->q5_k": {
+          "orig_early": 131072000,
+          "v01b_late": 144179200
+        },
+        "attn_v/q4_k->q5_k": {
+          "orig_early": 5242880,
+          "v01b_late": 5242880
+        },
+        "ffn_down/iq3_s->iq4_xs": {
+          "orig_early": 108625920,
+          "v01b_late": 271564800
+        },
+        "ffn_gate/iq3_s->iq4_xs": {
+          "orig_early": 108625920,
+          "v01b_late": 171991040
+        },
+        "ffn_up/iq3_s->iq4_xs": {
+          "orig_early": 108625920,
+          "v01b_late": 162938880
+        },
+        "ssm_alpha/iq3_s->iq4_xs": {
+          "orig_early": 599040,
+          "v01b_late": 599040
+        },
+        "ssm_beta/iq3_s->iq4_xs": {
+          "orig_early": 599040,
+          "v01b_late": 599040
+        },
+        "ssm_out/iq3_s->iq4_xs": {
+          "orig_early": 38338560,
+          "v01b_late": 76677120
+        }
+      },
+      "OE_direction": {
+        "attn_gate/iq3_s->iq4_xs": {
+          "orig_late": 76677120,
+          "v01b_early": 76677120
+        },
+        "attn_k/iq3_s->iq4_xs": {
+          "orig_late": 4259840,
+          "v01b_early": 4259840
+        },
+        "attn_q/iq3_s->iq4_xs": {
+          "orig_late": 51118080,
+          "v01b_early": 51118080
+        },
+        "attn_qkv/q4_k->q5_k": {
+          "orig_late": 157286400,
+          "v01b_early": 157286400
+        },
+        "attn_v/q4_k->q5_k": {
+          "orig_late": 5242880,
+          "v01b_early": 5242880
+        },
+        "ffn_down/iq3_s->iq4_xs": {
+          "orig_late": 289669120,
+          "v01b_early": 162938880
+        },
+        "ffn_gate/iq3_s->iq4_xs": {
+          "orig_late": 289669120,
+          "v01b_early": 199147520
+        },
+        "ffn_up/iq3_s->iq4_xs": {
+          "orig_late": 289669120,
+          "v01b_early": 199147520
+        },
+        "ssm_alpha/iq3_s->iq4_xs": {
+          "orig_late": 599040,
+          "v01b_early": 599040
+        },
+        "ssm_beta/iq3_s->iq4_xs": {
+          "orig_late": 599040,
+          "v01b_early": 599040
+        },
+        "ssm_out/iq3_s->iq4_xs": {
+          "orig_late": 76677120,
+          "v01b_early": 76677120
+        }
+      }
+    }
+  },
+  "schema_version": 1
+}
