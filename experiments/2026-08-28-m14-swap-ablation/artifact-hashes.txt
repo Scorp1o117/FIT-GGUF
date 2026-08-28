@@ -1,0 +1,5 @@
+f86ae882f0240b493261200ca4fddfa48cb92a6be762826fd2dbd20d755f878f  artifacts/fit/Huihui-Qwen3.8-27B-M14-OE-FIT50.gguf
+18aa7ea44f1c9a30fad674ae39f5e1d047ed738d1288aebc7249b6c762044ac8  artifacts/fit/Huihui-Qwen3.8-27B-M14-BL-FIT50.gguf
+09e98e8efa22dc3d09973ce0611db8570646fe8d13da3d185443b0bc5a180067  artifacts/fit/Huihui-Qwen3.8-27B-M14-SHUF-FIT50.gguf
+6628bbda3397a5c0b9f7c4a134ffbb96b95697e6bdecf913b3d93c6537c4720a  artifacts/fit/Huihui-Qwen3.8-27B-M14-OE-FIT75.gguf
+273ed3c2693bb04d90f3c4104a843185b7be314c418c0a0a47b9410b7796cbfe  artifacts/fit/Huihui-Qwen3.8-27B-M14-BL-FIT75.gguf
