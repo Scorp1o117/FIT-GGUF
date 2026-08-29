@@ -1,0 +1,1 @@
+572fd3e7909519982fcdcb9b13f40fc9239e2628c7a7d3b58d6fe0604bfe2a8c  artifacts/fit/release/refs/IQ2_M.gguf

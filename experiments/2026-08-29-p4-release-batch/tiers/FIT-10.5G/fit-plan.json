@@ -9,6 +9,7 @@
   "lower_size_bytes": 11186371776,
   "metadata_bytes": 10994880,
   "model_name": "orcarouter-Qwen3.8-27B-Uncensored",
+  "oracle_iterations": 1,
   "policy": "balanced",
   "predicted_size_bytes": 11273084096,
   "qtype_parameter_shares": {

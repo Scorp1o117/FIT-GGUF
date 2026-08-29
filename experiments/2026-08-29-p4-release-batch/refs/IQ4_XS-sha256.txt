@@ -1,0 +1,1 @@
+d8fccf02db40c8e1e748e0260a790263fc7c53b3179b4dd7e13fe79b68a226e6  artifacts/fit/release/refs/IQ4_XS.gguf

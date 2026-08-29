@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 192" role="img" aria-labelledby="title desc">
+  <title id="title">FIT-GGUF logo for dark backgrounds</title>
+  <desc id="desc">FIT-GGUF in extended geometric techno lettering beside a modular exact-fit mark.</desc>
+
+  <g transform="translate(16 16)">
+    <rect x="12" y="12" width="136" height="136" rx="18" fill="none" stroke="#F4F1E8" stroke-width="10"/>
+    <path fill="#F4F1E8" d="M28 28h24v100H28zM52 28h72l4 4v22H52zM52 64h66v26H52z"/>
+    <path fill="#FF5A1F" d="M68 104h56l4 4v16l-4 4H68l-4-4v-16z"/>
+  </g>
+
+  <g fill="#F4F1E8" transform="translate(220 56)">
+    <!-- F -->
+    <path d="M8 0h70v16H16v16h46v16H16v32H0V8z"/>
+    <!-- I -->
+    <path d="M94 0h16v80H94z"/>
+    <!-- T -->
+    <path d="M136 0h64v16h-24v64h-16V16h-32V8z"/>
+    <!-- hyphen -->
+    <path fill="#FF5A1F" d="M224 32h38l6 6v4l-6 6h-38l-6-6v-4z"/>
+    <!-- G -->
+    <path d="M296 8l8-8h62l16 16v12h-16V16h-54v48h54V52h-22V36h38v28l-16 16h-62l-8-8z"/>
+    <!-- G -->
+    <path d="M396 8l8-8h62l16 16v12h-16V16h-54v48h54V52h-22V36h38v28l-16 16h-62l-8-8z"/>
+    <!-- U -->
+    <path d="M496 0h16v64h48V0h16v72l-8 8h-64l-8-8z"/>
+    <!-- F -->
+    <path d="M600 8l8-8h70v16h-62v16h46v16h-46v32h-16z"/>
+  </g>
+</svg>

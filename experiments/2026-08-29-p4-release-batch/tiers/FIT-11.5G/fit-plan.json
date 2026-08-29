@@ -9,8 +9,9 @@
   "lower_size_bytes": 11967130816,
   "metadata_bytes": 10994880,
   "model_name": "orcarouter-Qwen3.8-27B-Uncensored",
+  "oracle_iterations": 1,
   "policy": "balanced",
-  "predicted_size_bytes": 12344126656,
+  "predicted_size_bytes": 12277279936,
   "qtype_parameter_shares": {
     "iq3_s": 0.7963739155863144,
     "iq3_xxs": 0.059654937128375086,
@@ -27,10 +28,10 @@
   "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-11.5G-IQ3_S.gguf",
   "target_bytes": 12348030976,
   "tensor_padding_bytes": 0,
-  "tensor_payload_bytes": 12333131776,
+  "tensor_payload_bytes": 12266285056,
   "tensor_types_path": "experiments/2026-08-29-p4-release-batch/tiers/FIT-11.5G/fit-tensor-types.txt",
   "tensor_types_sha256": "ef06d9747f42347722e630e43b5b929cc0b2bafab66458116badfaadd7e13b03",
-  "unused_bytes": 3904320,
+  "unused_bytes": 70751040,
   "upper_preset": "IQ3_S",
   "upper_size_bytes": 12419329216
 }

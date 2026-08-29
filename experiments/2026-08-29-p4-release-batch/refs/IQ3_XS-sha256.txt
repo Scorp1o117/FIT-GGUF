@@ -1,0 +1,1 @@
+e5a567460cd5bc636b6bacab7510c55a2a09cb4aa2490b33e0313a9e862c8b3c  artifacts/fit/release/refs/IQ3_XS.gguf

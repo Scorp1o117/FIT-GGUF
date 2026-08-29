@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">FIT-GGUF mark for light backgrounds</title>
+  <desc id="desc">A modular F fills a fixed budget frame; an orange tile completes the final slot.</desc>
+  <rect x="12" y="12" width="136" height="136" rx="18" fill="none" stroke="#111111" stroke-width="10"/>
+  <path fill="#111111" d="M28 28h24v100H28zM52 28h72l4 4v22H52zM52 64h66v26H52z"/>
+  <path fill="#FF5A1F" d="M68 104h56l4 4v16l-4 4H68l-4-4v-16z"/>
+</svg>

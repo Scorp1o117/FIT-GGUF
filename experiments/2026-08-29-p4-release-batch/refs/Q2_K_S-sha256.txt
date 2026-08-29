@@ -1,0 +1,1 @@
+2aa0a8b9a21da2194f6913242c22016e27035d19dccbe492c136e1f0cb0f3b5d  artifacts/fit/release/refs/Q2_K_S.gguf

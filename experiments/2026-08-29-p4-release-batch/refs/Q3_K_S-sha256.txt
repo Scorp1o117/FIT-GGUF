@@ -1,0 +1,1 @@
+9812d1e6618d9c8aa5d795bae8652f6b2fa736c94bc22aa21175bd2b0b56dc7f  artifacts/fit/release/refs/Q3_K_S.gguf
