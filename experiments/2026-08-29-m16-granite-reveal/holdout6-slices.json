@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "slice_chars": 65536,
+  "slices": {
+    "wiki_test": {
+      "source": "/run/media/s117/OS/Models/eval-data/wikitext-2-raw/wiki.test.raw",
+      "prior_offsets_chars": {
+        "m9": 0,
+        "m11": 655360,
+        "m13": 983040,
+        "m14": 327680,
+        "m15": 458752
+      },
+      "m16_offset_chars": 1114112,
+      "chars": 65536,
+      "bytes": 65585,
+      "sha256": "43037a924feb04398e35bbdce145f4bfe641e2de980f4135f0979f26109a599c",
+      "cjk_fraction": 0.0
+    },
+    "wiki_valid": {
+      "source": "/run/media/s117/OS/Models/eval-data/wikitext-2-raw/wiki.valid.raw",
+      "prior_offsets_chars": {
+        "m9": 0,
+        "m11": 655360,
+        "m13": 983040,
+        "m14": 327680,
+        "m15": 458752
+      },
+      "m16_offset_chars": 131072,
+      "chars": 65536,
+      "bytes": 65623,
+      "sha256": "a5c66ca32c207187f05a59e96956987ba87d7db4ef29558d4594d52552e207e8",
+      "cjk_fraction": 0.0
+    },
+    "chinese": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/combined_cn_medium.parquet",
+      "prior_offsets_chars": {
+        "m9": 3173914,
+        "m11": 4000000,
+        "m13": 6500000,
+        "m14": 7700000,
+        "m15": 8800000
+      },
+      "m16_offset_chars": 1500000,
+      "chars": 65536,
+      "bytes": 72326,
+      "sha256": "2757564c358571e86c568a4a8727f11d5df45579795cada2f3e77a9f2120fcb7",
+      "cjk_fraction": 0.0476
+    },
+    "code": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/code_medium.parquet",
+      "prior_offsets_chars": {
+        "m9": 12536883,
+        "m11": 18000000,
+        "m13": 28000000,
+        "m14": 21000000,
+        "m15": 33500000
+      },
+      "m16_offset_chars": 8000000,
+      "chars": 65536,
+      "bytes": 65543,
+      "sha256": "5abf8fae894bacb2e0f80ebd99ae9187046cdda2b89b182a0c037bc3b8bac946",
+      "cjk_fraction": 0.0
+    },
+    "agent_chat": {
+      "source": "/run/media/s117/OS/Models/imatrix-calibration/agentworld_clean_quick.txt",
+      "prior_offsets_chars": {
+        "m9": 998087,
+        "m11": 400000,
+        "m13": 1200000,
+        "m14": 1400000,
+        "m15": 1500000
+      },
+      "m16_offset_chars": 100000,
+      "chars": 65536,
+      "bytes": 65579,
+      "sha256": "3848035bd0ffe2964140874d0f47e13e427640787c1df14aefcea48380639ce7",
+      "cjk_fraction": 0.0
+    }
+  }
+}
