@@ -36,8 +36,9 @@ Metadata derivation replaces every hand-copied M12/M16 constant:
 - `quantize.imatrix.entries_count` = number of sums/counts pairs.
 - `quantize.imatrix.chunks_count` = the imatrix `imatrix.chunk_count` value;
   omitted when zero.
-- `general.file_type` = per-preset constant (IQ3_M 27, IQ4_XS 28). Only the
-  KV's encoded size matters for prediction, not the value.
+- `general.file_type` = per-preset constant (IQ3_M 27, IQ4_XS 30, from pinned
+  include/llama.h). Only the KV's encoded size matters for prediction, not the
+  value.
 
 `analysis.json` records source/imatrix paths, sizes, SHA-256 hashes (unless
 `--skip-hash`), predicted preset sizes, per-preset qtype histograms, the full
@@ -124,3 +125,17 @@ Imatrix SHA-256 provenance for Huihui:
 
 No quality evaluation (M9-M16 already recorded it), no allocator or threshold
 changes, no new model, no tuning on either model.
+
+## Amendment (2026-08-29, before any replay execution)
+
+A pre-run derivation check showed the Granite imatrix carries
+`imatrix.chunk_count = 3394`, while the M16 hand META recorded
+`chunks_count = 1250`. quantize.cpp writes chunks_count as a 4-byte integer
+KV, so its value cannot affect size prediction; only the KV's presence does.
+G5 is corrected to require the derived provenance to match the hand META on
+the size-relevant fields (file and dataset strings, exactly) and to report
+`entries_count = 280` with `chunks_count > 0` present. The observed
+3394-vs-1250 value difference is recorded as a provenance note in the replay
+results. No size gate is relaxed. The Huihui derivation matches the hand META
+exactly (496 / 1251 / `unsloth_calibration_dataset`, block span 16).
+
