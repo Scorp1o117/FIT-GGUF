@@ -75,3 +75,21 @@ Execution order: plans -> quantizes -> evals -> gates -> (on K4 pass) release
 swap -> re-summarize -> P4 gate re-run. Failure handling: any gate failure is
 recorded as-is; fixes are code/script changes followed by a full re-run of
 the affected stage.
+
+## Amendment 1 (2026-08-30, run-1 gate verdict invalid, recorded before any re-run)
+
+Run 1 completed plans and all three quantizes (K1/K2/K3 pass, zero-byte),
+then STOPPED before the release swap with K4/K5 false - correctly per the
+preregistered failure path. The verdict is however INVALID as a quality
+measurement: the eval-log skip guard keyed on the tier label, which this
+experiment reuses from the K-based run, so all 15 eval logs were stale
+K-based measurements (the "new" macro KLDs printed by the gate evaluator
+are bit-identical to the K-based baselines). The K4/K5 failure is therefore
+recorded as a measurement-infrastructure failure, not a quality result.
+
+Fix before any affected step (stage C) re-runs: the eval guard now keys on
+the evaluated artifact's SHA-256 (sentinel file `eval-<tier>-<domain>.sha`
+next to each log); stale logs are invalidated automatically. The invalid
+verdict is preserved as `results/gate-verdict-run1-stale-logs.json`. The
+affected stage (C: evals + gate evaluation) is re-run in full; plans and
+quantizes are untouched (their artifacts are hash-verified on resume).

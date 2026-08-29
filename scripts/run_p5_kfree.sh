@@ -69,12 +69,19 @@ evaluate_tier () { # tier
   local plan="$P5/tiers/$tier/fit-plan.json"
   local out="$BUNDLE/$(python3 -c "
 import json;print(json.load(open('$plan'))['suggested_filename'])")"
+  local sha sent
+  sha=$(sha256sum "$out" | cut -d" " -f1)
   for d in wiki_test wiki_valid chinese code agent_chat; do
     local log="$LOGDIR/eval-$tier-$d.log"
-    if ! grep -q "Mean.*KLD" "$log" 2>/dev/null; then
+    sent="$LOGDIR/eval-$tier-$d.sha"
+    # Eval logs are keyed by tier label, which this experiment REUSES from the
+    # K-based run; only trust a log whose sentinel matches the artifact sha.
+    if [[ ! -f "$log" || ! -f "$sent" || "$(cat "$sent")" != "$sha" ]]; then
+      rm -f "$log"
       echo "== eval $tier $d =="
       "$RT/llama-perplexity" -m "$out" -f "${SLICES[$d]}" -ngl 99 -t 16 -c 512 -b 512 \
         --kl-divergence --kl-divergence-base "$REFDIR/bf16-$d.kld" > "$log" 2>&1
+      echo "$sha" > "$sent"
     fi
   done
 }

@@ -1,0 +1,1 @@
+273f5fe52077226a27da0fe2ed49c72922e702ab51217cb7253b0372c7c1b15e  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-12.5G-IQ3_S.gguf
