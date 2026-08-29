@@ -105,6 +105,32 @@ deleted; no E2/E3/E4 step had been evaluated. E2 is replaced by:
 E1 stands as completed (BF16 SHA-256 recorded in `bf16-sha256.txt`). E3-E5
 are unchanged and have not been executed.
 
+## Amendment 2 (2026-08-29, before E3 execution)
+
+E3 gate refinement (agreed with the owner):
+
+- Payload-consistency check: for every preset, the predicted payload sum over
+  the recipe's quantized tensors must match the dry-run's own displayed
+  `quant size` total within display-rounding tolerance
+  (`(n_quantized + 1) * 5243` bytes). This makes the sweep exercise the trait
+  table of every type that appears in any preset recipe, not only the probe
+  artifacts.
+- Ladder monotonicity: predicted preset sizes are non-decreasing in the
+  source-defined BPW order of each preset's dominant type, and strictly
+  increasing between preset groups whose dominant types have different BPW
+  (iq3_s and q3_k share 3.4375 BPW; ties inside a group may order either
+  way).
+
+E4 probe pairs are frozen from the E3 ladder immediately after E3 completes
+and committed before any probe quantization:
+
+- probe-low: (IQ1_M, IQ3_XXS), `--fit 0.5` - bottom-envelope types.
+- probe-mid: the adjacent preset pair whose sizes bracket 1.25x the IQ4_XS
+  size (fallback if no bracket exists: the pair immediately above IQ4_XS),
+  `--fit 0.5` - upper-middle K-quant region.
+- probe-top: the adjacent pair with the largest size gap ending at Q8_0,
+  `--fit 0.5`.
+
 ## 3. Honest scope notes
 
 - Size control per artifact remains self-proving (predict -> quantize ->
