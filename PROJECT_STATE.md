@@ -8,10 +8,12 @@ between standard llama.cpp presets.
 
 ## Current milestone
 
-M14 complete - the preregistered role-matched crossover ablation rejected the
-early/late position mechanism (Gate 2 failed on wiki domains) while confirming
-the M13 FIT-75 tie and the saturation picture on a fourth holdout set. The
-allocation effect is domain-structured and interaction-laden, not positional.
+M15 complete - the matched random-seed baseline confirmed the original
+utility's FIT-25 advantage beyond random variance (strong support: 3/3 seeds,
++6.17% over the mean) and rejected the high-budget sensitivity-collapse
+hypothesis (random does not converge to the heuristics at FIT-75; the O/B
+ordering there is holdout-dependent). D-0021 froze the first cross-model
+validation package; Granite is sealed until the reveal.
 
 ## Verified facts
 
@@ -214,3 +216,16 @@ sets (M13, M14); the positional mechanism was rejected by the M14 crossover
 gates; the composite budget rule is not accepted (M13). Remaining for any
 deployment claim: matched random-seed variance baseline, then the frozen
 cross-model validation.
+
+- M15 (preregistered matched random baseline, fifth holdout set): paired
+  random trajectories (three seeds, FIT-25 prefix / FIT-75 continuation)
+  quantized with exact predicted sizes and evaluated against O/B on the same
+  holdout. H25 confirmed with strong support: original beats 3/3 random seeds
+  at FIT-25, margin 6.17% over the random mean, every seed worse in every
+  domain. H75 collapse NOT confirmed: the O75/B75 gap swung to -3.65% (B
+  better) after three ties, random mean sits +2.89% above the heuristic
+  midpoint with a 3.97% range, and one random seed is +47.95% worse in a
+  single domain. Paired random spread shrinks 7.26% -> 3.97% with budget but
+  the level stays above the heuristics. D-0021 froze the cross-model package:
+  exact-size control plus original-vs-v0.1b-vs-random at FIT-50, with
+  FIT-25/75 as reported diagnostics; non-transfer is recorded as failure.

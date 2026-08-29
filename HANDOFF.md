@@ -1,23 +1,24 @@
 # FIT-GGUF Handoff
 
-Date: 2026-08-29 (updated after M14 by the GLM-5.3-Flash session)
+Date: 2026-08-29 (updated after M15 by the GLM-5.3-Flash session)
 
 ## Read this first
 
-The repository is past M14. M0-M14 are complete. Do not restart source
-conversion, imatrix profiling, preset quantization, the five-domain M9 curve,
-the M11 holdout validation, the M13 budget-rule test, or the M14 crossover.
-The current open question, per D-0020: the positional (early-vs-late)
-mechanism was REJECTED by the crossover gates - the allocation effect is
-domain-structured (wiki vs non-wiki) and interaction-laden. v0.1b remains
-confirmed only at FIT-50 (M11); FIT-75 is a practical tie reproduced on three
-independent holdout sets; the 0.50 threshold, quarter weights, and all
-recipes are frozen.
+The repository is past M15. M0-M15 are complete. Do not restart any
+completed milestone; every one is preregistered, executed, and recorded. The
+frozen state, per D-0021: v0.1b is the only allocator with a confirmed
+positive result (FIT-50, M11); the original utility's FIT-25 advantage over
+random variance is confirmed with strong support (M15); the FIT-75 O/B
+ordering is holdout-dependent with no stable winner (M13/M14/M15); the
+positional mechanism is rejected (M14/D-0020). The first cross-model
+validation package is frozen and granite-4.2-8b is sealed - the very next
+action is the Granite reveal under the D-0021 protocol, results recorded
+as-is.
 
 Canonical status and evidence:
 
 - `PROJECT_STATE.md` - concise source of truth;
-- `DECISIONS.md` - decisions D-0001 through D-0020;
+- `DECISIONS.md` - decisions D-0001 through D-0021;
 - `experiments/2026-08-28-m9-fit-curve/README.md` - accepted formal curve;
 - `experiments/2026-08-28-m10-ablation/README.md` - random and block diagnosis;
 - `experiments/2026-08-28-m11-holdout/README.md` - preregistered holdout
@@ -28,7 +29,9 @@ Canonical status and evidence:
   budget-rule validation and its rejection (D-0019);
 - `experiments/2026-08-28-m14-swap-ablation/README.md` - crossover ablation
   rejecting the positional mechanism (D-0020), with the recipe-overlap
-  diagnostic (byte-Jaccard 0.328/0.464/0.689 at 25/50/75).
+  diagnostic (byte-Jaccard 0.328/0.464/0.689 at 25/50/75);
+- `experiments/2026-08-29-m15-random-baseline/README.md` - matched random
+  baseline: H25 strong support, H75 collapse rejected, D-0021 freeze.
 
 ## Environment and provenance
 
@@ -132,25 +135,21 @@ harmful arm's level; both wiki domains fail the domain gate (3-of-5 non-negative
 needing 4). NOT ACCEPTED per the frozen rule. Secondary predictions confirmed:
 S75 = -0.46% within the +-1% ROPE, S50 > S75. See D-0020.
 
-## Exact next step
+## Exact next step (M16 - Granite reveal, protocol frozen by D-0021)
 
-1. Run the matched random-seed baseline at FIT-25/FIT-75 (at FIT-75 it tests
-   the allocation-sensitivity-collapse hypothesis directly: if fresh random
-   seeds cluster at the O/B tie level, high-budget insensitivity is confirmed).
-   Preregister it before running, as always.
-2. Then commit the D-0021 allocator freeze and only afterwards evaluate FIT on
-   the cross-model validation target. granite-4.2-8b (four safetensors shards,
-   ~17.6 GB) is already downloaded to
-   `/run/media/s117/OS/Models/granite-4.2-8b`; do NOT look at FIT quality
-   results on it before the freeze is committed. A cross-model failure is
-   recorded as a failure, not tuned away.
-3. Do not move the 0.50 threshold, do not tune quarter weights, do not change
-   the optimizer family, and do not begin optimizer v2 without a new
-   preregistered gate.
-4. Keep using retained reference logits only with their matching slices;
-   never mix. Note: the M11 and M13 KLD reference files were deleted in the
-   M14 disk cleanup (slices retained; regenerate with the recorded commands
-   if needed).
+1. Convert granite-4.2-8b to BF16 GGUF, generate its imatrix, and build the
+   baseline presets (record every hash; runtime pinned to build 10666).
+2. Build original-utility, v0.1b, and matched-random plans at FIT-50 (plus
+   FIT-25/75 as reported diagnostics) with the frozen M7/M10 generators.
+3. Preregister the M16 README (slices, gates: exact-size control plus the
+   three-way allocator comparison) BEFORE any quality evaluation, then
+   evaluate and record results as-is. A non-transfer is a recorded failure,
+   not a tuning prompt.
+4. If a v0.2 development cycle is later opened on Granite, Granite becomes a
+   development model and a third model must be acquired for validation.
+5. Keep using retained reference logits only with their matching slices;
+   never mix. M9/M14/M15 KLD files were deleted after evaluation per the
+   disk policy (regenerable from retained slices).
 
 ## Storage and reproducibility
 
