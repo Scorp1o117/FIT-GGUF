@@ -8,12 +8,12 @@ between standard llama.cpp presets.
 
 ## Current milestone
 
-M15 complete - the matched random-seed baseline confirmed the original
-utility's FIT-25 advantage beyond random variance (strong support: 3/3 seeds,
-+6.17% over the mean) and rejected the high-budget sensitivity-collapse
-hypothesis (random does not converge to the heuristics at FIT-75; the O/B
-ordering there is holdout-dependent). D-0021 froze the first cross-model
-validation package; Granite is sealed until the reveal.
+M16 complete - the Granite cross-model reveal is recorded (D-0022). Exact
+size control transfers completely (11/11 zero-byte errors); the allocator
+value does not (original utility loses to the random mean at FIT-50 on
+granite; v0.1b shows no advantage). FIT's transferable claims: exact
+deterministic size control and monotonic quality-vs-budget curves. The
+imatrix-allocation claim is validated only on the development model.
 
 ## Verified facts
 
@@ -229,3 +229,12 @@ cross-model validation.
   the level stays above the heuristics. D-0021 froze the cross-model package:
   exact-size control plus original-vs-v0.1b-vs-random at FIT-50, with
   FIT-25/75 as reported diagnostics; non-transfer is recorded as failure.
+
+- M16 (preregistered Granite reveal, sixth holdout set, D-0022):
+  granite-4.2-8b converted to BF16 GGUF with the upstream converter
+  (documented deviation; the pinned b10666 runtime loads granite natively),
+  APEX calibration text at chunk 512, 11 artifacts quantized with zero-byte
+  size errors including both presets. G-size PASS; G-util FAIL (O50 1.36%
+  worse than the random mean, best FIT-50 variant is a random seed);
+  G-bal FAIL (B50 within ROPE of O50). Recorded as NO TRANSFER of allocator
+  value; size control fully transfers.

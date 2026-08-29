@@ -1,24 +1,23 @@
 # FIT-GGUF Handoff
 
-Date: 2026-08-29 (updated after M15 by the GLM-5.3-Flash session)
+Date: 2026-08-29 (updated after M16 by the GLM-5.3-Flash session)
 
 ## Read this first
 
-The repository is past M15. M0-M15 are complete. Do not restart any
-completed milestone; every one is preregistered, executed, and recorded. The
-frozen state, per D-0021: v0.1b is the only allocator with a confirmed
-positive result (FIT-50, M11); the original utility's FIT-25 advantage over
-random variance is confirmed with strong support (M15); the FIT-75 O/B
-ordering is holdout-dependent with no stable winner (M13/M14/M15); the
-positional mechanism is rejected (M14/D-0020). The first cross-model
-validation package is frozen and granite-4.2-8b is sealed - the very next
-action is the Granite reveal under the D-0021 protocol, results recorded
-as-is.
+The repository is past M16. M0-M16 are complete. The final evidence state,
+per D-0022: FIT's exact deterministic size control and monotonic
+quality-vs-budget curves transfer to a second model family (granite-4.2-8b,
+11/11 zero-byte artifacts); the imatrix-allocation value does NOT transfer
+(original utility loses to random at FIT-50 on Granite; v0.1b shows no
+advantage there). On the Huihui development model, v0.1b is confirmed at
+FIT-50 (M11) and the original utility at FIT-25 (M15). Every milestone is
+preregistered, executed, and recorded; nothing is pending on the development
+model.
 
 Canonical status and evidence:
 
 - `PROJECT_STATE.md` - concise source of truth;
-- `DECISIONS.md` - decisions D-0001 through D-0021;
+- `DECISIONS.md` - decisions D-0001 through D-0022;
 - `experiments/2026-08-28-m9-fit-curve/README.md` - accepted formal curve;
 - `experiments/2026-08-28-m10-ablation/README.md` - random and block diagnosis;
 - `experiments/2026-08-28-m11-holdout/README.md` - preregistered holdout
@@ -31,7 +30,9 @@ Canonical status and evidence:
   rejecting the positional mechanism (D-0020), with the recipe-overlap
   diagnostic (byte-Jaccard 0.328/0.464/0.689 at 25/50/75);
 - `experiments/2026-08-29-m15-random-baseline/README.md` - matched random
-  baseline: H25 strong support, H75 collapse rejected, D-0021 freeze.
+  baseline: H25 strong support, H75 collapse rejected, D-0021 freeze;
+- `experiments/2026-08-29-m16-granite-reveal/README.md` - cross-model reveal:
+  size control transfers, allocator value does not (D-0022).
 
 ## Environment and provenance
 
@@ -135,21 +136,20 @@ harmful arm's level; both wiki domains fail the domain gate (3-of-5 non-negative
 needing 4). NOT ACCEPTED per the frozen rule. Secondary predictions confirmed:
 S75 = -0.46% within the +-1% ROPE, S50 > S75. See D-0020.
 
-## Exact next step (M16 - Granite reveal, protocol frozen by D-0021)
+## Exact next step
 
-1. Convert granite-4.2-8b to BF16 GGUF, generate its imatrix, and build the
-   baseline presets (record every hash; runtime pinned to build 10666).
-2. Build original-utility, v0.1b, and matched-random plans at FIT-50 (plus
-   FIT-25/75 as reported diagnostics) with the frozen M7/M10 generators.
-3. Preregister the M16 README (slices, gates: exact-size control plus the
-   three-way allocator comparison) BEFORE any quality evaluation, then
-   evaluate and record results as-is. A non-transfer is a recorded failure,
-   not a tuning prompt.
-4. If a v0.2 development cycle is later opened on Granite, Granite becomes a
-   development model and a third model must be acquired for validation.
-5. Keep using retained reference logits only with their matching slices;
-   never mix. M9/M14/M15 KLD files were deleted after evaluation per the
-   disk policy (regenerable from retained slices).
+The experimental program defined by the master spec (M0-M16) is complete and
+recorded. Remaining work is productization, not experimentation:
+
+1. Build the user-facing `fit analyze/plan/quantize` CLI around the frozen
+   generators (the "size slider" product: tell FIT the budget, it plans and
+   quantizes with exact-size guarantees).
+2. Write FINAL_REPORT.md from the milestone READMEs: what transfers (size
+   control, monotonic curves), what is model-specific (imatrix allocation
+   value), and what open research remains (conditional marginal utility per
+   D-0020; a third validation model if allocator work resumes).
+3. Any new allocator experiment requires a new preregistered design on a
+   fresh model; do not tune on Huihui or Granite.
 
 ## Storage and reproducibility
 

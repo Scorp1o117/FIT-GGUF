@@ -102,3 +102,67 @@ equal quarters therefore use block_span = 10 on Granite (four 10-block
 ranges); everything else in the frozen rule is unchanged. The imatrix profile
 was verified complete before planning: 280 entries = 7 roles x 40 layers,
 blocks 0..39.
+
+## Provenance verification (executed)
+
+- Granite BF16 SHA-256 verified at quantization time (prefix
+  `d82690e0dc827f2c43effeb3`).
+- All eleven artifacts matched their exact predicted sizes with zero-byte
+  error — including both presets, validating the size predictor (and the
+  file_type=27 metadata convention) on the granite architecture. Imatrix
+  SHA-256 `5488dbe0…` recorded in `granite-imatrix-sha256.txt`.
+- Holdout-6 verified disjoint from all five prior slice sets.
+- Holdout-6 BF16 reference PPL: wiki_test 18.1560 ± 0.79911,
+  wiki_valid 21.4021 ± 0.96140, Chinese 12.1083 ± 0.42209,
+  code 5.8599 ± 0.20177, agent_chat 10.1445 ± 0.37938.
+- Artifact SHA-256 values recorded in `artifact-hashes.txt`.
+
+## Results
+
+Mean KL divergence on holdout-6 (lower is better):
+
+| Domain | IQ3_M | O25 | B25 | O50 | B50 | O75 | B75 | IQ4_XS | r1-50 | r2-50 | r3-50 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| wiki_test | 0.262710 | 0.220107 | 0.230251 | 0.202426 | 0.197128 | 0.167403 | 0.162962 | 0.114109 | 0.184382 | 0.205200 | 0.196731 |
+| wiki_valid | 0.323166 | 0.280995 | 0.285589 | 0.246748 | 0.254346 | 0.205983 | 0.208731 | 0.149095 | 0.233687 | 0.258833 | 0.229159 |
+| Chinese | 0.211658 | 0.170089 | 0.174312 | 0.148686 | 0.150121 | 0.131223 | 0.114577 | 0.085009 | 0.146082 | 0.162333 | 0.150262 |
+| code | 0.210479 | 0.186592 | 0.188497 | 0.166832 | 0.161656 | 0.135475 | 0.135050 | 0.097977 | 0.160671 | 0.171772 | 0.165027 |
+| agent_chat | 0.140281 | 0.124552 | 0.129689 | 0.108123 | 0.112883 | 0.093405 | 0.091777 | 0.058971 | 0.101780 | 0.109368 | 0.107527 |
+| Macro | 0.229659 | 0.196467 | 0.201668 | 0.174563 | 0.175227 | 0.146698 | 0.142619 | 0.101032 | 0.165320 | 0.181501 | 0.169741 |
+
+## Preregistered gate verdict
+
+- **G-size (product claim): PASS.** Eleven artifacts, eleven zero-byte size
+  errors — exact continuous size control transfers to granite, a second model
+  family, with zero qtype mismatches.
+- **G-util (utility transfer): FAIL.** O50 macro KL 0.174563 is 1.36% WORSE
+  than the three-seed random mean (0.172188) and beats only 1 of 3 seeds
+  (r1-50 at 0.165320 is the best FIT-50 variant overall).
+- **G-bal (v0.1b transfer): FAIL.** B50 is 0.38% above O50 — within the 1%
+  ROPE, i.e. no measurable difference and no advantage.
+- Guardrail: PASS (worst cell +9.18%, r2-50/chinese).
+
+**Overall: NO TRANSFER of the allocator claims. Size control transfers.**
+
+## Interpretation (diagnostic)
+
+- The monotone size curve structure does transfer: KL decreases strictly from
+  IQ3_M through every FIT point to IQ4_XS in every domain, and FIT points sit
+  where their budgets place them. FIT as a size product works on Granite.
+- The allocator value does not. On Huihui-27B (hybrid, 64 blocks), the
+  original utility beat random variance decisively at FIT-25 (M15) and v0.1b
+  beat original at FIT-50 (M11). On Granite-8B (dense, 40 blocks), neither
+  holds at FIT-50: random r1 is the best variant and the utility loses to the
+  random mean. The imatrix scalar utility is model-dependent, exactly what
+  D-0012 warned it might be ("a provisional search proxy, not a quality
+  conclusion").
+- Honest scope statement for the project: FIT's validated, transferable
+  claims are (a) exact deterministic size control between presets and (b) a
+  monotonic quality-vs-budget curve. The claim that imatrix-guided allocation
+  beats random allocation is validated ONLY on the Huihui development model
+  (FIT-50 v0.1b; FIT-25 original) and did not transfer to Granite-8B at
+  FIT-50.
+
+Machine records: `holdout6-slices.json`, `plan-predictions.json`,
+`m16-results.json`, `gate-verdict.json`, `artifact-hashes.txt`,
+`granite-imatrix-sha256.txt`.

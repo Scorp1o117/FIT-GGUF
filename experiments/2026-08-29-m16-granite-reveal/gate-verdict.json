@@ -1,0 +1,40 @@
+{
+  "delta_rope": 0.01,
+  "macro_kl": {
+    "iq3m": 0.229659,
+    "o25": 0.196467,
+    "b25": 0.201668,
+    "o50": 0.174563,
+    "b50": 0.175227,
+    "o75": 0.146698,
+    "b75": 0.142619,
+    "iq4xs": 0.101032,
+    "r1-50": 0.16532,
+    "r2-50": 0.181501,
+    "r3-50": 0.169741
+  },
+  "random_mean_50": 0.172188,
+  "G_util": {
+    "margin_over_mean": -0.01361,
+    "seeds_beaten": 1,
+    "g_util_a": false,
+    "g_util_b": false,
+    "g_util_c": false,
+    "pass": false
+  },
+  "G_bal": {
+    "b_vs_o": 0.0038,
+    "pass": false
+  },
+  "guardrail": {
+    "worst_cell": "r2-50/chinese",
+    "percent": 9.18,
+    "pass": true
+  },
+  "transfer_verdict": {
+    "size_control": "PASS (zero-byte errors at quantization stage)",
+    "utility_transfers": false,
+    "v01b_balancing_transfers": false,
+    "overall": "NO TRANSFER"
+  }
+}

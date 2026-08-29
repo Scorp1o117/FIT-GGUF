@@ -1,0 +1,1 @@
+5488dbe0391dd8e54b1404cc14d805bd92ea2bfe09eb14be5794bbd0894ce18e  imatrix-granite-apex-c512.gguf

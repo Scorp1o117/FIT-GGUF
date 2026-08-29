@@ -1,0 +1,11 @@
+c71232a4879fb381e3abe9ff1f58e35f49f254f54ab64ba5d7e0124099fc5a47  artifacts/fit/Granite-4.2-8B-IQ3_M.gguf
+5df7a93b7fd1ad2b4b37b0a411e32ea9e02e1c2177d8ca0f86a9eb9a01ce8667  artifacts/fit/Granite-4.2-8B-IQ4_XS.gguf
+97847f1f183137710f64733ca95829b56641e9d7bcd63a6d05e3952ea8721d12  artifacts/fit/Granite-4.2-8B-O-FIT25.gguf
+456372dc98506fc0fd87ce31c6afd7db67cdaabd5128819557c72eb2b9612586  artifacts/fit/Granite-4.2-8B-B-FIT25.gguf
+09ca3d8505ed728b1c1a2202d7a9793268f66d3ee8ad5001f5b76993f1d1023e  artifacts/fit/Granite-4.2-8B-O-FIT50.gguf
+17660767b5967a08112c27f04ad95b67278e9c372afde2cbd6e37ba81c123e21  artifacts/fit/Granite-4.2-8B-B-FIT50.gguf
+4840e644b9b7fa143926ff261766770f13d71731a8625c724a2c80db61337106  artifacts/fit/Granite-4.2-8B-O-FIT75.gguf
+07df5d2001bf91ae111e67f0fbe53dee9bb17087d9eaf34e650971ba92f64252  artifacts/fit/Granite-4.2-8B-B-FIT75.gguf
+c63ab1c202a8f765d695e277f1c2a65c92a6ff9ea6e820a0785ba42098fd1dae  artifacts/fit/Granite-4.2-8B-R1-FIT50.gguf
+f689e48332dfec7290fe901db95afb9970e537c965cac4d088a38d0ecf11921c  artifacts/fit/Granite-4.2-8B-R2-FIT50.gguf
+def7d4281ff8b9fdcbe31afd2eccdffa8122799e8c58265cdfe8b604bf2bb6e3  artifacts/fit/Granite-4.2-8B-R3-FIT50.gguf

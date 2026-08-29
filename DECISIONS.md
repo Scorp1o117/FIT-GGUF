@@ -449,3 +449,33 @@ positional claim are part of this package (both were rejected as global
 mechanisms). If a v0.2 development cycle is later opened on Granite, Granite
 becomes a development model and a third model must be acquired for the next
 validation.
+
+## D-0022: Record the Granite non-transfer of allocator value
+
+Reason:
+The first cross-model validation (D-0021) must be recorded exactly as
+measured. Exact size control transferred completely; the allocator value did
+not. On granite-4.2-8b at FIT-50, the original imatrix utility loses to the
+matched random mean by 1.36% and to one random seed outright, and
+block-balanced v0.1b is within the ROPE of the original (no advantage).
+
+Alternatives:
+Tune the imatrix text or allocator on Granite until it wins (forbidden by
+D-0021), claim partial transfer of "beats 1 of 3 seeds", or hide the random
+seed that won.
+
+Evidence:
+`experiments/2026-08-29-m16-granite-reveal/`: eleven artifacts with zero-byte
+size errors (G-size PASS); O50 macro KL 0.174563 vs random mean 0.172188
+(-1.36%) and vs r1-50 0.165320 (the best FIT-50 variant, a random seed); B50
+0.175227 (+0.38% vs O50, within ROPE); guardrail passed (+9.18% worst cell).
+Fifth independent evaluation set, same pinned runtime and protocol.
+
+Status:
+Accepted as recorded. FIT's transferable, validated claims are: exact
+deterministic size control between presets on a second model family, and
+monotonic quality-vs-budget behavior. The imatrix-allocation-beats-random
+claim is validated only on the Huihui development model. Any v0.2 allocator
+work is now genuinely open research (conditional marginal utility per
+D-0020's interaction finding) and must not be tuned on either existing
+validation model without a new preregistered design.
