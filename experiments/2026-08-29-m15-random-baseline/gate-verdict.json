@@ -1,0 +1,49 @@
+{
+  "delta_rope": 0.01,
+  "fit75_collapse": {
+    "O75": 0.085745,
+    "B75": 0.082676,
+    "H75": 0.084211,
+    "random_macros_75": [
+      0.084946,
+      0.088289,
+      0.086702
+    ],
+    "G75a_OB_gap": 0.03645,
+    "G75b_mean_gap": 0.02892,
+    "G75c_range": 0.0397,
+    "guard_worst_cell": "r2-75/wiki_test",
+    "guard_worst_percent": 47.95,
+    "g75a": false,
+    "g75b": false,
+    "g75c": false,
+    "guard75": false,
+    "h75_collapse_confirmed": false
+  },
+  "fit25_advantage": {
+    "O25": 0.117171,
+    "B25": 0.116584,
+    "random_macros_25": [
+      0.12699,
+      0.118843,
+      0.127349
+    ],
+    "random_mean_25": 0.124394,
+    "G25a_margin": 0.06165,
+    "seeds_beaten": 3,
+    "g25a": true,
+    "g25b": true,
+    "g25c": true,
+    "guard25": true,
+    "strong_support": true,
+    "h25_advantage_confirmed": true
+  },
+  "secondary_paired_spread": {
+    "spread25": 0.0726,
+    "spread75": 0.0397,
+    "spread_shrinks": true
+  },
+  "h75_confirmed": false,
+  "h25_confirmed": true,
+  "decision": "H75: collapse NOT confirmed | H25: original FIT-25 advantage beyond random variance ACCEPTED -> proceed to D-0021 freeze and Granite reveal"
+}

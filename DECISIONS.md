@@ -414,3 +414,38 @@ upgrade set depends on the rest of the recipe; O->E neutral while B->L is
 harmful for the same exchanged bytes in the opposite direction). No allocator
 promotion, no threshold or quarter-weight changes. Next: matched random seeds
 at FIT-25/75, then the D-0021 freeze before the first cross-model validation.
+
+## D-0021: Freeze the first cross-model validation package
+
+Reason:
+All original-model characterization is complete (M11 confirmed v0.1b at
+FIT-50; M13 rejected the budget rule; M14 rejected the positional mechanism;
+M15 confirmed the original utility's FIT-25 advantage over random variance
+and showed the FIT-75 O/B ordering is holdout-dependent, with random
+allocation carrying heavy single-domain tail risk). Continuing to vary
+experiments on the development model risks turning Granite into a development
+set; the freeze must precede any Granite quality result.
+
+Alternatives:
+Reveal Granite immediately, keep tuning on the development model first, or
+skip the random baseline in the frozen package.
+
+Evidence:
+`experiments/2026-08-29-m15-random-baseline/`: H25 confirmed with strong
+support (original beats 3/3 matched random seeds at FIT-25, margin 6.17% over
+the random mean); H75 collapse NOT confirmed (random mean +2.89% above the
+O/B midpoint, range 3.97%, one seed +47.95% in a single domain; the O75/B75
+gap swung to -3.65% after three ties). The deployable statement frozen here
+is exactly what the evidence supports.
+
+Status:
+Accepted. The first cross-model validation (granite-4.2-8b, already downloaded
+and sealed) tests, with the same pinned protocol and preregistered protocol:
+(a) exact-size continuous control between presets; (b) original utility vs
+block-balanced v0.1b vs matched random seeds at FIT-50, with FIT-25/FIT-75 as
+reported diagnostics; (c) all results recorded as-is - a non-transfer is a
+recorded failure, not a tuning prompt. No budget-conditional rule and no
+positional claim are part of this package (both were rejected as global
+mechanisms). If a v0.2 development cycle is later opened on Granite, Granite
+becomes a development model and a third model must be acquired for the next
+validation.
