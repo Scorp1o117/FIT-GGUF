@@ -162,7 +162,7 @@ def suggested_filename(model_name: str, target_bytes: int, dominant_qtype: str) 
     """
     gib = max(target_bytes, 1) / (1 << 30)
     if abs(gib - round(gib)) < 1e-6:
-        label = f"{round(gib)}G"
+        label = f"{max(1, round(gib))}G"
     elif abs(gib * 2 - round(gib * 2)) < 1e-6:
         label = f"{round(gib * 2) / 2:g}G"
     else:
