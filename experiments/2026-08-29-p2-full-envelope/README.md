@@ -169,6 +169,22 @@ errors (not trait errors) produced false failures:
 No probe quantization has run. E3 is re-run with the corrected comparators;
 its recorded ladder sizes are unchanged.
 
+## Amendment 5 (2026-08-29, after E3 pass, before E4 execution)
+
+E3 passed: 23/23 presets accepted and parsed, all-tensor payload residual
+2,376 bytes or less on every preset (display rounding only), zero ladder
+inversions (`preset-ladder.json`). Probe pairs frozen from the recorded
+ladder:
+
+- probe-low: (IQ1_M, IQ3_XXS), `--fit 0.5` - target 9,408,728,256 bytes.
+- probe-mid: (Q5_K_S, Q5_K_M), `--fit 0.5` - this is the adjacent pair
+  bracketing 1.25x IQ4_XS (18,853,134,320); target 18,955,357,376 bytes.
+- probe-top: (Q6_K, Q8_0), `--fit 0.5` - the largest adjacent gap below Q8_0
+  (6,513,233,920 bytes); target 25,339,147,456 bytes.
+
+All probes planned with the frozen original allocator, quantized from the
+lower preset, and gated on output size == prediction with zero tolerance.
+
 ## 3. Honest scope notes
 
 - Size control per artifact remains self-proving (predict -> quantize ->
