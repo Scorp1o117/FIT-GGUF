@@ -1,0 +1,51 @@
+{
+  "all_pass": true,
+  "gates": {
+    "R1": {
+      "conditions": [
+        true
+      ],
+      "description": "11 balanced plans with exact tier names",
+      "pass": true
+    },
+    "R2": {
+      "conditions": [
+        true
+      ],
+      "description": "11 FIT artifacts at zero-byte error",
+      "pass": true
+    },
+    "R3": {
+      "conditions": [
+        true
+      ],
+      "description": "14 reference presets match ladder predictions",
+      "pass": true
+    },
+    "R4": {
+      "conditions": [
+        true
+      ],
+      "description": "25 artifacts x 5 domains evaluated",
+      "pass": true
+    },
+    "R5": {
+      "conditions": [
+        true,
+        true,
+        true
+      ],
+      "description": "comparison table and curves rendered",
+      "pass": true
+    },
+    "R6": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "test suite green",
+      "pass": true
+    }
+  },
+  "schema_version": 1
+}

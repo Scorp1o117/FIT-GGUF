@@ -118,3 +118,30 @@ the oracle (expected no-op, since their actual outputs already matched).
   card and the comparison chart - not new allocator or generalization claims.
 - Allocator research stays frozen (D-0022/D-0023): balanced is used as the
   documented release choice, with the M11/M16 caveats cited in the model card.
+
+## Results (2026-08-29)
+
+All six gates passed (`gate-verdict.json`): 11 balanced plans with exact tier
+names, 11 FIT artifacts and 14 reference presets at zero-byte size error,
+25 x 5-domain KL evaluations parsed, tables and curves rendered, 61 tests
+green. See `results/comparison-table.md`, `results/kl-curve.png`,
+`results/sametop-curve.png`, `results/p4-results.json`.
+
+Key observations (protocol-scoped, M9 slices):
+
+- The FIT tier line threads the preset reference points smoothly across the
+  whole 7-12 GiB range; every tier's macro KL sits at or between its
+  bracketing presets.
+- Q3_K_S is a visible outlier ABOVE the frontier (macro KL 0.2148 at
+  11.24 GiB - worse than the cheaper IQ3_XS at 11.15, macro 0.1512); FIT-11G
+  and FIT-11.5G dominate it outright.
+- FIT-12G (12.0 GiB, macro KL 0.1227, Same-top 90.32%) beats both IQ3_S
+  (11.57 GiB, 0.1424) and IQ3_M (11.72 GiB, 0.1445) at less than +0.3 GiB
+  over IQ3_M - the mixed-quant allocation advantage, on this architecture
+  where the allocator evidence directly applies.
+- The IQ1 region is as rough as expected (macro KL ~1.13) and is reported
+  as measured; the curve turns sharply at the IQ2 boundary (7.5G).
+
+The 14 reference artifacts were deleted after evaluation per the disk policy
+(reproducible in minutes); the 11 FIT release artifacts are retained under
+`artifacts/fit/release/` for upload.

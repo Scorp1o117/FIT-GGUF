@@ -1,0 +1,911 @@
+{
+  "artifacts": {
+    "FIT-10.5G": {
+      "actual_bytes": 11273084096,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.180481,
+          "ppl_q": 7.819399,
+          "same_top": 88.223
+        },
+        "chinese": {
+          "mean_kld": 0.295021,
+          "ppl_q": 12.812636,
+          "same_top": 85.346
+        },
+        "code": {
+          "mean_kld": 0.294667,
+          "ppl_q": 6.335443,
+          "same_top": 87.243
+        },
+        "wiki_test": {
+          "mean_kld": 0.08937,
+          "ppl_q": 5.954793,
+          "same_top": 87.894
+        },
+        "wiki_valid": {
+          "mean_kld": 0.076962,
+          "ppl_q": 5.771487,
+          "same_top": 88.197
+        }
+      },
+      "dominant_qtype": "iq3_xxs",
+      "kind": "fit",
+      "macro_kld": 0.1873002,
+      "macro_same_top": 87.3806,
+      "pair": "IQ3_XXS->IQ3_XS",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-10.5G-IQ3_XXS.gguf",
+      "target_bytes": 11274289152
+    },
+    "FIT-10G": {
+      "actual_bytes": 10737040576,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.237254,
+          "ppl_q": 7.07171,
+          "same_top": 85.443
+        },
+        "chinese": {
+          "mean_kld": 0.345968,
+          "ppl_q": 10.552381,
+          "same_top": 81.856
+        },
+        "code": {
+          "mean_kld": 0.340753,
+          "ppl_q": 6.055922,
+          "same_top": 85.233
+        },
+        "wiki_test": {
+          "mean_kld": 0.148037,
+          "ppl_q": 6.162964,
+          "same_top": 83.896
+        },
+        "wiki_valid": {
+          "mean_kld": 0.123396,
+          "ppl_q": 5.877285,
+          "same_top": 85.25
+        }
+      },
+      "dominant_qtype": "q2_k",
+      "kind": "fit",
+      "macro_kld": 0.2390816,
+      "macro_same_top": 84.3356,
+      "pair": "Q2_K->IQ3_XXS",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-10G-Q2_K.gguf",
+      "target_bytes": 10737418240
+    },
+    "FIT-11.5G": {
+      "actual_bytes": 12277279936,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.146758,
+          "ppl_q": 7.314305,
+          "same_top": 89.804
+        },
+        "chinese": {
+          "mean_kld": 0.247782,
+          "ppl_q": 11.488891,
+          "same_top": 87.085
+        },
+        "code": {
+          "mean_kld": 0.203517,
+          "ppl_q": 5.497186,
+          "same_top": 90.037
+        },
+        "wiki_test": {
+          "mean_kld": 0.064047,
+          "ppl_q": 5.848372,
+          "same_top": 89.753
+        },
+        "wiki_valid": {
+          "mean_kld": 0.057525,
+          "ppl_q": 5.62048,
+          "same_top": 89.45
+        }
+      },
+      "dominant_qtype": "iq3_s",
+      "kind": "fit",
+      "macro_kld": 0.1439258,
+      "macro_same_top": 89.2258,
+      "pair": "IQ3_XS->IQ3_S",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-11.5G-IQ3_S.gguf",
+      "target_bytes": 12348030976
+    },
+    "FIT-11G": {
+      "actual_bytes": 11798273216,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.148165,
+          "ppl_q": 7.429707,
+          "same_top": 89.519
+        },
+        "chinese": {
+          "mean_kld": 0.250176,
+          "ppl_q": 11.608471,
+          "same_top": 86.667
+        },
+        "code": {
+          "mean_kld": 0.231627,
+          "ppl_q": 5.767981,
+          "same_top": 89.142
+        },
+        "wiki_test": {
+          "mean_kld": 0.065249,
+          "ppl_q": 5.857475,
+          "same_top": 89.235
+        },
+        "wiki_valid": {
+          "mean_kld": 0.062353,
+          "ppl_q": 5.700881,
+          "same_top": 89.981
+        }
+      },
+      "dominant_qtype": "iq3_s",
+      "kind": "fit",
+      "macro_kld": 0.15151399999999998,
+      "macro_same_top": 88.9088,
+      "pair": "IQ3_XXS->IQ3_XS",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-11G-IQ3_S.gguf",
+      "target_bytes": 11811160064
+    },
+    "FIT-12G": {
+      "actual_bytes": 12884614336,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.12617,
+          "ppl_q": 7.189752,
+          "same_top": 90.493
+        },
+        "chinese": {
+          "mean_kld": 0.221157,
+          "ppl_q": 10.608138,
+          "same_top": 88.039
+        },
+        "code": {
+          "mean_kld": 0.165288,
+          "ppl_q": 4.973267,
+          "same_top": 90.723
+        },
+        "wiki_test": {
+          "mean_kld": 0.052627,
+          "ppl_q": 5.798393,
+          "same_top": 90.968
+        },
+        "wiki_valid": {
+          "mean_kld": 0.048455,
+          "ppl_q": 5.624645,
+          "same_top": 91.398
+        }
+      },
+      "dominant_qtype": "iq3_s",
+      "kind": "fit",
+      "macro_kld": 0.12273939999999998,
+      "macro_same_top": 90.32419999999999,
+      "pair": "IQ3_M->IQ4_XS",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-12G-IQ3_S.gguf",
+      "target_bytes": 12884901888
+    },
+    "FIT-7.5G": {
+      "actual_bytes": 8052665536,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.571275,
+          "ppl_q": 9.437506,
+          "same_top": 74.51
+        },
+        "chinese": {
+          "mean_kld": 0.790098,
+          "ppl_q": 14.874016,
+          "same_top": 70.235
+        },
+        "code": {
+          "mean_kld": 0.716227,
+          "ppl_q": 7.997051,
+          "same_top": 76.127
+        },
+        "wiki_test": {
+          "mean_kld": 0.452251,
+          "ppl_q": 8.308652,
+          "same_top": 71.512
+        },
+        "wiki_valid": {
+          "mean_kld": 0.419212,
+          "ppl_q": 7.711696,
+          "same_top": 72.954
+        }
+      },
+      "dominant_qtype": "iq2_xxs",
+      "kind": "fit",
+      "macro_kld": 0.5898125999999999,
+      "macro_same_top": 73.0676,
+      "pair": "IQ1_M->IQ2_XXS",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-7.5G-IQ2_XXS.gguf",
+      "target_bytes": 8053063680
+    },
+    "FIT-7G": {
+      "actual_bytes": 7515946176,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 1.35043,
+          "ppl_q": 24.837442,
+          "same_top": 61.961
+        },
+        "chinese": {
+          "mean_kld": 1.615927,
+          "ppl_q": 43.419503,
+          "same_top": 57.059
+        },
+        "code": {
+          "mean_kld": 1.384188,
+          "ppl_q": 17.205528,
+          "same_top": 66.225
+        },
+        "wiki_test": {
+          "mean_kld": 0.672713,
+          "ppl_q": 10.078866,
+          "same_top": 66.224
+        },
+        "wiki_valid": {
+          "mean_kld": 0.640271,
+          "ppl_q": 9.607143,
+          "same_top": 68.21
+        }
+      },
+      "dominant_qtype": "iq1_m",
+      "kind": "fit",
+      "macro_kld": 1.1327057999999999,
+      "macro_same_top": 63.93579999999999,
+      "pair": "IQ1_S->IQ1_M",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-7G-IQ1_M.gguf",
+      "target_bytes": 7516192768
+    },
+    "FIT-8.5G": {
+      "actual_bytes": 9125981376,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.61554,
+          "ppl_q": 12.263312,
+          "same_top": 77.207
+        },
+        "chinese": {
+          "mean_kld": 0.853138,
+          "ppl_q": 23.19347,
+          "same_top": 72.418
+        },
+        "code": {
+          "mean_kld": 0.954757,
+          "ppl_q": 13.290041,
+          "same_top": 74.596
+        },
+        "wiki_test": {
+          "mean_kld": 0.237122,
+          "ppl_q": 6.685983,
+          "same_top": 80.013
+        },
+        "wiki_valid": {
+          "mean_kld": 0.215288,
+          "ppl_q": 6.423572,
+          "same_top": 80.86
+        }
+      },
+      "dominant_qtype": "iq2_xs",
+      "kind": "fit",
+      "macro_kld": 0.575169,
+      "macro_same_top": 77.0188,
+      "pair": "IQ2_XS->IQ2_S",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XS.gguf",
+      "target_bytes": 9126805504
+    },
+    "FIT-8G": {
+      "actual_bytes": 8589733056,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.597017,
+          "ppl_q": 11.508962,
+          "same_top": 75.888
+        },
+        "chinese": {
+          "mean_kld": 0.779279,
+          "ppl_q": 19.63311,
+          "same_top": 71.778
+        },
+        "code": {
+          "mean_kld": 0.862605,
+          "ppl_q": 11.070717,
+          "same_top": 75.294
+        },
+        "wiki_test": {
+          "mean_kld": 0.311066,
+          "ppl_q": 7.220129,
+          "same_top": 76.799
+        },
+        "wiki_valid": {
+          "mean_kld": 0.282123,
+          "ppl_q": 6.798066,
+          "same_top": 77.913
+        }
+      },
+      "dominant_qtype": "iq2_xxs",
+      "kind": "fit",
+      "macro_kld": 0.566418,
+      "macro_same_top": 75.5344,
+      "pair": "IQ2_XXS->IQ2_XS",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf",
+      "target_bytes": 8589934592
+    },
+    "FIT-9.5G": {
+      "actual_bytes": 10200362176,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.329816,
+          "ppl_q": 9.056328,
+          "same_top": 82.709
+        },
+        "chinese": {
+          "mean_kld": 0.471272,
+          "ppl_q": 14.357201,
+          "same_top": 79.399
+        },
+        "code": {
+          "mean_kld": 0.429805,
+          "ppl_q": 6.86067,
+          "same_top": 82.684
+        },
+        "wiki_test": {
+          "mean_kld": 0.170129,
+          "ppl_q": 6.258755,
+          "same_top": 82.694
+        },
+        "wiki_valid": {
+          "mean_kld": 0.147883,
+          "ppl_q": 5.928872,
+          "same_top": 84.048
+        }
+      },
+      "dominant_qtype": "iq2_s",
+      "kind": "fit",
+      "macro_kld": 0.309781,
+      "macro_same_top": 82.3068,
+      "pair": "IQ2_M->Q2_K",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-9.5G-IQ2_S.gguf",
+      "target_bytes": 10200547328
+    },
+    "FIT-9G": {
+      "actual_bytes": 9663478976,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.452646,
+          "ppl_q": 10.342927,
+          "same_top": 79.81
+        },
+        "chinese": {
+          "mean_kld": 0.702915,
+          "ppl_q": 19.453377,
+          "same_top": 75.961
+        },
+        "code": {
+          "mean_kld": 0.761266,
+          "ppl_q": 10.961441,
+          "same_top": 77.929
+        },
+        "wiki_test": {
+          "mean_kld": 0.197432,
+          "ppl_q": 6.461449,
+          "same_top": 81.569
+        },
+        "wiki_valid": {
+          "mean_kld": 0.18012,
+          "ppl_q": 6.143877,
+          "same_top": 81.898
+        }
+      },
+      "dominant_qtype": "iq2_xs",
+      "kind": "fit",
+      "macro_kld": 0.45887580000000006,
+      "macro_same_top": 79.4334,
+      "pair": "IQ2_S->IQ2_M",
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-9G-IQ2_XS.gguf",
+      "target_bytes": 9663676416
+    },
+    "IQ1_M": {
+      "actual_bytes": 7631084736,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 1.4452,
+          "ppl_q": 28.318691,
+          "same_top": 61.236
+        },
+        "chinese": {
+          "mean_kld": 1.619261,
+          "ppl_q": 45.904733,
+          "same_top": 57.425
+        },
+        "code": {
+          "mean_kld": 1.433534,
+          "ppl_q": 18.88101,
+          "same_top": 66.005
+        },
+        "wiki_test": {
+          "mean_kld": 0.619902,
+          "ppl_q": 9.501841,
+          "same_top": 67.198
+        },
+        "wiki_valid": {
+          "mean_kld": 0.578341,
+          "ppl_q": 8.972348,
+          "same_top": 69.07
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 1.1392476,
+      "macro_same_top": 64.18679999999999,
+      "target_bytes": 7631084736
+    },
+    "IQ1_S": {
+      "actual_bytes": 7149825216,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 1.129746,
+          "ppl_q": 16.263049,
+          "same_top": 62.484
+        },
+        "chinese": {
+          "mean_kld": 1.385824,
+          "ppl_q": 27.023335,
+          "same_top": 58.876
+        },
+        "code": {
+          "mean_kld": 1.479517,
+          "ppl_q": 16.851626,
+          "same_top": 62.757
+        },
+        "wiki_test": {
+          "mean_kld": 0.851754,
+          "ppl_q": 12.089886,
+          "same_top": 62.505
+        },
+        "wiki_valid": {
+          "mean_kld": 0.795765,
+          "ppl_q": 11.194184,
+          "same_top": 64.238
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 1.1285212,
+      "macro_same_top": 62.172000000000004,
+      "target_bytes": 7149825216
+    },
+    "IQ2_M": {
+      "actual_bytes": 10004593856,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.491522,
+          "ppl_q": 11.289942,
+          "same_top": 79.81
+        },
+        "chinese": {
+          "mean_kld": 0.749613,
+          "ppl_q": 22.196426,
+          "same_top": 75.595
+        },
+        "code": {
+          "mean_kld": 0.741192,
+          "ppl_q": 10.679243,
+          "same_top": 78.382
+        },
+        "wiki_test": {
+          "mean_kld": 0.166683,
+          "ppl_q": 6.374278,
+          "same_top": 82.985
+        },
+        "wiki_valid": {
+          "mean_kld": 0.155698,
+          "ppl_q": 6.000657,
+          "same_top": 83.327
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.46094159999999995,
+      "macro_same_top": 80.0198,
+      "target_bytes": 10004593856
+    },
+    "IQ2_S": {
+      "actual_bytes": 9362914496,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.62417,
+          "ppl_q": 12.503365,
+          "same_top": 77.172
+        },
+        "chinese": {
+          "mean_kld": 0.854174,
+          "ppl_q": 24.048663,
+          "same_top": 72.627
+        },
+        "code": {
+          "mean_kld": 0.937723,
+          "ppl_q": 13.444655,
+          "same_top": 74.62
+        },
+        "wiki_test": {
+          "mean_kld": 0.228748,
+          "ppl_q": 6.649894,
+          "same_top": 80.0
+        },
+        "wiki_valid": {
+          "mean_kld": 0.206875,
+          "ppl_q": 6.386093,
+          "same_top": 81.05
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.570338,
+      "macro_same_top": 77.0938,
+      "target_bytes": 9362914496
+    },
+    "IQ2_XS": {
+      "actual_bytes": 9090591936,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.66131,
+          "ppl_q": 13.091372,
+          "same_top": 76.506
+        },
+        "chinese": {
+          "mean_kld": 0.89772,
+          "ppl_q": 24.886189,
+          "same_top": 71.438
+        },
+        "code": {
+          "mean_kld": 0.99823,
+          "ppl_q": 13.91927,
+          "same_top": 73.836
+        },
+        "wiki_test": {
+          "mean_kld": 0.242479,
+          "ppl_q": 6.735694,
+          "same_top": 79.772
+        },
+        "wiki_valid": {
+          "mean_kld": 0.219112,
+          "ppl_q": 6.420007,
+          "same_top": 80.582
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.6037701999999999,
+      "macro_same_top": 76.4268,
+      "target_bytes": 9090591936
+    },
+    "IQ2_XXS": {
+      "actual_bytes": 8433183936,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.569901,
+          "ppl_q": 10.410924,
+          "same_top": 75.46
+        },
+        "chinese": {
+          "mean_kld": 0.752014,
+          "ppl_q": 16.967436,
+          "same_top": 71.948
+        },
+        "code": {
+          "mean_kld": 0.768944,
+          "ppl_q": 9.105112,
+          "same_top": 75.931
+        },
+        "wiki_test": {
+          "mean_kld": 0.323355,
+          "ppl_q": 7.207475,
+          "same_top": 76.483
+        },
+        "wiki_valid": {
+          "mean_kld": 0.287046,
+          "ppl_q": 6.727558,
+          "same_top": 77.951
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.540252,
+      "macro_same_top": 75.5546,
+      "target_bytes": 8433183936
+    },
+    "IQ3_M": {
+      "actual_bytes": 12580875456,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.153861,
+          "ppl_q": 7.455442,
+          "same_top": 89.78
+        },
+        "chinese": {
+          "mean_kld": 0.256812,
+          "ppl_q": 11.643557,
+          "same_top": 86.797
+        },
+        "code": {
+          "mean_kld": 0.196062,
+          "ppl_q": 5.371002,
+          "same_top": 90.049
+        },
+        "wiki_test": {
+          "mean_kld": 0.060299,
+          "ppl_q": 5.808028,
+          "same_top": 90.07
+        },
+        "wiki_valid": {
+          "mean_kld": 0.055263,
+          "ppl_q": 5.61318,
+          "same_top": 90.196
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.1444594,
+      "macro_same_top": 89.3784,
+      "target_bytes": 12580875456
+    },
+    "IQ3_S": {
+      "actual_bytes": 12419329216,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.148765,
+          "ppl_q": 7.359682,
+          "same_top": 89.804
+        },
+        "chinese": {
+          "mean_kld": 0.251509,
+          "ppl_q": 11.238444,
+          "same_top": 87.32
+        },
+        "code": {
+          "mean_kld": 0.198471,
+          "ppl_q": 5.406732,
+          "same_top": 89.951
+        },
+        "wiki_test": {
+          "mean_kld": 0.060547,
+          "ppl_q": 5.829021,
+          "same_top": 90.057
+        },
+        "wiki_valid": {
+          "mean_kld": 0.052915,
+          "ppl_q": 5.608545,
+          "same_top": 90.525
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.1424414,
+      "macro_same_top": 89.53139999999999,
+      "target_bytes": 12419329216
+    },
+    "IQ3_XS": {
+      "actual_bytes": 11967130816,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.147688,
+          "ppl_q": 7.427415,
+          "same_top": 89.887
+        },
+        "chinese": {
+          "mean_kld": 0.24983,
+          "ppl_q": 11.608437,
+          "same_top": 86.81
+        },
+        "code": {
+          "mean_kld": 0.231418,
+          "ppl_q": 5.770322,
+          "same_top": 89.24
+        },
+        "wiki_test": {
+          "mean_kld": 0.065025,
+          "ppl_q": 5.849044,
+          "same_top": 89.336
+        },
+        "wiki_valid": {
+          "mean_kld": 0.061984,
+          "ppl_q": 5.696435,
+          "same_top": 89.956
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.151189,
+      "macro_same_top": 89.0458,
+      "target_bytes": 11967130816
+    },
+    "IQ3_XXS": {
+      "actual_bytes": 11186371776,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.198304,
+          "ppl_q": 7.728664,
+          "same_top": 87.843
+        },
+        "chinese": {
+          "mean_kld": 0.31105,
+          "ppl_q": 12.751953,
+          "same_top": 85.124
+        },
+        "code": {
+          "mean_kld": 0.287915,
+          "ppl_q": 6.260942,
+          "same_top": 87.5
+        },
+        "wiki_test": {
+          "mean_kld": 0.091581,
+          "ppl_q": 5.966549,
+          "same_top": 87.375
+        },
+        "wiki_valid": {
+          "mean_kld": 0.084147,
+          "ppl_q": 5.789106,
+          "same_top": 87.767
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.1945994,
+      "macro_same_top": 87.1218,
+      "target_bytes": 11186371776
+    },
+    "IQ4_XS": {
+      "actual_bytes": 15082507456,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.063147,
+          "ppl_q": 6.998518,
+          "same_top": 93.928
+        },
+        "chinese": {
+          "mean_kld": 0.119284,
+          "ppl_q": 11.102723,
+          "same_top": 92.588
+        },
+        "code": {
+          "mean_kld": 0.095034,
+          "ppl_q": 5.233146,
+          "same_top": 93.995
+        },
+        "wiki_test": {
+          "mean_kld": 0.018743,
+          "ppl_q": 5.630714,
+          "same_top": 94.206
+        },
+        "wiki_valid": {
+          "mean_kld": 0.015919,
+          "ppl_q": 5.477365,
+          "same_top": 94.231
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.0624254,
+      "macro_same_top": 93.7896,
+      "target_bytes": 15082507456
+    },
+    "Q2_K": {
+      "actual_bytes": 10711665856,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.248936,
+          "ppl_q": 7.335221,
+          "same_top": 84.67
+        },
+        "chinese": {
+          "mean_kld": 0.353729,
+          "ppl_q": 11.031934,
+          "same_top": 81.556
+        },
+        "code": {
+          "mean_kld": 0.339257,
+          "ppl_q": 6.097061,
+          "same_top": 84.926
+        },
+        "wiki_test": {
+          "mean_kld": 0.151263,
+          "ppl_q": 6.181703,
+          "same_top": 83.985
+        },
+        "wiki_valid": {
+          "mean_kld": 0.126141,
+          "ppl_q": 5.893331,
+          "same_top": 85.25
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.24386519999999998,
+      "macro_same_top": 84.0774,
+      "target_bytes": 10711665856
+    },
+    "Q2_K_S": {
+      "actual_bytes": 10248326336,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.283793,
+          "ppl_q": 7.739842,
+          "same_top": 83.256
+        },
+        "chinese": {
+          "mean_kld": 0.407183,
+          "ppl_q": 11.412296,
+          "same_top": 80.144
+        },
+        "code": {
+          "mean_kld": 0.393522,
+          "ppl_q": 6.281421,
+          "same_top": 83.542
+        },
+        "wiki_test": {
+          "mean_kld": 0.19379,
+          "ppl_q": 6.444429,
+          "same_top": 82.328
+        },
+        "wiki_valid": {
+          "mean_kld": 0.166069,
+          "ppl_q": 6.14604,
+          "same_top": 83.96
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.2888714,
+      "macro_same_top": 82.646,
+      "target_bytes": 10248326336
+    },
+    "Q3_K_S": {
+      "actual_bytes": 12073954496,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.204559,
+          "ppl_q": 7.901247,
+          "same_top": 87.415
+        },
+        "chinese": {
+          "mean_kld": 0.355843,
+          "ppl_q": 13.047108,
+          "same_top": 84.17
+        },
+        "code": {
+          "mean_kld": 0.359685,
+          "ppl_q": 6.893883,
+          "same_top": 85.919
+        },
+        "wiki_test": {
+          "mean_kld": 0.081404,
+          "ppl_q": 5.953583,
+          "same_top": 88.134
+        },
+        "wiki_valid": {
+          "mean_kld": 0.072318,
+          "ppl_q": 5.792471,
+          "same_top": 88.223
+        }
+      },
+      "kind": "reference",
+      "macro_kld": 0.2147618,
+      "macro_same_top": 86.7722,
+      "target_bytes": 12073954496
+    }
+  },
+  "bf16_references": {
+    "agent_chat": {
+      "ppl": 6.8946,
+      "ppl_uncertainty": 0.21987
+    },
+    "chinese": {
+      "ppl": 10.671,
+      "ppl_uncertainty": 0.42676
+    },
+    "code": {
+      "ppl": 4.9538,
+      "ppl_uncertainty": 0.15128
+    },
+    "wiki_test": {
+      "ppl": 5.5825,
+      "ppl_uncertainty": 0.14876
+    },
+    "wiki_valid": {
+      "ppl": 5.4312,
+      "ppl_uncertainty": 0.14404
+    }
+  },
+  "protocol": "llama-perplexity -ngl 99 -t 16 -c 512 -b 512 --kl-divergence (M9 slices)",
+  "schema_version": 1
+}
