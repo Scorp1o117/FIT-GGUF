@@ -1,0 +1,81 @@
+{
+  "all_pass": true,
+  "gates": {
+    "K1": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "3 balanced K-free plans with exact tier labels",
+      "pass": true
+    },
+    "K2": {
+      "conditions": [
+        true
+      ],
+      "description": "3 FIT artifacts at zero-byte size error",
+      "pass": true
+    },
+    "K3": {
+      "conditions": [
+        true
+      ],
+      "description": "no q2_k/q3_k tensors in the override set",
+      "pass": true,
+      "qtype_counts": {
+        "FIT-12.5G": {
+          "iq4_xs": 235,
+          "q5_k": 49
+        },
+        "FIT-13.5G": {
+          "iq4_xs": 353,
+          "q5_k": 61
+        },
+        "FIT-13G": {
+          "iq4_xs": 295,
+          "q5_k": 53
+        }
+      }
+    },
+    "K4": {
+      "conditions": [
+        true
+      ],
+      "description": "each K-free tier strictly beats its K-based baseline",
+      "detail": {
+        "FIT-12.5G": {
+          "new_k_free": 0.111572,
+          "old_k_based": 0.1315594
+        },
+        "FIT-13.5G": {
+          "new_k_free": 0.0837682,
+          "old_k_based": 0.11635
+        },
+        "FIT-13G": {
+          "new_k_free": 0.0987018,
+          "old_k_based": 0.1303854
+        }
+      },
+      "pass": true
+    },
+    "K5": {
+      "conditions": [
+        [
+          0.12273939999999998,
+          0.111572,
+          0.0987018,
+          0.0837682
+        ]
+      ],
+      "description": "macro KLD non-increasing across FIT-12G..13.5G",
+      "pass": true,
+      "sequence": [
+        0.12273939999999998,
+        0.111572,
+        0.0987018,
+        0.0837682
+      ]
+    }
+  },
+  "schema_version": 1
+}

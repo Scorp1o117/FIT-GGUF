@@ -166,3 +166,42 @@ budget 0.97 GiB >= both fill needs - the Q3_K_L attention-piece transitions
 avoid the zero-gain trap), and FIT-13.5G on (Q3_K_L -> IQ4_XS, exact target 14,495,514,624 = 13.5 GiB; an initial off-by-1.1 MB target of 14,496,634,368 rendered "14G" and was corrected before release). Same frozen
 settings as the original eleven: balanced allocator, oracle planning,
 zero-byte quantize gate, 5-domain KL evaluation.
+
+Final release state after this amendment: 14 FIT artifacts and 14 reference
+artifacts are present in `results/p4-results.json`; all 28 have five-domain
+measurements, and all 14 released FIT artifacts match their final post-oracle
+predicted byte sizes exactly. This final count supersedes the original
+11-FIT/25-evaluation counts in the pre-extension Results section above while
+preserving that section as the contemporaneous record of the first run.
+
+## Amendment 4 (2026-08-30, owner-directed K-free redo of FIT-12.5G/13G/13.5G)
+
+The owner spotted that the 12.5-13G tiers bought no (indeed negative)
+quality: macro KL 0.122739 (FIT-12G) -> 0.131559 (12.5G) -> 0.130385 (13G).
+Diagnosis: the amendment-3 pair (Q3_K_M -> Q3_K_L) pins all 353 bulk matrices
+at q3_k and offers only ~138 auxiliary q4_k -> q5_k transitions, which barely
+move KL - while q3_k bulk is per-byte inefficient on this model (Q3_K_S
+0.2148 @ 11.245G vs IQ3_XS 0.1512 @ 11.145G). A P4 span-selection error,
+recorded as such.
+
+Per the owner directive ("Q4KM以下把K系列移除试试，用IQ3-IQ4XS重做一次
+12.5 / 13 / 13.5"), the three tiers.csv rows move to the K-free IQ ladder:
+all three select (IQ3_M -> IQ4_XS), whose candidate space contains zero
+q2_k/q3_k tensors. Everything else frozen (balanced, imatrix_unsloth, oracle
+planning, zero-byte gate, M9 KL protocol). Execution and gates K1-K5 are
+preregistered in `experiments/2026-08-30-p5-kfree-12-13.5/`; old plan files
+are archived under `tiers/<tier>/k-based/`.
+
+New results (all gates pass, release swapped, this file's Results counts
+superseded for these three tiers):
+
+| Tier | Pair | Actual GiB | Macro KLD | Macro Same-top % |
+| --- | --- | ---: | ---: | ---: |
+| FIT-12.5G | IQ3_M -> IQ4_XS | 12.497 | 0.111572 | 91.045 |
+| FIT-13G | IQ3_M -> IQ4_XS | 12.998 | 0.098702 | 91.931 |
+| FIT-13.5G | IQ3_M -> IQ4_XS | 13.498 | 0.083768 | 92.737 |
+
+Improvements over the K-based tiers: -0.0200 / -0.0317 / -0.0326 macro KL;
+the FIT curve is now monotonically improving from FIT-12G through FIT-13.5G
+(0.1227 -> 0.1116 -> 0.0987 -> 0.0838), removing the pair-boundary
+regression. P4 gates R1-R6 re-run ALL_PASS after the swap.
