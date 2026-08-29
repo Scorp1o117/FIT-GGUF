@@ -9,9 +9,15 @@ spends the remaining bytes on deterministic tensor precision upgrades, landing
 at exactly the predicted size.
 
 **v0.1 headline** (see `FINAL_REPORT.md`): exact deterministic size control
-transfers across models (22/22 artifacts at zero-byte error, two
-architectures); imatrix-driven allocation value is validated only on the
-development model and is reported honestly as not yet generalizing.
+transferred across both tested model families (22/22 artifacts at zero-byte
+error under the tested toolchain); the imatrix-derived utility allocator did
+not generalize to the second model family and is reported honestly as such.
+
+To be equally direct about what this tool promises:
+
+- **FIT solves:** "I need a GGUF around X GiB."
+- **FIT does not yet solve:** "What is the globally optimal way to spend
+  every extra byte?"
 
 ## The fit CLI
 

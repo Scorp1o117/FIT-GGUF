@@ -13,26 +13,27 @@ quantized to *any* target size between two standard llama.cpp presets, with
 exact deterministic size control and quality that degrades gracefully?
 
 After the full M0-M16 program on two models, the answer splits cleanly in
-two:
+two, and the final claim is deliberately worded to stay inside the evidence:
 
-1. **Continuous-size control works, completely.** Every one of the 22 FIT
-   artifacts quantized across the program landed at exactly its predicted
-   byte size, across two architectures (a 27B dense Qwen and an 8B IBM
-   Granite), with zero-byte error and zero qtype mismatches. The planner is
-   deterministic, reproducible to the SHA-256 level, and now shipped as the
-   `fit` CLI.
+1. **Exact-size control works.** Across the two tested model families, all
+   evaluated target recipes matched their predicted output sizes exactly —
+   22/22 targets achieved zero-byte prediction error under the tested
+   toolchain — and the productized CLI reproduced four historical reference
+   GGUFs bit-for-bit. "Continuous" here means near-continuous: arbitrary
+   target sizes within the representable recipe space (existing GGUF
+   qtypes/presets plus tensor overrides); the smallest granularity is still
+   the discrete byte change of a tensor/qtype transition.
 
-2. **imatrix-driven allocation value is model-specific.** The original
-   utility ordering beat matched random allocations on the development model
-   but lost to a random seed on the cross-model validation. The block-balanced
-   v0.1b variant, confirmed on a untouched holdout for the development model,
-   showed no advantage on Granite. Both were recorded as preregistered
-   failures, not tuned away.
+2. **The imatrix-guided utility allocator does not demonstrate cross-model
+   generalization.** It was beneficial on the development model (multiple
+   holdouts and matched random baselines), but failed to outperform matched
+   random allocation on granite-4.2-8b at FIT-50, and v0.1b showed no
+   advantage there. Both were recorded as preregistered failures, not tuned
+   away. FIT v0.1 therefore claims reliable target-size control, not
+   universally superior tensor allocation.
 
-The product claim for v0.1 is therefore deliberately narrow: exact size
-control with a monotonic quality-vs-budget curve, plus the conservative
-original utility ordering as a search heuristic whose quality value is
-validated only on the development model.
+In one sentence: **FIT-GGUF v0.1 is accepted as a product prototype; the
+allocator research is frozen with a negative transfer result.**
 
 ## 2. Method
 
@@ -57,25 +58,36 @@ artifacts on re-run.
 
 ## 3. What was validated
 
-### Size control (transfers; product-ready)
+### Size control (transfers across both tested model families; product-ready)
 
-- 4/4 preset predictions and 18/18 FIT-plan predictions matched real artifact
-  sizes with zero-byte error across both models (M2, M3, M7, M9, M10, M12,
-  M14-M16), 11/11 zero-byte on Granite (M16).
+- 22/22 evaluated targets achieved zero-byte prediction error under the
+  tested toolchain: 4/4 preset predictions and 18/18 FIT-plan predictions
+  across both models (M2, M3, M7, M9, M10, M12, M14-M16), 11/11 zero-byte on
+  Granite (M16). This is a statement about the pinned build-10666 toolchain,
+  not about every llama.cpp build or platform.
 - Re-quantization from retained tensor-type files reproduces artifact
-  SHA-256 exactly (M11 rebuild of three deleted random artifacts).
+  SHA-256 exactly (M11 rebuild of three deleted random artifacts). The P1
+  hashes prove that the CLI reproduces the *frozen research pipeline*
+  bit-for-bit on this toolchain; they do not claim universal determinism
+  across compilers, upstream versions, or metadata changes.
 - The `fit` CLI replays both historical ground-truth points (Huihui and
   Granite FIT-50, original and block-balanced) with byte-identical recipes
   and identical artifact hashes (P1, see section 6).
 
-### Quality-vs-budget monotonicity (development model, M9)
+### Quality-vs-budget behavior (observations, not guarantees)
 
-Across five domains (wiki_test, wiki_valid, Chinese, code, agent_chat), macro
-KL improved monotonically at every size step of
-IQ3_M → FIT-25 → FIT-50 → FIT-75 → IQ4_XS:
+On the development model (M9), across five domains (wiki_test, wiki_valid,
+Chinese, code, agent_chat), macro KL improved monotonically at every size
+step of IQ3_M → FIT-25 → FIT-50 → FIT-75 → IQ4_XS:
 0.141098 → 0.106277 → 0.097324 → 0.079720 → 0.057874, with Same-top strictly
 increasing 89.456% → 93.865%. All 20 adjacent transitions in all five domains
 moved in the expected direction.
+
+On Granite (M16 diagnostics, ungated), the monotone structure was observed as
+well: KL decreased strictly from IQ3_M through every FIT point to IQ4_XS in
+every evaluated domain. These are empirical observations under the tested
+protocol — the planner's size constraint is enforced, but quality
+monotonicity is not an algorithmic guarantee.
 
 ### v0.1b block balancing at FIT-50 on the development model (M11)
 
@@ -106,14 +118,21 @@ model and only at some budgets.
 
 - Pinned runtime: llama.cpp build 10666 (`4e97ac86e`), ROCm, Linux x86_64.
   Size prediction is exact for this build's metadata behavior; other builds
-  require revalidation.
+  require revalidation. All quality results are protocol-scoped
+  (512-token context, fixed 64 KiB slices, KL/Same-top against aligned BF16
+  references; short-corpus PPL point estimates are diagnostics only, D-0014).
 - Envelope: IQ3_M ↔ IQ4_XS with upgrade-only transitions from the lower
-  preset (D-0001); no downgrades, no unrestricted search.
+  preset (D-0001); no downgrades, no unrestricted search. Targets are
+  near-continuous within this representable recipe space, not mathematically
+  continuous.
 - The auxiliary NextN/MTP head is excluded from targets and budgets (D-0008).
 - The scalar imatrix utility is a search proxy, not a quality model (D-0012).
-- Quality was measured with KL divergence and Same-top against aligned BF16
-  references at 512-token context on fixed 64 KiB slices; short-corpus PPL
-  point estimates are diagnostics only (D-0014).
+  The negative result is about cross-model generalization of *this
+  heuristic*, not about imatrix utility being useless everywhere.
+- Documented deviation kept for reproducibility: Granite's BF16 conversion
+  used the upstream master `conversion/` package because the pinned converter
+  lacked Granite support, while the evaluation/quantization runtime remained
+  the pinned b10666 build.
 
 ## 6. P1 productization replay
 
