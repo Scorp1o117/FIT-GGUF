@@ -8,11 +8,13 @@ between standard llama.cpp presets.
 
 ## Current milestone
 
-P1 complete - the fit CLI shipped and the preregistered regression replay
-passed all eight gates (D-0023). FIT-GGUF is versioned v0.1 and frozen:
-exact size control transfers cross-model (22/22 artifacts at zero-byte error
-across two architectures); the imatrix-allocation value does not (D-0022).
-`FINAL_REPORT.md` is the closing document for this version.
+P2 complete - the full-envelope extension (IQ1_S..Q8_0) is validated on the
+first release source (orcarouter/Qwen3.8-27B-Uncensored, BF16 converted with
+the pinned converter). 23/23 canonical presets accepted with display-rounding
+-only payload residuals; three probe artifacts (IQ1_M/IQ3_XXS, Q5_K_S/Q5_K_M,
+Q6_K/Q8_0) hit zero-byte prediction error; 55 unit tests pass including
+pinned-source trait checks. FIT's size-control claim now spans the entire
+llama.cpp quantization ladder. Next: the owner-directed 27B release planning.
 
 ## Verified facts
 

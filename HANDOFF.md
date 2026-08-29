@@ -1,20 +1,18 @@
 # FIT-GGUF Handoff
 
-Date: 2026-08-29 (updated after P1 by the GLM-5.3-Flash session)
+Date: 2026-08-29 (updated after P2 by the GLM-5.3-Flash session)
 
 ## Read this first
 
-The repository is past P1. M0-M16 (research) and P1 (productization) are
-complete; the project is versioned **FIT-GGUF v0.1** and frozen. The final
-evidence state, per D-0022 and D-0023: FIT's exact deterministic size control
-and monotonic quality-vs-budget curves transfer to a second model family
-(granite-4.2-8b, 11/11 zero-byte artifacts); the imatrix-allocation value does
-NOT transfer (original utility loses to random at FIT-50 on Granite; v0.1b
-shows no advantage there). On the Huihui development model, v0.1b is confirmed
-at FIT-50 (M11) and the original utility at FIT-25 (M15). The `fit
-analyze/plan/quantize` CLI replays both models' historical FIT-50 ground truth
-byte-identically (preregistered gates G1-G8, all passed). Every milestone is
-preregistered, executed, and recorded; nothing is pending.
+The repository is past P2. M0-M16 (research), P1 (CLI productization), and P2
+(full-envelope extension) are complete; the core project is versioned
+**FIT-GGUF v0.1** and frozen. Evidence state, per D-0022/D-0023 and P2: exact
+deterministic size control now spans **IQ1_S..Q8_0** (23/23 presets validated
+on the first release source, three zero-byte probes at the envelope extremes);
+the imatrix-allocation value does NOT transfer across models (D-0022) and
+allocator research stays frozen. The first release source
+`orcarouter/Qwen3.8-27B-Uncensored` is converted and in
+`artifacts/source/`; release planning is the active discussion.
 
 Canonical status and evidence:
 
