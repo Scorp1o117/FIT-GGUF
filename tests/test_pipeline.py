@@ -354,3 +354,62 @@ def test_json_round_trip_of_recipe_and_candidates(e2e):
     assert json.loads(json.dumps(_candidate_set_to_json(candidate_set))) == original
     recipe = _recipe_from_json(payload["lower_recipe"])
     assert json.loads(json.dumps(_recipe_to_json(recipe))) == payload["lower_recipe"]
+
+
+def test_qtype_distribution_is_element_weighted():
+    from fit_gguf.pipeline import qtype_parameter_distribution
+
+    tensors = (
+        # 100 small iq4_xs tensors would win by count, but lose by elements.
+        DryRunTensorAssignment(1, 3, "blk.0.a", (256, 2, 1, 1), "BF16", "iq4_xs", True, 100, 50),
+        DryRunTensorAssignment(2, 3, "blk.0.b", (256, 2, 1, 1), "BF16", "iq4_xs", True, 100, 50),
+        DryRunTensorAssignment(3, 3, "blk.0.c", (256, 512, 1, 1), "BF16", "iq3_s", True, 100, 50),
+        # Unquantized tensors must be excluded from the distribution.
+        DryRunTensorAssignment(4, 4, "blk.0.n", (256, 1, 1, 1), "F32", "f32", False, 100, 100),
+    )
+    recipe = DryRunResult(tensors, 4, 400, 300)
+    distribution = qtype_parameter_distribution(recipe)
+    assert distribution == {"iq3_s": 131_072, "iq4_xs": 1_024}
+    dominant = max(distribution, key=lambda q: distribution[q])
+    assert dominant == "iq3_s"
+
+
+def test_suggested_filename_rules():
+    from fit_gguf.pipeline import suggested_filename
+
+    # 13,831,691,232 bytes = 12.888 GiB -> 13G; qtype uppercased.
+    assert suggested_filename("M", 13_831_691_232, "iq4_xs") == "M-FIT-13G-IQ4_XS.gguf"
+    # Exactly 1.5 GiB rounds half-up to 2G.
+    assert suggested_filename("M", 3 * (1 << 29), "iq3_s") == "M-FIT-2G-IQ3_S.gguf"
+    # Tiny targets clamp to 1G.
+    assert suggested_filename("M", 100, "q2_k") == "M-FIT-1G-Q2_K.gguf"
+
+
+def test_default_model_name_strips_bf16_marker():
+    from fit_gguf.pipeline import default_model_name
+
+    assert default_model_name("/x/orcarouter-Qwen3.8-27B-Uncensored-BF16.gguf") == (
+        "orcarouter-Qwen3.8-27B-Uncensored"
+    )
+    assert default_model_name("/x/model.gguf") == "model"
+
+
+def test_plan_record_contains_naming_fields(e2e):
+    analysis = analyze(
+        e2e["source"], e2e["imatrix"], e2e["runtime"], e2e["tmp"] / "a4", hash_sources=False
+    )
+    record = plan(
+        analysis, e2e["tmp"] / "a4" / "named", fit="0.5", policy="original",
+        model_name="TestModel",
+    )
+    assert record["dominant_qtype"] == "iq3_s"
+    assert record["model_name"] == "TestModel"
+    assert abs(sum(record["qtype_parameter_shares"].values()) - 1.0) < 1e-12
+    gib = (record["target_bytes"] + (1 << 29)) // (1 << 30)
+    assert record["suggested_filename"] == f"TestModel-FIT-{max(1, gib)}G-IQ3_S.gguf"
+    # Derived default strips nothing from the stub source name.
+    derived = plan(
+        analysis, e2e["tmp"] / "a4" / "derived", fit="0.5", policy="original"
+    )
+    assert derived["model_name"] == "src"
+    assert derived["suggested_filename"].startswith("src-FIT-")

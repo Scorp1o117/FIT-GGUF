@@ -70,6 +70,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Block-quarter span for --policy balanced (default: auto)",
     )
     plan_parser.add_argument(
+        "--model-name",
+        default=None,
+        help="Model name for the suggested filename (default: derived from the source)",
+    )
+    plan_parser.add_argument(
         "--out-prefix", required=True, help="Prefix for -plan.json/-recipe.json/-tensor-types.txt"
     )
 
@@ -109,12 +114,21 @@ def _run(args: argparse.Namespace) -> int:
             policy=args.policy,
             seed=args.seed,
             block_span=args.block_span,
+            model_name=args.model_name,
         )
         print(
             f"plan written: policy={record['policy']} target={record['target_bytes']:,} "
             f"predicted={record['predicted_size_bytes']:,} unused={record['unused_bytes']:,} "
             f"selected={record['selected_count']}"
         )
+        if record["dominant_qtype"]:
+            share = record["qtype_parameter_shares"][record["dominant_qtype"]]
+            print(
+                f"dominant qtype: {str(record['dominant_qtype']).upper()} "
+                f"({share:.1%} of quantized parameters)"
+            )
+        if record["suggested_filename"]:
+            print(f"suggested filename: {record['suggested_filename']}")
         print(f"plan record: {record['recipe_path'].rsplit('-', 1)[0]}-plan.json")
         return 0
 

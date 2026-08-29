@@ -50,3 +50,18 @@ The CLI prints the dominant qtype with its share and the suggested filename.
 
 Failure handling: any gate failure is recorded as-is; fixes are code changes
 followed by a full re-run of the affected gates.
+
+## Results (2026-08-29)
+
+- A1: 4 new unit tests pass (element-weighted dominance defeats tensor-count
+  intuition; shares sum to 1; GiB half-up rounding; -BF16 strip and
+  --model-name override). Suite total 59/59.
+- A2: zero-drift replay on all three P2 probe analyses
+  (`replay-results.json`): recipe_sha256, tensor_types_sha256,
+  predicted_size_bytes, target_bytes, and selected_count are byte-identical
+  to the committed P2 plans; only the additive naming fields differ.
+  Observed suggested filenames: FIT-9G-IQ3_XXS (probe-low, dominant is the
+  upgraded FFN mass - element weighting working as specified),
+  FIT-18G-Q5_K (87.6% of quantized parameters), FIT-24G-Q6_K.
+- A3: CLI prints the dominant qtype with its share and the suggested
+  filename.

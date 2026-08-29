@@ -121,6 +121,46 @@ def auto_block_span(profile: ImatrixProfile) -> int:
     return (max_block + 1 + 3) // 4
 
 
+def qtype_parameter_distribution(recipe: DryRunResult) -> dict[str, int]:
+    """Parameter-element counts per destination qtype over QUANTIZED tensors.
+
+    Element weighting is the release naming convention's explicit rule: the
+    dominant qtype must be computed from the final recipe by covered
+    parameters, never by tensor count and never from the target size.
+    """
+    distribution: dict[str, int] = {}
+    for tensor in recipe.tensors:
+        if not tensor.is_quantized:
+            continue
+        elements = 1
+        for dimension in tensor.shape:
+            elements *= dimension
+        key = tensor.dst_type.lower()
+        distribution[key] = distribution.get(key, 0) + elements
+    return dict(sorted(distribution.items()))
+
+
+def default_model_name(source_path: str) -> str:
+    """Source GGUF file name minus suffix and trailing BF16 marker."""
+    stem = Path(source_path).name
+    if stem.endswith(".gguf"):
+        stem = stem[:-5]
+    if stem.upper().endswith("-BF16"):
+        stem = stem[:-5]
+    return stem
+
+
+def suggested_filename(model_name: str, target_bytes: int, dominant_qtype: str) -> str:
+    """Release naming convention: <Model>-FIT-<G>G-<QTYPE>.gguf.
+
+    The encoded promise is the TARGET size in GiB rounded half-up (the
+    product claim is "main model file ≈ target"), and the qtype is the
+    canonical uppercase form of the element-weighted dominant type.
+    """
+    gib = max(1, (target_bytes + (1 << 29)) // (1 << 30))
+    return f"{model_name}-FIT-{gib}G-{dominant_qtype.upper()}.gguf"
+
+
 def run_dry_run(
     runtime_dir: str | Path,
     source: str | Path,
@@ -388,6 +428,7 @@ def plan(
     policy: str = "original",
     seed: str | int | None = None,
     block_span: int | str = "auto",
+    model_name: str | None = None,
 ) -> dict[str, object]:
     """Plan one artifact from a frozen analysis and write its three records."""
     if policy not in _POLICIES:
@@ -449,6 +490,20 @@ def plan(
             f"Predicted {prediction.total_bytes:,} bytes exceeds target {target:,}"
         )
 
+    distribution = qtype_parameter_distribution(recipe)
+    total_elements = sum(distribution.values())
+    dominant = max(distribution, key=lambda qtype: distribution[qtype]) if distribution else None
+    shares = {
+        qtype: count / total_elements
+        for qtype, count in sorted(
+            distribution.items(), key=lambda item: (-item[1], item[0])
+        )
+    } if total_elements else {}
+    resolved_model_name = model_name or default_model_name(str(payload["source"]["path"]))
+    suggested = (
+        suggested_filename(resolved_model_name, target, dominant) if dominant else None
+    )
+
     prefix = Path(out_prefix)
     if prefix.parent != Path("."):
         prefix.parent.mkdir(parents=True, exist_ok=True)
@@ -483,6 +538,10 @@ def plan(
         "recipe_sha256": _sha256_file(recipe_path),
         "tensor_types_path": str(types_path),
         "tensor_types_sha256": _sha256_file(types_path),
+        "model_name": resolved_model_name,
+        "dominant_qtype": dominant,
+        "qtype_parameter_shares": shares,
+        "suggested_filename": suggested,
     }
     plan_record_path = prefix.with_name(prefix.name + "-plan.json")
     _dump_json(record, plan_record_path)

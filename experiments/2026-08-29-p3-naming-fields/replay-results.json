@@ -1,0 +1,57 @@
+{
+  "replays": {
+    "probe-low": {
+      "dominant_qtype": "iq3_xxs",
+      "fields_identical": {
+        "predicted_size_bytes": true,
+        "recipe_sha256": true,
+        "selected_count": true,
+        "target_bytes": true,
+        "tensor_types_sha256": true
+      },
+      "qtype_parameter_shares": {
+        "iq1_m": 0.361049,
+        "iq2_s": 0.031192,
+        "iq3_xxs": 0.371284,
+        "q2_k": 0.073789,
+        "q4_k": 0.096696,
+        "q5_k": 0.047276
+      },
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-9G-IQ3_XXS.gguf",
+      "zero_drift": true
+    },
+    "probe-mid": {
+      "dominant_qtype": "q5_k",
+      "fields_identical": {
+        "predicted_size_bytes": true,
+        "recipe_sha256": true,
+        "selected_count": true,
+        "target_bytes": true,
+        "tensor_types_sha256": true
+      },
+      "qtype_parameter_shares": {
+        "q5_k": 0.876109,
+        "q6_k": 0.123891
+      },
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-18G-Q5_K.gguf",
+      "zero_drift": true
+    },
+    "probe-top": {
+      "dominant_qtype": "q6_k",
+      "fields_identical": {
+        "predicted_size_bytes": true,
+        "recipe_sha256": true,
+        "selected_count": true,
+        "target_bytes": true,
+        "tensor_types_sha256": true
+      },
+      "qtype_parameter_shares": {
+        "q6_k": 0.500829,
+        "q8_0": 0.499171
+      },
+      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-24G-Q6_K.gguf",
+      "zero_drift": true
+    }
+  },
+  "schema_version": 1
+}
