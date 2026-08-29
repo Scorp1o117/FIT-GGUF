@@ -146,6 +146,29 @@ layer matrices, and (c) recorded fallback behavior for token_embd/output
 (assignment oracle is the dry-run, per D-0005/M2). No evaluation result was
 observed before this correction; E3 had not run.
 
+## Amendment 4 (2026-08-29, after E3 first run, before any probe)
+
+The first E3 sweep accepted and parsed 23/23 presets with a cleanly climbing
+ladder (IQ1_S 7,149,825,216 .. Q8_0 28,595,764,416). Two check-implementation
+errors (not trait errors) produced false failures:
+
+- Payload accounting: the dry-run's displayed `quant size` total includes the
+  ORIGINAL bytes of unchanged tensors, not only quantized tensors. Evidence:
+  the first-run diff was ~10.58 MB for every preset regardless of type mix,
+  exactly the 10,582,016 bytes of the 353 unchanged f32 tensors; after
+  correcting the comparator to all-tensor unpadded payload, the IQ3_M
+  residual is 2,376 bytes (display rounding). The corrected check is
+  `|reported_quant_bytes - sum(payload_bytes over all tensors)| <= tolerance`.
+- Ladder monotonicity: amendment 2's intent ("ties inside a group may order
+  either way") is implemented group-wise: strictly increasing between
+  adjacent groups with distinct dominant BPW, unconstrained inside a group.
+  The first run's single inversion (IQ4_NL 15,801,928,896 > Q4_K_S
+  15,586,315,456, both dominant 4.5 BPW) is a genuine source characteristic
+  of the two mixtures and is not a gate failure under this rule.
+
+No probe quantization has run. E3 is re-run with the corrected comparators;
+its recorded ladder sizes are unchanged.
+
 ## 3. Honest scope notes
 
 - Size control per artifact remains self-proving (predict -> quantize ->

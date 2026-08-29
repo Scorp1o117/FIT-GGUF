@@ -139,13 +139,11 @@ def e3() -> dict:
             layout, recipe,
             QuantizationMetadata(file_type=PRESET_FILE_TYPES[preset], imatrix=provenance),
         )
-        quantized_payload = sum(
-            size.padded_bytes
-            for size, tensor in zip(prediction.tensors, recipe.tensors)
-            if tensor.is_quantized
-        )
-        tolerance = (recipe.quantized_count + 1) * DISPLAY_MIB_BYTES
-        payload_diff = abs(quantized_payload - recipe.reported_new_bytes)
+        # The dry-run "quant size" total counts ALL tensors: quantized new
+        # bytes plus unchanged tensors' original bytes (P2 amendment 4).
+        total_payload = sum(size.payload_bytes for size in prediction.tensors)
+        tolerance = (recipe.total_tensors + 1) * DISPLAY_MIB_BYTES
+        payload_diff = abs(total_payload - recipe.reported_new_bytes)
         histogram = Counter(t.dst_type.lower() for t in recipe.tensors)
         results[preset] = {
             "accepted": True,
@@ -166,23 +164,29 @@ def e3() -> dict:
             f"{'OK' if results[preset]['payload_ok'] else 'FAIL'}"
         )
 
-    # Ladder gate: non-decreasing inside each dominant-BPW group, strictly
-    # increasing between groups with distinct dominant BPW.
+    # Ladder gate (amendments 2 and 4): strictly increasing between adjacent
+    # groups with distinct dominant BPW; inside a group ties may order either
+    # way.
     inversions = []
     accepted_order = [
         (preset, bpw) for preset, bpw in PRESET_LADDER if results[preset]["accepted"]
     ]
-    for (name_a, bpw_a), (name_b, bpw_b) in zip(accepted_order, accepted_order[1:]):
-        size_a = results[name_a]["predicted_size_bytes"]
-        size_b = results[name_b]["predicted_size_bytes"]
-        if bpw_a == bpw_b:
-            if size_b < size_a:
-                inversions.append({"pair": [name_a, name_b], "sizes": [size_a, size_b],
-                                   "kind": "within_group"})
+    groups: list[tuple[float, list[int]]] = []
+    for preset, bpw in accepted_order:
+        if groups and groups[-1][0] == bpw:
+            groups[-1][1].append(results[preset]["predicted_size_bytes"])
         else:
-            if size_b <= size_a:
-                inversions.append({"pair": [name_a, name_b], "sizes": [size_a, size_b],
-                                   "kind": "between_groups"})
+            groups.append((bpw, [results[preset]["predicted_size_bytes"]]))
+    for (bpw_a, sizes_a), (bpw_b, sizes_b) in zip(groups, groups[1:]):
+        if max(sizes_a) >= min(sizes_b):
+            inversions.append(
+                {
+                    "groups": [bpw_a, bpw_b],
+                    "max_prev": max(sizes_a),
+                    "min_next": min(sizes_b),
+                    "kind": "between_groups",
+                }
+            )
 
     rejected = [preset for preset, _ in PRESET_LADDER if not results[preset]["accepted"]]
     payload_all_ok = all(

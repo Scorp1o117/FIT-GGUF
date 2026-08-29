@@ -1,0 +1,19 @@
+{
+  "chunk_count": 1251,
+  "datasets": [
+    "unsloth_calibration_dataset"
+  ],
+  "fallback_assignments": {
+    "output.weight": "q6_K",
+    "token_embd.weight": "iq3_s"
+  },
+  "fallback_without_imatrix_entry": [
+    "output.weight",
+    "token_embd.weight"
+  ],
+  "imatrix_entries": 496,
+  "imatrix_sha256": "0ee5b10bd0c2fa2127c6f4b43dbfe1efd71e383b63217af9dade1de36599f1c1",
+  "layer_matrix_coverage": "complete (496/496)",
+  "provenance": "importance values derive from Huihui-Qwen3.8-27B-abliterated activations (P2 amendment 1, owner directive)",
+  "quantized_tensors_iq3_m": 498
+}
