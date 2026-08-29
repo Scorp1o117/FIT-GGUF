@@ -11,7 +11,7 @@ import sys
 
 REPO = Path("/run/media/s117/OS/FIT-GGUF")
 P4 = REPO / "experiments/2026-08-29-p4-release-batch"
-RELEASE = REPO / "artifacts/fit/release"
+RELEASE = REPO / "Qwen3.8-27B-Uncensored-FIT-GGUF"  # release bundle holds the GGUFs
 MODEL = "orcarouter-Qwen3.8-27B-Uncensored"
 DOMAINS = ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat")
 

@@ -155,5 +155,5 @@ Release filenames drop the source-org prefix: the released artifacts are
 at `/Qwen3.8-27B-Uncensored-FIT-GGUF/` (gitignored staging folder): the 11
 GGUFs, `results/` (comparison table, KL and Same-top curves, machine
 records), `fit-plans/` (per-tier plan/recipe/tensor-type provenance), and a
-README draft. The quantization workspace under `artifacts/fit/release/`
-keeps the renamed artifacts and quantize records.
+README draft. The GGUFs live in the bundle; the quantization workspace
+under `artifacts/fit/release/` keeps the quantize records.
