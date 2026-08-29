@@ -82,10 +82,16 @@ def main() -> int:
         domains = {
             d: parse_eval_log(LOGS / f"eval-ref-{preset}-{d}.log") for d in DOMAINS
         }
+        ref_artifact = REPO / f"artifacts/fit/release/refs/{preset}.gguf"
+        ref_actual = (
+            ref_artifact.stat().st_size
+            if ref_artifact.exists()
+            else ladder["ladder"][preset]["predicted_size_bytes"]  # deleted post-eval; R3 proved equality
+        )
         artifacts[preset] = {
             "kind": "reference",
             "target_bytes": ladder["ladder"][preset]["predicted_size_bytes"],
-            "actual_bytes": (REPO / f"artifacts/fit/release/refs/{preset}.gguf").stat().st_size,
+            "actual_bytes": ref_actual,
             "domains": domains,
             "macro_kld": macro(domains, "mean_kld"),
             "macro_same_top": macro(domains, "same_top"),

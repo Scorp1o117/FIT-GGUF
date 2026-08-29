@@ -34,7 +34,7 @@
       "macro_kld": 0.1873002,
       "macro_same_top": 87.3806,
       "pair": "IQ3_XXS->IQ3_XS",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-10.5G-IQ3_XXS.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-10.5G-IQ3_XXS.gguf",
       "target_bytes": 11274289152
     },
     "FIT-10G": {
@@ -71,7 +71,7 @@
       "macro_kld": 0.2390816,
       "macro_same_top": 84.3356,
       "pair": "Q2_K->IQ3_XXS",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-10G-Q2_K.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-10G-Q2_K.gguf",
       "target_bytes": 10737418240
     },
     "FIT-11.5G": {
@@ -108,7 +108,7 @@
       "macro_kld": 0.1439258,
       "macro_same_top": 89.2258,
       "pair": "IQ3_XS->IQ3_S",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-11.5G-IQ3_S.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-11.5G-IQ3_S.gguf",
       "target_bytes": 12348030976
     },
     "FIT-11G": {
@@ -145,7 +145,7 @@
       "macro_kld": 0.15151399999999998,
       "macro_same_top": 88.9088,
       "pair": "IQ3_XXS->IQ3_XS",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-11G-IQ3_S.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-11G-IQ3_S.gguf",
       "target_bytes": 11811160064
     },
     "FIT-12G": {
@@ -182,7 +182,7 @@
       "macro_kld": 0.12273939999999998,
       "macro_same_top": 90.32419999999999,
       "pair": "IQ3_M->IQ4_XS",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-12G-IQ3_S.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-12G-IQ3_S.gguf",
       "target_bytes": 12884901888
     },
     "FIT-7.5G": {
@@ -219,7 +219,7 @@
       "macro_kld": 0.5898125999999999,
       "macro_same_top": 73.0676,
       "pair": "IQ1_M->IQ2_XXS",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-7.5G-IQ2_XXS.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-7.5G-IQ2_XXS.gguf",
       "target_bytes": 8053063680
     },
     "FIT-7G": {
@@ -256,7 +256,7 @@
       "macro_kld": 1.1327057999999999,
       "macro_same_top": 63.93579999999999,
       "pair": "IQ1_S->IQ1_M",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-7G-IQ1_M.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-7G-IQ1_M.gguf",
       "target_bytes": 7516192768
     },
     "FIT-8.5G": {
@@ -293,7 +293,7 @@
       "macro_kld": 0.575169,
       "macro_same_top": 77.0188,
       "pair": "IQ2_XS->IQ2_S",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XS.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XS.gguf",
       "target_bytes": 9126805504
     },
     "FIT-8G": {
@@ -330,7 +330,7 @@
       "macro_kld": 0.566418,
       "macro_same_top": 75.5344,
       "pair": "IQ2_XXS->IQ2_XS",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf",
       "target_bytes": 8589934592
     },
     "FIT-9.5G": {
@@ -367,7 +367,7 @@
       "macro_kld": 0.309781,
       "macro_same_top": 82.3068,
       "pair": "IQ2_M->Q2_K",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-9.5G-IQ2_S.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-9.5G-IQ2_S.gguf",
       "target_bytes": 10200547328
     },
     "FIT-9G": {
@@ -404,7 +404,7 @@
       "macro_kld": 0.45887580000000006,
       "macro_same_top": 79.4334,
       "pair": "IQ2_S->IQ2_M",
-      "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-9G-IQ2_XS.gguf",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-9G-IQ2_XS.gguf",
       "target_bytes": 9663676416
     },
     "IQ1_M": {

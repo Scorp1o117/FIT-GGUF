@@ -145,3 +145,15 @@ Key observations (protocol-scoped, M9 slices):
 The 14 reference artifacts were deleted after evaluation per the disk policy
 (reproducible in minutes); the 11 FIT release artifacts are retained under
 `artifacts/fit/release/` for upload.
+
+## Amendment 2 (2026-08-29, owner-directed release naming)
+
+Release filenames drop the source-org prefix: the released artifacts are
+`Qwen3.8-27B-Uncensored-FIT-<size>-<qtype>.gguf` (plans re-run with
+`--model-name Qwen3.8-27B-Uncensored`; predictions and artifacts unchanged,
+11/11 size-verified after rename). The complete release bundle is assembled
+at `/Qwen3.8-27B-Uncensored-FIT-GGUF/` (gitignored staging folder): the 11
+GGUFs, `results/` (comparison table, KL and Same-top curves, machine
+records), `fit-plans/` (per-tier plan/recipe/tensor-type provenance), and a
+README draft. The quantization workspace under `artifacts/fit/release/`
+keeps the renamed artifacts and quantize records.
