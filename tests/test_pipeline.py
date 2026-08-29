@@ -379,8 +379,11 @@ def test_suggested_filename_rules():
 
     # 13,831,691,232 bytes = 12.888 GiB -> 13G; qtype uppercased.
     assert suggested_filename("M", 13_831_691_232, "iq4_xs") == "M-FIT-13G-IQ4_XS.gguf"
-    # Exactly 1.5 GiB rounds half-up to 2G.
-    assert suggested_filename("M", 3 * (1 << 29), "iq3_s") == "M-FIT-2G-IQ3_S.gguf"
+    # Exact half-GiB targets render with one decimal (0.5-GiB tier grid).
+    assert suggested_filename("M", 3 * (1 << 29), "iq3_s") == "M-FIT-1.5G-IQ3_S.gguf"
+    assert suggested_filename("M", 15 * (1 << 29), "q2_k") == "M-FIT-7.5G-Q2_K.gguf"
+    # 8.762 GiB is neither integer nor half: rounds to 9G (P2 replay stays valid).
+    assert suggested_filename("M", 9_408_728_256, "iq3_xxs") == "M-FIT-9G-IQ3_XXS.gguf"
     # Tiny targets clamp to 1G.
     assert suggested_filename("M", 100, "q2_k") == "M-FIT-1G-Q2_K.gguf"
 

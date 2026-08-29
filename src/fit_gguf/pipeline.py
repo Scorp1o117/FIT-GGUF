@@ -151,14 +151,23 @@ def default_model_name(source_path: str) -> str:
 
 
 def suggested_filename(model_name: str, target_bytes: int, dominant_qtype: str) -> str:
-    """Release naming convention: <Model>-FIT-<G>G-<QTYPE>.gguf.
+    """Release naming convention: <Model>-FIT-<Size>G-<QTYPE>.gguf.
 
-    The encoded promise is the TARGET size in GiB rounded half-up (the
-    product claim is "main model file ≈ target"), and the qtype is the
-    canonical uppercase form of the element-weighted dominant type.
+    The encoded promise is the TARGET size in GiB (the product claim is
+    "main model file ≈ target"). Exact half-GiB targets render with one
+    decimal (`7.5G`) so the 0.5-GiB release grid does not collide; every
+    other target rounds half-up to an integer (`7G`, `9G` from 8.76 GiB).
+    The qtype is the canonical uppercase form of the element-weighted
+    dominant type.
     """
-    gib = max(1, (target_bytes + (1 << 29)) // (1 << 30))
-    return f"{model_name}-FIT-{gib}G-{dominant_qtype.upper()}.gguf"
+    gib = max(target_bytes, 1) / (1 << 30)
+    if abs(gib - round(gib)) < 1e-6:
+        label = f"{round(gib)}G"
+    elif abs(gib * 2 - round(gib * 2)) < 1e-6:
+        label = f"{round(gib * 2) / 2:g}G"
+    else:
+        label = f"{int(gib + 0.5) if gib >= 0.5 else 1}G"
+    return f"{model_name}-FIT-{label}-{dominant_qtype.upper()}.gguf"
 
 
 def run_dry_run(

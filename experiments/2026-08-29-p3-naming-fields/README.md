@@ -51,6 +51,16 @@ The CLI prints the dominant qtype with its share and the suggested filename.
 Failure handling: any gate failure is recorded as-is; fixes are code changes
 followed by a full re-run of the affected gates.
 
+## Amendment 1 (2026-08-29, owner-directed 0.5-GiB tier grid, before P4)
+
+The release tier grid is every 0.5 GiB from 7G to 12G. Integer-GiB rounding
+would collide half-GiB tiers (7.5G and 8G would both render "8G"). The
+suggested-filename rule is extended: exact half-GiB targets render with one
+decimal (`7.5G`), every other target keeps integer rounding (`7G`, `9G` from
+8.76 GiB, so the recorded P2/P3 replay filenames stay valid). "G" in FIT
+filenames means GiB (1024^3 bytes); the model card states this explicitly.
+Tier targets are exact byte targets (`--target-bytes`), never rounded.
+
 ## Results (2026-08-29)
 
 - A1: 4 new unit tests pass (element-weighted dominance defeats tensor-count
