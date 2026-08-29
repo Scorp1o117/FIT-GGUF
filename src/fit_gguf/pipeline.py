@@ -43,13 +43,35 @@ ANALYSIS_SCHEMA_VERSION = 1
 PLAN_SCHEMA_VERSION = 1
 FIT_GGUF_VERSION = "0.1.0"
 
-# general.file_type values from pinned include/llama.h (LLAMA_FTYPE enum).
-# Only each KV's encoded size matters for size prediction; the constants keep
-# analysis.json faithful to what llama-quantize writes per preset.
+# general.file_type values from pinned include/llama.h (LLAMA_FTYPE enum),
+# covering every quantization preset pinned quantize.cpp accepts as a
+# positional argument. Only each KV's encoded size matters for size
+# prediction; the constants keep analysis.json faithful to what
+# llama-quantize writes per preset.
 PRESET_FILE_TYPES = {
+    "IQ1_S": 24,
+    "IQ1_M": 31,
+    "IQ2_XXS": 19,
+    "IQ2_XS": 20,
+    "IQ2_S": 28,
+    "IQ2_M": 29,
+    "IQ3_XXS": 23,
+    "IQ3_XS": 22,
     "IQ3_S": 26,
     "IQ3_M": 27,
+    "IQ4_NL": 25,
     "IQ4_XS": 30,
+    "Q2_K": 10,
+    "Q2_K_S": 21,
+    "Q3_K_S": 11,
+    "Q3_K_M": 12,
+    "Q3_K_L": 13,
+    "Q4_K_S": 14,
+    "Q4_K_M": 15,
+    "Q5_K_S": 16,
+    "Q5_K_M": 17,
+    "Q6_K": 18,
+    "Q8_0": 7,
 }
 
 # strncpy(kvo.val_str, ..., 127); kvo.val_str[127] = '\0' in quantize.cpp.

@@ -33,14 +33,26 @@ _FIXED_VALUE_SIZES = {
 }
 
 # (block elements, encoded block bytes), pinned to ggml commit 4e97ac86e.
+# Values are the static_assert sizeof expressions in ggml/src/ggml-common.h;
+# tests/test_gguf_traits_source.py re-parses that file to keep this table honest.
 GGML_TYPE_TRAITS: dict[str, tuple[int, int]] = {
     "f32": (1, 4),
     "bf16": (1, 2),
+    "iq1_s": (256, 50),
+    "iq1_m": (256, 56),
+    "iq2_xxs": (256, 66),
+    "iq2_xs": (256, 74),
+    "iq2_s": (256, 82),
+    "iq3_xxs": (256, 98),
     "iq3_s": (256, 110),
     "iq4_xs": (256, 136),
+    "iq4_nl": (32, 18),
+    "q2_k": (256, 84),
+    "q3_k": (256, 110),
     "q4_k": (256, 144),
     "q5_k": (256, 176),
     "q6_k": (256, 210),
+    "q8_0": (32, 34),
 }
 
 
