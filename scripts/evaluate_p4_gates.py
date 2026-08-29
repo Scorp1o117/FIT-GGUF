@@ -15,6 +15,15 @@ RELEASE = REPO / "Qwen3.8-27B-Uncensored-FIT-GGUF"  # release bundle holds the G
 MODEL = "Qwen3.8-27B-Uncensored"
 DOMAINS = ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat")
 
+def _record_path(name: str) -> Path:
+    for base in (REPO / "artifacts/fit/release", REPO / "Qwen3.8-27B-Uncensored-FIT-GGUF"):
+        candidate = base / (name + ".quantize-record.json")
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(name + ".quantize-record.json")
+
+
+
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -57,7 +66,7 @@ def main() -> int:
             and plan["dominant_qtype"] is not None
         )
         r1_ok = r1_ok and ok
-    check(gates, "R1", "11 balanced plans with exact tier names", r1_ok and len(tiers) == 11)
+    check(gates, "R1", "balanced plans with exact tier names", r1_ok and len(tiers) == 14)
 
     # R2: FIT quantizes zero-byte
     r2_ok = True
@@ -65,8 +74,7 @@ def main() -> int:
         plan = json.loads((P4 / f"tiers/{tier}/fit-plan.json").read_text(encoding="utf-8"))
         artifact = RELEASE / str(plan["suggested_filename"])
         record = json.loads(
-            (REPO / "artifacts/fit/release" / (plan["suggested_filename"] + ".quantize-record.json"))
-            .read_text(encoding="utf-8")
+            _record_path(plan["suggested_filename"]).read_text(encoding="utf-8")
         )
         recorded = (P4 / f"tiers/{tier}/artifact-sha256.txt").read_text(encoding="utf-8").split()[0]
         ok = (
@@ -99,12 +107,12 @@ def main() -> int:
     # R4: KL evaluations all parsed
     results = json.loads((P4 / "results/p4-results.json").read_text(encoding="utf-8"))
     artifacts = results["artifacts"]
-    complete = len(artifacts) == 25 and all(
+    complete = len(artifacts) == 2 * len(tiers) and all(
         set(a["domains"]) == set(DOMAINS) for a in artifacts.values()
     )
     refs_ok = len(results["bf16_references"]) == 5
     slices_recorded = (P4 / "slices-sha256.txt").is_file()
-    check(gates, "R4", "25 artifacts x 5 domains evaluated", complete and refs_ok and slices_recorded)
+    check(gates, "R4", "all artifacts x 5 domains evaluated", complete and refs_ok and slices_recorded)
 
     # R5: reporting outputs
     check(

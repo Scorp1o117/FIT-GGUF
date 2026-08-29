@@ -163,6 +163,6 @@ under `artifacts/fit/release/` keeps the quantize records.
 Three tiers added to fill the 12-14 GiB gap: FIT-12.5G and FIT-13G on the
 (Q3_K_M -> Q3_K_L) pair (the immediate bracket; 138 positive-gain candidates,
 budget 0.97 GiB >= both fill needs - the Q3_K_L attention-piece transitions
-avoid the zero-gain trap), and FIT-13.5G on (Q3_K_L -> IQ4_XS). Same frozen
+avoid the zero-gain trap), and FIT-13.5G on (Q3_K_L -> IQ4_XS, exact target 14,495,514,624 = 13.5 GiB; an initial off-by-1.1 MB target of 14,496,634,368 rendered "14G" and was corrected before release). Same frozen
 settings as the original eleven: balanced allocator, oracle planning,
 zero-byte quantize gate, 5-domain KL evaluation.

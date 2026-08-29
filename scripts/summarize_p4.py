@@ -20,6 +20,15 @@ PAIR_PATTERNS = {
 }
 DOMAINS = ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat")
 
+def _record_path(name: str) -> Path:
+    for base in (REPO / "artifacts/fit/release", REPO / "Qwen3.8-27B-Uncensored-FIT-GGUF"):
+        candidate = base / (name + ".quantize-record.json")
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(name + ".quantize-record.json")
+
+
+
 
 def parse_eval_log(path: Path) -> dict[str, float]:
     text = path.read_text(encoding="utf-8")
@@ -55,8 +64,7 @@ def main() -> int:
         tier, lower, upper, target = line.split(",")
         plan = json.loads((P4 / f"tiers/{tier}/fit-plan.json").read_text(encoding="utf-8"))
         record = json.loads(
-            (REPO / f"artifacts/fit/release/{plan['suggested_filename']}.quantize-record.json")
-            .read_text(encoding="utf-8")
+            _record_path(plan["suggested_filename"]).read_text(encoding="utf-8")
         )
         domains = {
             d: parse_eval_log(LOGS / f"eval-{tier}-{d}.log") for d in DOMAINS
