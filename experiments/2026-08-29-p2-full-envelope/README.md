@@ -85,6 +85,26 @@ Steps and gates (all frozen before execution):
 Failure handling: any gate failure is recorded as-is; fixes are code changes
 followed by a full re-run of E3-E5. No gate relaxation.
 
+## Amendment 1 (2026-08-29, owner directive, before E2-E5 execution)
+
+The owner directed reuse of `imatrix_unsloth.gguf` (the Huihui canonical
+imatrix, SHA-256 `0ee5b10bd0c2fa2127c6f4b43dbfe1efd71e383b63217af9dade1de36599f1c1`)
+instead of building a new imatrix for the orcarouter source. The in-progress
+self-built APEX run was stopped mid-computation and its partial output
+deleted; no E2/E3/E4 step had been evaluated. E2 is replaced by:
+
+- E2': verify `imatrix_unsloth.gguf` by SHA-256, confirm all 496 profiled
+  entries cover the quantizable matrices of the new BF16 (same qwen35
+  architecture, 851 no-MTP tensors, identical tensor names and shapes), and
+  record the provenance: the importance values derive from
+  Huihui-Qwen3.8-27B-abliterated activations, not from this model's own
+  activations. Quantized outputs will embed
+  `quantize.imatrix.file = "imatrix_unsloth.gguf"` and dataset
+  `unsloth_calibration_dataset`.
+
+E1 stands as completed (BF16 SHA-256 recorded in `bf16-sha256.txt`). E3-E5
+are unchanged and have not been executed.
+
 ## 3. Honest scope notes
 
 - Size control per artifact remains self-proving (predict -> quantize ->

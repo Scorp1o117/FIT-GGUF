@@ -1,0 +1,2 @@
+f95456457fededfaf9f51cd4739a00aada0795be372882844071cc19146634cd  artifacts/source/orcarouter-Qwen3.8-27B-Uncensored-BF16.gguf
+size=53808282624
