@@ -158,28 +158,32 @@ or Granite, which are development data only.
 ## Storage and reproducibility
 
 Large GGUFs, KLD files, and raw logs are intentionally ignored by Git. Recipes,
-hashes, parsed JSON, and reports are tracked. The random GGUFs are fully
+hashes, parsed JSON, and reports are tracked. Quantized GGUFs are fully
 reproducible from their retained tensor-type files: the M11 rebuild reproduced
-all three M10 SHA-256 values exactly. Retained artifacts: BF16 source, M9
-references, original FIT-25/50/75, block-balanced FIT-50/25/75, the three
-rebuilt random FIT-50 GGUFs, and the five M14 crossover GGUFs.
+all three M10 SHA-256 values exactly, and the P1 replay reproduced four more
+historical hashes bit-for-bit. As of the post-freeze cleanup no quantized GGUF
+or BF16 GGUF remains under `artifacts/`; see the disk policy below.
 
-Disk policy (owner-directed, 2026-08-29): only the six curve artifacts are
-kept on disk - original FIT-25/50/75 and block-balanced FIT-25/50/75, plus
-the BF16 source. Everything else quantized is reproducible from retained
-tensor-type files and deleted after evaluation: the M8 intermediates, the
-three random FIT-50 GGUFs (hashes in the M10 records; rebuilt bit-exactly in
-M11), the five M14 crossover GGUFs (SHA-256 archived in
-`experiments/2026-08-28-m14-swap-ablation/artifact-hashes.txt`), and the
-M9/M11/M13/M14 KLD reference files (regenerable from the retained slices;
-M9 KLD hashes are pinned in the M9 README). Determinism of both the
-quantization and reference pipelines has been proven repeatedly. The safetensors source and the calibration dataset are project inputs. On
+Disk policy (owner-directed, 2026-08-29): after the v0.1 freeze the owner
+directed deletion of ALL remaining GGUF artifacts - the six retained curve
+artifacts, the M2 preset artifacts, and both BF16 sources (23 GGUFs, about
+239 GB freed; disk 89% -> 75%). Everything deleted is reproducible: the
+quantized artifacts from their retained tensor-type files (bit-exact
+reproduction proven in M11 and again in the P1 replay), and the BF16 sources
+from the safetensors trees under `/run/media/s117/OS/Models/`
+(`Huihui-Qwen3.8-27B-abliterated/`, `granite-4.2-8b/`) with the documented
+conversions. Full provenance hashes live in the experiment records: M2/M9/M10
+/M12 README SHA tables, M16 `artifact-hashes.txt`, Huihui BF16
+`8a033407...` in PROJECT_STATE, and the now-complete Granite BF16 hash in
+`experiments/2026-08-29-m16-granite-reveal/granite-bf16-sha256.txt`
+(`d82690e0dc827f2c43effeb3d489f572afbe2541fa8b4895b0d958ce473925a6`). The
+safetensors sources and the calibration dataset are project inputs. On
 2026-08-29 the duplicate copies under `test-Models/` were removed and replaced
 with symlinks to the canonical copies under
-`/run/media/s117/OS/Models/` (verified identical by full-file `cmp` on
-shards and per-file size sets; the calibration nested git repos are the same
-commit with the same local state). Check `df` before adding artifacts; about 170 GB
-was free after the 2026-08-29 cleanup.
+`/run/media/s117/OS/Models/`. The first release source,
+`orcarouter/Qwen3.8-27B-Uncensored`, is being fetched into
+`/run/media/s117/OS/Models/orcarouter-Qwen3.8-27B-Uncensored/`. Check `df`
+before adding artifacts; about 406 GB was free after the post-freeze cleanup.
 
 Commits: a16d7ab (M0-M12), f5f93cc (M13 prereg), 414aaa6 (M13 results),
 5836443 (M14 prereg + overlap diagnostic), then M14 results; incremental.
