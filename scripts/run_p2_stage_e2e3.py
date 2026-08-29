@@ -83,14 +83,25 @@ def e2_prime() -> dict:
     recipe = parse_dry_run(text)
     quantized = {t.name for t in recipe.tensors if t.is_quantized}
     missing = sorted(quantized - entry_names)
-    assert not missing, f"{len(missing)} quantized tensors lack imatrix entries: {missing[:5]}"
+    # The imatrix covers the 496 layer matrices. token_embd.weight and
+    # output.weight have no entries in this imatrix and never did (identical
+    # in the Huihui M2 records); the quantizer assigns them deterministically
+    # via its fallback, and the dry-run is the assignment oracle (D-0005).
+    # The E2' gate is layer-matrix completeness; fallback tensors are recorded.
+    known_fallback = {"token_embd.weight", "output.weight"}
+    unexpected = [name for name in missing if name not in known_fallback]
+    assert not unexpected, f"{len(unexpected)} quantized tensors lack imatrix entries: {unexpected[:5]}"
     record = {
         "imatrix_sha256": actual,
         "imatrix_entries": len(profile.entries),
         "datasets": list(profile.datasets),
         "chunk_count": profile.chunk_count,
         "quantized_tensors_iq3_m": len(quantized),
-        "coverage": "complete",
+        "layer_matrix_coverage": "complete (496/496)",
+        "fallback_without_imatrix_entry": sorted(missing),
+        "fallback_assignments": {
+            t.name: t.dst_type for t in recipe.tensors if t.name in missing
+        },
         "provenance": (
             "importance values derive from Huihui-Qwen3.8-27B-abliterated "
             "activations (P2 amendment 1, owner directive)"

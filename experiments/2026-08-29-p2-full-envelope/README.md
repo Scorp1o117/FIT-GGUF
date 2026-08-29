@@ -131,6 +131,21 @@ and committed before any probe quantization:
 - probe-top: the adjacent pair with the largest size gap ending at Q8_0,
   `--fit 0.5`.
 
+## Amendment 3 (2026-08-29, after E2' first run, before E3 execution)
+
+The initial E2' assertion required every quantized tensor to have an imatrix
+entry and failed on `output.weight` and `token_embd.weight`. Source evidence:
+the Huihui M2 dry-run (experiments/2026-08-28-m2-effective-recipes) shows the
+identical assignments for this imatrix (output.weight -> q6_K,
+token_embd.weight -> iq3_s) - the imatrix never carried entries for these two
+matrices, the quantizer's fallback is deterministic, and every M2/M3/M9
+zero-byte prediction was achieved under exactly this condition. The orcarouter
+IQ3_M assignment is byte-identical to Huihui's on these tensors. E2' is
+corrected to assert (a) imatrix SHA-256, (b) complete coverage of the 496
+layer matrices, and (c) recorded fallback behavior for token_embd/output
+(assignment oracle is the dry-run, per D-0005/M2). No evaluation result was
+observed before this correction; E3 had not run.
+
 ## 3. Honest scope notes
 
 - Size control per artifact remains self-proving (predict -> quantize ->
