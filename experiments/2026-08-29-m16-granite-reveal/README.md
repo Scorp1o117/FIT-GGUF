@@ -94,3 +94,11 @@ these slices.
   mechanically by `scripts/evaluate_m16_gate.py`.
 - Elapsed seconds are wall-clock from log file timestamps; max RSS is not
   instrumented.
+
+## Protocol-lock amendment (before any plan generation)
+
+Granite has 40 blocks (vs Huihui's 64). The block-balanced v0.1b rule's four
+equal quarters therefore use block_span = 10 on Granite (four 10-block
+ranges); everything else in the frozen rule is unchanged. The imatrix profile
+was verified complete before planning: 280 entries = 7 roles x 40 layers,
+blocks 0..39.
