@@ -65,7 +65,8 @@ def main() -> int:
         plan = json.loads((P4 / f"tiers/{tier}/fit-plan.json").read_text(encoding="utf-8"))
         artifact = RELEASE / str(plan["suggested_filename"])
         record = json.loads(
-            Path(str(artifact) + ".quantize-record.json").read_text(encoding="utf-8")
+            (REPO / "artifacts/fit/release" / (plan["suggested_filename"] + ".quantize-record.json"))
+            .read_text(encoding="utf-8")
         )
         recorded = (P4 / f"tiers/{tier}/artifact-sha256.txt").read_text(encoding="utf-8").split()[0]
         ok = (
