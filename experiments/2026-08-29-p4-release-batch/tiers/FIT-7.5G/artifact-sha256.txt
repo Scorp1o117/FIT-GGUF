@@ -1,0 +1,1 @@
+1f5a6561f035e52ae0e0831c062cb0e912ea34186004a78863bb72ec747bdfc6  artifacts/fit/release/orcarouter-Qwen3.8-27B-Uncensored-FIT-7.5G-IQ2_XXS.gguf

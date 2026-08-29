@@ -1,0 +1,23 @@
+{
+  "analysis_path": "experiments/2026-08-29-p4-release-batch/tiers/_analysis/IQ1_S-IQ1_M/analysis.json",
+  "command": [
+    "tools/llama-b10666-rocm/llama-quantize",
+    "--imatrix",
+    "imatrix_unsloth.gguf",
+    "--tensor-type-file",
+    "experiments/2026-08-29-p4-release-batch/tiers/FIT-7G/fit-tensor-types.txt",
+    "artifacts/source/orcarouter-Qwen3.8-27B-Uncensored-BF16.gguf",
+    "artifacts/fit/release/orcarouter-Qwen3.8-27B-Uncensored-FIT-7G-IQ1_M.gguf",
+    "IQ1_S"
+  ],
+  "expect_bytes": 7515946176,
+  "output_path": "artifacts/fit/release/orcarouter-Qwen3.8-27B-Uncensored-FIT-7G-IQ1_M.gguf",
+  "returncode": 0,
+  "schema_version": 1,
+  "sha256": "c1f018180d570fc56ecef416fba85f50ab7545caecb369f580701c20f94d36ea",
+  "size_bytes": 7515946176,
+  "size_matches_expectation": true,
+  "stderr_tail": "9/ 851] blk.62.ssm_norm.weight               - [   128,      1,      1,      1], type =    f32, size =    0.000 MiB\n[ 840/ 851] blk.62.ssm_out.weight                - [  6144,   5120,      1,      1], type =   bf16, converting to iq1_m .. size =    60.00 MiB ->     6.56 MiB\n[ 841/ 851] blk.63.attn_k.weight                 - [  5120,   1024,      1,      1], type =   bf16, converting to iq1_m .. size =    10.00 MiB ->     1.09 MiB\n[ 842/ 851] blk.63.attn_k_norm.weight            - [   256,      1,      1,      1], type =    f32, size =    0.001 MiB\n[ 843/ 851] blk.63.attn_norm.weight              - [  5120,      1,      1,      1], type =    f32, size =    0.020 MiB\n[ 844/ 851] blk.63.attn_output.weight            - [  6144,   5120,      1,      1], type =   bf16, converting to iq2_xxs .. size =    60.00 MiB ->     7.73 MiB\n[ 845/ 851] blk.63.attn_q.weight                 - [  5120,  12288,      1,      1], type =   bf16, converting to iq1_s .. size =   120.00 MiB ->    11.72 MiB\n[ 846/ 851] blk.63.attn_q_norm.weight            - [   256,      1,      1,      1], type =    f32, size =    0.001 MiB\n[ 847/ 851] blk.63.attn_v.weight                 - [  5120,   1024,      1,      1], type =   bf16, converting to q4_K .. size =    10.00 MiB ->     2.81 MiB\n[ 848/ 851] blk.63.ffn_down.weight               - [ 17408,   5120,      1,      1], type =   bf16, converting to iq1_m .. size =   170.00 MiB ->    18.59 MiB\n[ 849/ 851] blk.63.ffn_gate.weight               - [  5120,  17408,      1,      1], type =   bf16, converting to iq1_m .. size =   170.00 MiB ->    18.59 MiB\n[ 850/ 851] blk.63.ffn_up.weight                 - [  5120,  17408,      1,      1], type =   bf16, converting to iq1_m .. size =   170.00 MiB ->    18.59 MiB\n[ 851/ 851] blk.63.post_attention_norm.weight    - [  5120,      1,      1,      1], type =    f32, size =    0.020 MiB\nllama_model_quantize_impl: model size  = 51305.09 MiB (16.00 BPW)\nllama_model_quantize_impl: quant size  =  7157.28 MiB (2.23 BPW)\n",
+  "tensor_types_path": "experiments/2026-08-29-p4-release-batch/tiers/FIT-7G/fit-tensor-types.txt",
+  "tensor_types_sha256": "efe2de3fc91a671e424d9ec919c72c67fa6810a47da221247dd0c9e8b28f9b0d"
+}
