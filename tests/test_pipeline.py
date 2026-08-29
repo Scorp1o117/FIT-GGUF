@@ -139,7 +139,11 @@ def _write_stub_runtime(directory) -> None:
         'echo "stub: $*" >> "$STUB_CALL_LOG"\n'
         'if [[ "$1" == "--dry-run" ]]; then\n'
         '  preset="${!#}"\n'
-        '  cat "$STUB_DIR/${preset,,}.dryrun.log"\n'
+        '  if [[ -n "$STUB_ORACLE_LOG" && "$*" == *"--tensor-type-file"* ]]; then\n'
+        '    cat "$STUB_ORACLE_LOG"\n'
+        '  else\n'
+        '    cat "$STUB_DIR/${preset,,}.dryrun.log"\n'
+        '  fi\n'
         "  exit 0\n"
         "fi\n"
         "for ((i=1; i<=$#; i++)); do\n"
@@ -416,3 +420,62 @@ def test_plan_record_contains_naming_fields(e2e):
     )
     assert derived["model_name"] == "src"
     assert derived["suggested_filename"].startswith("src-FIT-")
+
+
+def test_plan_oracle_adopts_effective_recipe(e2e, monkeypatch):
+    from fit_gguf.pipeline import plan as plan_fn, load_analysis
+
+    out_dir = e2e["tmp"] / "oracle"
+    analysis = analyze(
+        e2e["source"], e2e["imatrix"], e2e["runtime"], out_dir, hash_sources=False
+    )
+    # Oracle log: attn_q lands one type lower than the non-oracle dry-run,
+    # emulating llama.cpp's counter-shift for overridden-neighbor tensors.
+    oracle_log = _dry_run_log("IQ3_M").replace(
+        "0.054 MiB (IQ3_S)", "0.046 MiB (IQ3_XXS)"
+    ).replace(
+        "quant size  =    0.082 MiB", "quant size  =    0.074 MiB"
+    )
+    (e2e["runtime"] / "oracle-iq3_m.log").write_text(oracle_log, encoding="utf-8")
+    monkeypatch.setenv("STUB_ORACLE_LOG", str(e2e["runtime"] / "oracle-iq3_m.log"))
+    record = plan_fn(analysis, out_dir / "fit50", fit="0.5", policy="original")
+    assert record["oracle_iterations"] == 1
+    assert record["predicted_size_bytes"] < record["target_bytes"]
+    # The prediction must equal the ORACLE parse, not the naive dry-run.
+    from fit_gguf import parse_dry_run, read_gguf_layout, predict_quantized_size
+    from fit_gguf.gguf import QuantizationMetadata, ImatrixProvenance
+
+    layout = read_gguf_layout(str(e2e["source"]))
+    oracle_recipe = parse_dry_run(oracle_log)
+    meta = QuantizationMetadata(
+        file_type=27,
+        imatrix=ImatrixProvenance(
+            file="imx.gguf", dataset="fixture-dataset", entries_count=2, chunks_count=3
+        ),
+    )
+    oracle_size = predict_quantized_size(layout, oracle_recipe, meta).total_bytes
+    assert record["predicted_size_bytes"] == oracle_size
+    assert record["unused_bytes"] == record["target_bytes"] - oracle_size
+
+
+def test_plan_oracle_gives_up_after_three_overshoots(e2e, monkeypatch):
+    from fit_gguf.pipeline import PipelineError, plan as plan_fn
+
+    out_dir = e2e["tmp"] / "oracle2"
+    analysis = analyze(
+        e2e["source"], e2e["imatrix"], e2e["runtime"], out_dir, hash_sources=False
+    )
+    # Oracle always lands one type HIGHER: overshoot can never converge.
+    oracle_log = _dry_run_log("IQ3_M").replace(
+        "0.054 MiB (IQ3_S)", "0.066 MiB (IQ4_XS)"
+    ).replace(
+        "quant size  =    0.082 MiB", "quant size  =    0.094 MiB"
+    )
+    (e2e["runtime"] / "oracle-high-iq3_m.log").write_text(oracle_log, encoding="utf-8")
+    monkeypatch.setenv("STUB_ORACLE_LOG", str(e2e["runtime"] / "oracle-high-iq3_m.log"))
+    try:
+        plan_fn(analysis, out_dir / "fit50", fit="0.5", policy="original")
+    except PipelineError as error:
+        assert "oracle" in str(error)
+    else:
+        raise AssertionError("expected PipelineError from non-converging oracle loop")

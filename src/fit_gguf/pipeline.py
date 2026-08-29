@@ -32,6 +32,7 @@ from fit_gguf.imatrix import ImatrixProfile, load_imatrix_profile, write_profile
 from fit_gguf.llama_integration import write_tensor_type_file
 from fit_gguf.models import DryRunResult, DryRunTensorAssignment
 from fit_gguf.optimizer import (
+    OptimizationError,
     OptimizationPlan,
     optimize_block_balanced,
     optimize_greedy,
@@ -176,12 +177,23 @@ def run_dry_run(
     imatrix_arg: str,
     preset: str,
     log_path: str | Path,
+    *,
+    tensor_types: str | Path | None = None,
 ) -> DryRunResult:
-    """Run one pinned llama-quantize --dry-run and strictly parse the log."""
+    """Run one pinned llama-quantize --dry-run and strictly parse the log.
+
+    With ``tensor_types``, the dry-run captures the EFFECTIVE recipe: llama.cpp
+    applies the overrides, and overridden tensors skip the counter-based
+    category rules (P4 amendment 1), so this oracle re-dry-run is the faithful
+    base for size prediction of planned recipes.
+    """
     binary = Path(runtime_dir) / "llama-quantize"
     if not binary.is_file():
         raise PipelineError(f"llama-quantize not found at {binary}")
-    command = [str(binary), "--dry-run", "--imatrix", imatrix_arg, str(source), preset]
+    command = [str(binary), "--dry-run", "--imatrix", imatrix_arg]
+    if tensor_types is not None:
+        command += ["--tensor-type-file", str(tensor_types)]
+    command += [str(source), preset]
     completed = subprocess.run(command, capture_output=True, text=True)
     # Historical logs capture unbuffered stderr before buffered stdout; keep
     # that order so the parsed text matches the M2/M16 ground truth.
@@ -485,20 +497,59 @@ def plan(
         resolved_span = int(payload["block_span_auto"])
     else:
         resolved_span = int(block_span)  # type: ignore[arg-type]
-    if policy == "original":
-        optimization = optimize_greedy(target, candidate_set)
-    elif policy == "balanced":
-        optimization = optimize_block_balanced(target, candidate_set, block_span=resolved_span)
-    else:
-        optimization = optimize_random(target, candidate_set, seed=seed)
 
-    recipe = apply_overrides(lower_recipe, optimization)
-    prediction = predict_quantized_size(layout, recipe, metadata)
+    def select(select_target: int) -> OptimizationPlan:
+        if policy == "original":
+            return optimize_greedy(select_target, candidate_set)
+        if policy == "balanced":
+            return optimize_block_balanced(select_target, candidate_set, block_span=resolved_span)
+        return optimize_random(select_target, candidate_set, seed=seed)
+
+    optimization = select(target)
+
+    prefix = Path(out_prefix)
+    if prefix.parent != Path("."):
+        prefix.parent.mkdir(parents=True, exist_ok=True)
+    recipe_path = prefix.with_name(prefix.name + "-recipe.json")
+    types_path = prefix.with_name(prefix.name + "-tensor-types.txt")
+
+    # Oracle loop (P4 amendment 1): overrides skip llama.cpp's counter-based
+    # category rules, so only a dry-run WITH the override file captures the
+    # effective recipe. Adopt its prediction; on overshoot, re-select with a
+    # reduced target (max 3 iterations).
+    runtime_binary = str(payload["runtime"]["llama_quantize"])
+    source_path = str(payload["source"]["path"])
+    imatrix_arg = str(payload["imatrix"]["arg"])
+    effective_target = target
+    oracle_iterations = 0
+    while True:
+        oracle_iterations += 1
+        write_fit_recipe(optimization, recipe_path, lower_preset=lower_preset, upper_preset=upper_preset)
+        write_tensor_type_file(optimization, types_path)
+        effective_recipe = run_dry_run(
+            Path(runtime_binary).parent, source_path, imatrix_arg, lower_preset,
+            prefix.with_name(prefix.name + "-oracle-dry-run.log"),
+            tensor_types=types_path,
+        )
+        prediction = predict_quantized_size(layout, effective_recipe, metadata)
+        if prediction.total_bytes <= effective_target:
+            break
+        if oracle_iterations >= 3:
+            raise PipelineError(
+                f"Oracle prediction {prediction.total_bytes:,} still exceeds target "
+                f"{effective_target:,} after {oracle_iterations} iterations"
+            )
+        effective_target = effective_target - (prediction.total_bytes - effective_target) - (1 << 20)
+        try:
+            optimization = select(effective_target)
+        except OptimizationError as exc:
+            raise PipelineError(f"oracle loop failed to converge: {exc}") from exc
     if prediction.total_bytes > target:
         raise PipelineError(
             f"Predicted {prediction.total_bytes:,} bytes exceeds target {target:,}"
         )
 
+    recipe = apply_overrides(lower_recipe, optimization)
     distribution = qtype_parameter_distribution(recipe)
     total_elements = sum(distribution.values())
     dominant = max(distribution, key=lambda qtype: distribution[qtype]) if distribution else None
@@ -512,14 +563,6 @@ def plan(
     suggested = (
         suggested_filename(resolved_model_name, target, dominant) if dominant else None
     )
-
-    prefix = Path(out_prefix)
-    if prefix.parent != Path("."):
-        prefix.parent.mkdir(parents=True, exist_ok=True)
-    recipe_path = prefix.with_name(prefix.name + "-recipe.json")
-    types_path = prefix.with_name(prefix.name + "-tensor-types.txt")
-    write_fit_recipe(optimization, recipe_path, lower_preset=lower_preset, upper_preset=upper_preset)
-    write_tensor_type_file(optimization, types_path)
 
     record = {
         "schema_version": PLAN_SCHEMA_VERSION,
@@ -539,10 +582,11 @@ def plan(
         "metadata_bytes": prediction.metadata_bytes,
         "tensor_payload_bytes": prediction.tensor_payload_bytes,
         "tensor_padding_bytes": prediction.tensor_padding_bytes,
-        "unused_bytes": optimization.unused_bytes,
+        "unused_bytes": target - prediction.total_bytes,
         "selected_count": len(optimization.selected),
         "skipped_count": optimization.skipped_count,
         "selected_cost_bytes": optimization.selected_cost_bytes,
+        "oracle_iterations": oracle_iterations,
         "recipe_path": str(recipe_path),
         "recipe_sha256": _sha256_file(recipe_path),
         "tensor_types_path": str(types_path),
