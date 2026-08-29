@@ -157,3 +157,12 @@ GGUFs, `results/` (comparison table, KL and Same-top curves, machine
 records), `fit-plans/` (per-tier plan/recipe/tensor-type provenance), and a
 README draft. The GGUFs live in the bundle; the quantization workspace
 under `artifacts/fit/release/` keeps the quantize records.
+
+## Amendment 3 (2026-08-29, owner-directed grid extension)
+
+Three tiers added to fill the 12-14 GiB gap: FIT-12.5G and FIT-13G on the
+(Q3_K_M -> Q3_K_L) pair (the immediate bracket; 138 positive-gain candidates,
+budget 0.97 GiB >= both fill needs - the Q3_K_L attention-piece transitions
+avoid the zero-gain trap), and FIT-13.5G on (Q3_K_L -> IQ4_XS). Same frozen
+settings as the original eleven: balanced allocator, oracle planning,
+zero-byte quantize gate, 5-domain KL evaluation.
