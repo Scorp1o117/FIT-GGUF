@@ -479,3 +479,30 @@ claim is validated only on the Huihui development model. Any v0.2 allocator
 work is now genuinely open research (conditional marginal utility per
 D-0020's interaction finding) and must not be tuned on either existing
 validation model without a new preregistered design.
+
+## D-0023: Ship the fit CLI as the v0.1 implementation after replay-only acceptance
+
+Reason:
+Productization must not change any frozen behavior. The CLI wraps the exact
+M2-M16 pipeline, replaces every hand-copied constant with derivation from the
+imatrix GGUF and pinned quantize.cpp behavior, and earns acceptance solely by
+replaying two historical ground-truth points byte-identically.
+
+Alternatives:
+Extend the experiment scripts indefinitely, rewrite the planner around a new
+design, or add tolerance to the replay gates.
+
+Evidence:
+Preregistered gates G1-G8 (experiments/2026-08-29-p1-cli/README.md, committed
+before execution) all passed on the first run: both models' FIT-50 plans
+(original and block-balanced) produced tensor-type files byte-identical to the
+M7/M10/M16 ground truth, and all four re-quantized artifacts reproduced the
+M9/M10/M16 SHA-256 hashes exactly. 53 unit tests pass. One provenance note:
+the Granite imatrix chunk_count value (3394) differs from the hand-recorded
+1250; the KV is a 4-byte integer, so the value cannot affect size prediction.
+
+Status:
+Accepted. Version FIT-GGUF v0.1 (not v1.0; the allocation claim remains
+model-scoped per D-0022). Research stays frozen: no allocator tuning on either
+model; any future allocator experiment requires a new preregistered design on
+a fresh third model.

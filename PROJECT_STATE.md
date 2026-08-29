@@ -8,12 +8,11 @@ between standard llama.cpp presets.
 
 ## Current milestone
 
-M16 complete - the Granite cross-model reveal is recorded (D-0022). Exact
-size control transfers completely (11/11 zero-byte errors); the allocator
-value does not (original utility loses to the random mean at FIT-50 on
-granite; v0.1b shows no advantage). FIT's transferable claims: exact
-deterministic size control and monotonic quality-vs-budget curves. The
-imatrix-allocation claim is validated only on the development model.
+P1 complete - the fit CLI shipped and the preregistered regression replay
+passed all eight gates (D-0023). FIT-GGUF is versioned v0.1 and frozen:
+exact size control transfers cross-model (22/22 artifacts at zero-byte error
+across two architectures); the imatrix-allocation value does not (D-0022).
+`FINAL_REPORT.md` is the closing document for this version.
 
 ## Verified facts
 
@@ -59,9 +58,15 @@ imatrix-allocation claim is validated only on the development model.
   incomplete tensor sequences, inconsistent totals, conflicting summaries, and
   aggregate differences beyond display-rounding tolerance.
 - The parser, size predictor, profiler, planner, candidate generator, optimizer,
-  and llama.cpp recipe writer have 43 passing unit tests, including Qwen3.5
+  llama.cpp recipe writer, pipeline, and CLI have 53 passing unit tests,
+  including Qwen3.5
   attention, FFN, and SSM tensor names. They deliberately treat printed MiB values as rounded
   display measurements rather than exact file-size predictions.
+- The `fit analyze/plan/quantize` CLI (`src/fit_gguf/cli.py`,
+  `src/fit_gguf/pipeline.py`) wraps the frozen pipeline with every
+  hand-copied constant derived from the imatrix GGUF and pinned quantize.cpp
+  behavior; it replayed both models' historical FIT-50 ground truth
+  byte-identically (D-0023).
 - IQ3_S, IQ3_M, and IQ4_XS dry-run assignments were compared with three full
   real quantizations of the current 27B model. All three had 851/851 matching
   tensor names and zero destination-qtype mismatches.
@@ -194,28 +199,27 @@ reported uncertainty while KL and Same-top retain consistent direction.
 
 ## Current task
 
-Record the M14 rejection and run the matched random-seed baseline at
-FIT-25/FIT-75 (next queued milestone; at FIT-75 it directly tests the
-allocation-sensitivity-collapse hypothesis behind the repeated O/B ties).
+None. M0-M16 and P1 are complete; FIT-GGUF v0.1 is frozen and shipped
+(`fit` CLI, FINAL_REPORT.md, README). No work is pending on either model.
 
 ## Next task
 
-After the random-seed baseline: write the D-0021 allocator freeze for the
-first cross-model validation (granite-4.2-8b is already downloaded to
-/run/media/s117/OS/Models/granite-4.2-8b) and only then evaluate FIT on it.
-Per external review: Granite quality results must not be seen before the
-freeze is committed; a cross-model failure must be recorded as a failure,
-not tuned away.
+Nothing scheduled. If allocator research reopens as v0.2, it requires a new
+preregistered design (conditional marginal utility per D-0020) on a fresh
+third model; Huihui and Granite are development data only and must not be
+tuned on.
 
 ## Acceptance status
 
-Not accepted. M0-M14 complete. Positive allocation evidence stands exactly
-here: v0.1b confirmed at FIT-50 on untouched data (M11); original utility
-owns FIT-25; FIT-75 is a practical tie reproduced on two independent holdout
-sets (M13, M14); the positional mechanism was rejected by the M14 crossover
-gates; the composite budget rule is not accepted (M13). Remaining for any
-deployment claim: matched random-seed variance baseline, then the frozen
-cross-model validation.
+Accepted as v0.1 with a deliberately narrow claim. M0-M16 plus P1 complete.
+Validated and transferable: exact deterministic size control between presets
+(zero-byte error on all 22 artifacts across two architectures) and monotonic
+quality-vs-budget curves on the development model. Model-scoped only: the
+imatrix-allocation value (v0.1b confirmed at FIT-50 on Huihui in M11; original
+owns FIT-25 per M15; no allocator advantage on Granite per M16). Positional
+mechanism, budget rule, and FIT-75 collapse hypotheses all rejected (M13-M15).
+The v0.1 CLI replays both models' historical ground truth byte-identically
+(D-0023).
 
 - M15 (preregistered matched random baseline, fifth holdout set): paired
   random trajectories (three seeds, FIT-25 prefix / FIT-75 continuation)
@@ -238,3 +242,14 @@ cross-model validation.
   worse than the random mean, best FIT-50 variant is a random seed);
   G-bal FAIL (B50 within ROPE of O50). Recorded as NO TRANSFER of allocator
   value; size control fully transfers.
+
+- P1 (preregistered productization replay, D-0023): the `fit
+  analyze/plan/quantize` CLI wraps the frozen pipeline with all hand-copied
+  constants replaced by derivation (imatrix provenance from the imatrix GGUF,
+  block span from the profile, exact integer fraction targets). Gates G1-G8
+  passed on the first run: both Huihui FIT-50 plans (original/balanced) and
+  both Granite FIT-50 plans produced tensor-type files byte-identical to the
+  M7/M10/M16 ground truth, and all four re-quantized artifacts reproduced
+  their M9/M10/M16 SHA-256 hashes exactly. 53 unit tests pass. Replay GGUFs
+  deleted after hashing per the disk policy; records retained in
+  `experiments/2026-08-29-p1-cli/`.

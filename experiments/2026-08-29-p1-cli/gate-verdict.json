@@ -1,0 +1,88 @@
+{
+  "all_pass": true,
+  "gates": {
+    "G1": {
+      "conditions": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "description": "Huihui analyze provenance and preset predictions",
+      "pass": true
+    },
+    "G2": {
+      "conditions": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "description": "Huihui plan original equals M7 tensor-types",
+      "pass": true
+    },
+    "G3": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "Huihui plan balanced equals M10 tensor-types",
+      "pass": true
+    },
+    "G4": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "Huihui replay artifacts match M9/M10 SHA-256",
+      "pass": true
+    },
+    "G5": {
+      "conditions": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "description": "Granite analyze provenance and preset predictions",
+      "pass": true
+    },
+    "G6": {
+      "conditions": [
+        true,
+        true,
+        true
+      ],
+      "description": "Granite plan original equals M16 tensor-types",
+      "pass": true
+    },
+    "G7": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "Granite plan balanced equals M16 tensor-types",
+      "pass": true
+    },
+    "G8": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "Granite replay artifacts match M16 SHA-256",
+      "pass": true
+    }
+  },
+  "notes": {
+    "granite_chunks_count_provenance": "derived chunks_count=3394 from the imatrix GGUF; the M16 hand META recorded 1250. quantize.cpp writes this KV as a 4-byte integer, so the value cannot affect size prediction."
+  },
+  "schema_version": 1
+}

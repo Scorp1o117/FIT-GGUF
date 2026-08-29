@@ -1,0 +1,23 @@
+{
+  "analysis_path": "experiments/2026-08-29-p1-cli/granite/analysis/analysis.json",
+  "command": [
+    "tools/llama-b10666-rocm/llama-quantize",
+    "--imatrix",
+    "imatrix-granite-apex-c512.gguf",
+    "--tensor-type-file",
+    "experiments/2026-08-29-p1-cli/granite/b-fit50-tensor-types.txt",
+    "artifacts/source/granite-4.2-8b-BF16.gguf",
+    "artifacts/fit/p1-replay/Granite-B-FIT50-replay.gguf",
+    "IQ3_M"
+  ],
+  "expect_bytes": 4454564224,
+  "output_path": "artifacts/fit/p1-replay/Granite-B-FIT50-replay.gguf",
+  "returncode": 0,
+  "schema_version": 1,
+  "sha256": "17660767b5967a08112c27f04ad95b67278e9c372afde2cbd6e37ba81c123e21",
+  "size_bytes": 4454564224,
+  "size_matches_expectation": true,
+  "stderr_tail": "pe =   bf16, converting to iq4_xs .. size =   100.00 MiB ->    26.56 MiB\n[ 352/ 363] blk.38.ffn_gate.weight               - [  4096,  12800,      1,      1], type =   bf16, converting to iq4_xs .. size =   100.00 MiB ->    26.56 MiB\n[ 353/ 363] blk.38.ffn_norm.weight               - [  4096,      1,      1,      1], type =    f32, size =    0.016 MiB\n[ 354/ 363] blk.38.ffn_up.weight                 - [  4096,  12800,      1,      1], type =   bf16, converting to iq4_xs .. size =   100.00 MiB ->    26.56 MiB\n[ 355/ 363] blk.39.attn_k.weight                 - [  4096,   1024,      1,      1], type =   bf16, converting to iq4_xs .. size =     8.00 MiB ->     2.12 MiB\n[ 356/ 363] blk.39.attn_norm.weight              - [  4096,      1,      1,      1], type =    f32, size =    0.016 MiB\n[ 357/ 363] blk.39.attn_output.weight            - [  4096,   4096,      1,      1], type =   bf16, converting to q4_K .. size =    32.00 MiB ->     9.00 MiB\n[ 358/ 363] blk.39.attn_q.weight                 - [  4096,   4096,      1,      1], type =   bf16, converting to iq4_xs .. size =    32.00 MiB ->     8.50 MiB\n[ 359/ 363] blk.39.attn_v.weight                 - [  4096,   1024,      1,      1], type =   bf16, converting to q5_K .. size =     8.00 MiB ->     2.75 MiB\n[ 360/ 363] blk.39.ffn_down.weight               - [ 12800,   4096,      1,      1], type =   bf16, converting to iq4_xs .. size =   100.00 MiB ->    26.56 MiB\n[ 361/ 363] blk.39.ffn_gate.weight               - [  4096,  12800,      1,      1], type =   bf16, converting to iq4_xs .. size =   100.00 MiB ->    26.56 MiB\n[ 362/ 363] blk.39.ffn_norm.weight               - [  4096,      1,      1,      1], type =    f32, size =    0.016 MiB\n[ 363/ 363] blk.39.ffn_up.weight                 - [  4096,  12800,      1,      1], type =   bf16, converting to iq4_xs .. size =   100.00 MiB ->    26.56 MiB\nllama_model_quantize_impl: model size  = 16769.27 MiB (16.00 BPW)\nllama_model_quantize_impl: quant size  =  4244.80 MiB (4.05 BPW)\n",
+  "tensor_types_path": "experiments/2026-08-29-p1-cli/granite/b-fit50-tensor-types.txt",
+  "tensor_types_sha256": "1ddfa270f824b8f73bcb77d5df8befb19c2a5a8eafb20a38381192bfd4909a22"
+}

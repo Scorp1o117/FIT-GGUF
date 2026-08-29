@@ -1,18 +1,20 @@
 # FIT-GGUF Handoff
 
-Date: 2026-08-29 (updated after M16 by the GLM-5.3-Flash session)
+Date: 2026-08-29 (updated after P1 by the GLM-5.3-Flash session)
 
 ## Read this first
 
-The repository is past M16. M0-M16 are complete. The final evidence state,
-per D-0022: FIT's exact deterministic size control and monotonic
-quality-vs-budget curves transfer to a second model family (granite-4.2-8b,
-11/11 zero-byte artifacts); the imatrix-allocation value does NOT transfer
-(original utility loses to random at FIT-50 on Granite; v0.1b shows no
-advantage there). On the Huihui development model, v0.1b is confirmed at
-FIT-50 (M11) and the original utility at FIT-25 (M15). Every milestone is
-preregistered, executed, and recorded; nothing is pending on the development
-model.
+The repository is past P1. M0-M16 (research) and P1 (productization) are
+complete; the project is versioned **FIT-GGUF v0.1** and frozen. The final
+evidence state, per D-0022 and D-0023: FIT's exact deterministic size control
+and monotonic quality-vs-budget curves transfer to a second model family
+(granite-4.2-8b, 11/11 zero-byte artifacts); the imatrix-allocation value does
+NOT transfer (original utility loses to random at FIT-50 on Granite; v0.1b
+shows no advantage there). On the Huihui development model, v0.1b is confirmed
+at FIT-50 (M11) and the original utility at FIT-25 (M15). The `fit
+analyze/plan/quantize` CLI replays both models' historical FIT-50 ground truth
+byte-identically (preregistered gates G1-G8, all passed). Every milestone is
+preregistered, executed, and recorded; nothing is pending.
 
 Canonical status and evidence:
 
@@ -33,6 +35,11 @@ Canonical status and evidence:
   baseline: H25 strong support, H75 collapse rejected, D-0021 freeze;
 - `experiments/2026-08-29-m16-granite-reveal/README.md` - cross-model reveal:
   size control transfers, allocator value does not (D-0022).
+- `experiments/2026-08-29-p1-cli/README.md` - preregistered productization
+  replay: CLI reproduces both models' FIT-50 ground truth byte-identically
+  (D-0023).
+- `FINAL_REPORT.md` - the closing v0.1 report: what transfers, what is
+  model-specific, what stays open.
 
 ## Environment and provenance
 
@@ -78,13 +85,17 @@ slices and their SHA-256 values are in
 - preregistered M11 gate evaluator (`scripts/evaluate_m11_gate.py`);
 - holdout slice generator (`scripts/make_holdout_slices.py`);
 - M12 plan generator with ground-truth self-check
-  (`scripts/generate_m12_block_balanced.py`).
+  (`scripts/generate_m12_block_balanced.py`);
+- the `fit analyze/plan/quantize` CLI (`src/fit_gguf/cli.py` +
+  `src/fit_gguf/pipeline.py`) with derived metadata, auto block span, exact
+  integer fraction targets, and SHA-256-provenanced plan/quantize records
+  (`scripts/run_p1_replay.sh` + `scripts/evaluate_p1_replay.py`).
 
 Current verification:
 
 ```bash
 python -m pytest -q
-# 43 passed
+# 53 passed
 git diff --check
 ```
 
@@ -138,18 +149,11 @@ S75 = -0.46% within the +-1% ROPE, S50 > S75. See D-0020.
 
 ## Exact next step
 
-The experimental program defined by the master spec (M0-M16) is complete and
-recorded. Remaining work is productization, not experimentation:
-
-1. Build the user-facing `fit analyze/plan/quantize` CLI around the frozen
-   generators (the "size slider" product: tell FIT the budget, it plans and
-   quantizes with exact-size guarantees).
-2. Write FINAL_REPORT.md from the milestone READMEs: what transfers (size
-   control, monotonic curves), what is model-specific (imatrix allocation
-   value), and what open research remains (conditional marginal utility per
-   D-0020; a third validation model if allocator work resumes).
-3. Any new allocator experiment requires a new preregistered design on a
-   fresh model; do not tune on Huihui or Granite.
+None scheduled. M0-M16 and P1 are complete and FIT-GGUF is versioned v0.1
+(FINAL_REPORT.md, README). Research is frozen per D-0022/D-0023: any future
+allocator experiment (v0.2) requires a new preregistered design - conditional
+marginal utility per D-0020 - on a fresh third model; do not tune on Huihui
+or Granite, which are development data only.
 
 ## Storage and reproducibility
 

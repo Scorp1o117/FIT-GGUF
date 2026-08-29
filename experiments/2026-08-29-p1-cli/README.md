@@ -126,6 +126,39 @@ Imatrix SHA-256 provenance for Huihui:
 No quality evaluation (M9-M16 already recorded it), no allocator or threshold
 changes, no new model, no tuning on either model.
 
+## Results (2026-08-29)
+
+All eight preregistered gates passed on the first full run
+(`gate-verdict.json`, `replay-run.log`). No behavioral drift was found.
+
+| Point | Target bytes | Predicted | Artifact SHA-256 | Historical match |
+| --- | ---: | ---: | --- | --- |
+| Huihui O-FIT-50 | 13,831,691,232 | 13,831,486,432 | `e4fe1c46...f33306` | M9, exact |
+| Huihui B-FIT-50 | 13,831,691,232 | 13,828,987,872 | `7cfa1b91...9a07` | M10, exact |
+| Granite O-FIT-50 | 4,454,736,256 | 4,454,351,232 | `09ca3d85...1023e` | M16, exact |
+| Granite B-FIT-50 | 4,454,564,224 | 4,454,564,224 | `17660767...23e21` | M16, exact |
+
+- G1-G3: `fit analyze` reproduced the hand META exactly on Huihui
+  (source hash, 496 entries, `unsloth_calibration_dataset`, 1251 chunks,
+  preset predictions 12,580,875,232 / 15,082,507,232), and both Huihui plans
+  produced tensor-types files byte-identical to the M7 and M10 ground truth
+  (323 and 336 overrides respectively).
+- G5-G7: Granite analyze derived its provenance automatically from the
+  imatrix GGUF (280 entries, dataset path, block span 10); both plans
+  reproduced the M16 tensor-types files byte-identically (165 and 168
+  overrides).
+- G4/G8: all four re-quantized artifacts match their M9/M10/M16 SHA-256
+  hashes exactly; every output equals its prediction byte-for-byte.
+
+Provenance note (per the amendment): the Granite imatrix carries
+`imatrix.chunk_count = 3394` where the M16 hand META recorded 1250; the KV is
+a 4-byte integer so the value cannot affect size prediction. Recorded in
+`gate-verdict.json`.
+
+The replay artifacts under `artifacts/fit/p1-replay/` are reproducible
+intermediates and were deleted after hashing per the owner-directed disk
+policy; their sizes, hashes, and quantize records are retained here.
+
 ## Amendment (2026-08-29, before any replay execution)
 
 A pre-run derivation check showed the Granite imatrix carries
