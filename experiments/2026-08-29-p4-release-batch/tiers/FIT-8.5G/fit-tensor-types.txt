@@ -1,0 +1,8 @@
+^blk\.11\.attn_output\.weight$=iq3_s
+^blk\.15\.attn_output\.weight$=iq3_s
+^blk\.27\.attn_output\.weight$=iq3_s
+^blk\.31\.attn_output\.weight$=iq3_s
+^blk\.35\.attn_output\.weight$=iq3_s
+^blk\.43\.attn_output\.weight$=iq3_s
+^blk\.59\.attn_output\.weight$=iq3_s
+^blk\.63\.attn_output\.weight$=iq3_s
