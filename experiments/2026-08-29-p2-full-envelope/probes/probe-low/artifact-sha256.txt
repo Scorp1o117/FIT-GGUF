@@ -1,0 +1,1 @@
+8ffcd827057d235981bad20959ecba66d1e3a71a0f5798afed60f1577c78a1fb  artifacts/fit/p2-probes/probe-low-FIT50.gguf

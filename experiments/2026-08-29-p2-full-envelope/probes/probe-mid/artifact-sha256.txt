@@ -1,0 +1,1 @@
+87866cb1467609a28e6063d546eee8f1b037ad0f6c083b0f8592eb4031d7356d  artifacts/fit/p2-probes/probe-mid-FIT50.gguf

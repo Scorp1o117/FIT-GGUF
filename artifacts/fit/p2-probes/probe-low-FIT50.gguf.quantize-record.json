@@ -1,0 +1,23 @@
+{
+  "analysis_path": "experiments/2026-08-29-p2-full-envelope/probes/probe-low/analysis.json",
+  "command": [
+    "tools/llama-b10666-rocm/llama-quantize",
+    "--imatrix",
+    "imatrix_unsloth.gguf",
+    "--tensor-type-file",
+    "experiments/2026-08-29-p2-full-envelope/probes/probe-low/fit50-tensor-types.txt",
+    "artifacts/source/orcarouter-Qwen3.8-27B-Uncensored-BF16.gguf",
+    "artifacts/fit/p2-probes/probe-low-FIT50.gguf",
+    "IQ1_M"
+  ],
+  "expect_bytes": 9408523456,
+  "output_path": "artifacts/fit/p2-probes/probe-low-FIT50.gguf",
+  "returncode": 0,
+  "schema_version": 1,
+  "sha256": "8ffcd827057d235981bad20959ecba66d1e3a71a0f5798afed60f1577c78a1fb",
+  "size_bytes": 9408523456,
+  "size_matches_expectation": true,
+  "stderr_tail": "] blk.62.ssm_norm.weight               - [   128,      1,      1,      1], type =    f32, size =    0.000 MiB\n[ 840/ 851] blk.62.ssm_out.weight                - [  6144,   5120,      1,      1], type =   bf16, converting to iq3_xxs .. size =    60.00 MiB ->    11.48 MiB\n[ 841/ 851] blk.63.attn_k.weight                 - [  5120,   1024,      1,      1], type =   bf16, converting to iq2_s .. size =    10.00 MiB ->     1.60 MiB\n[ 842/ 851] blk.63.attn_k_norm.weight            - [   256,      1,      1,      1], type =    f32, size =    0.001 MiB\n[ 843/ 851] blk.63.attn_norm.weight              - [  5120,      1,      1,      1], type =    f32, size =    0.020 MiB\n[ 844/ 851] blk.63.attn_output.weight            - [  6144,   5120,      1,      1], type =   bf16, converting to iq3_s .. size =    60.00 MiB ->    12.89 MiB\n[ 845/ 851] blk.63.attn_q.weight                 - [  5120,  12288,      1,      1], type =   bf16, converting to iq2_s .. size =   120.00 MiB ->    19.22 MiB\n[ 846/ 851] blk.63.attn_q_norm.weight            - [   256,      1,      1,      1], type =    f32, size =    0.001 MiB\n[ 847/ 851] blk.63.attn_v.weight                 - [  5120,   1024,      1,      1], type =   bf16, converting to q4_K .. size =    10.00 MiB ->     2.81 MiB\n[ 848/ 851] blk.63.ffn_down.weight               - [ 17408,   5120,      1,      1], type =   bf16, converting to iq3_xxs .. size =   170.00 MiB ->    32.54 MiB\n[ 849/ 851] blk.63.ffn_gate.weight               - [  5120,  17408,      1,      1], type =   bf16, converting to iq3_xxs .. size =   170.00 MiB ->    32.54 MiB\n[ 850/ 851] blk.63.ffn_up.weight                 - [  5120,  17408,      1,      1], type =   bf16, converting to iq3_xxs .. size =   170.00 MiB ->    32.54 MiB\n[ 851/ 851] blk.63.post_attention_norm.weight    - [  5120,      1,      1,      1], type =    f32, size =    0.020 MiB\nllama_model_quantize_impl: model size  = 51305.09 MiB (16.00 BPW)\nllama_model_quantize_impl: quant size  =  8962.18 MiB (2.80 BPW)\n",
+  "tensor_types_path": "experiments/2026-08-29-p2-full-envelope/probes/probe-low/fit50-tensor-types.txt",
+  "tensor_types_sha256": "0a426a717af3c69e60b1698359cc7f71f7892de4a75f1e4f17f1b256f919e091"
+}

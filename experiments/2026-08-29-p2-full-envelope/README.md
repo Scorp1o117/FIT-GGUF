@@ -185,6 +185,46 @@ ladder:
 All probes planned with the frozen original allocator, quantized from the
 lower preset, and gated on output size == prediction with zero tolerance.
 
+## Results (2026-08-29)
+
+All five preregistered gates passed (`gate-verdict.json`); amendments 1-5 were
+committed before the evaluation steps they affected, and no probe or ladder
+size was observed before its gate correction was committed.
+
+- E1: BF16 source converted with the pinned converter, 851 tensors
+  (`--no-nextn`), 53,808,282,624 bytes, SHA-256 in `bf16-sha256.txt`.
+- E2': `imatrix_unsloth.gguf` verified (SHA, 496/496 layer-matrix coverage,
+  deterministic fallback assignments for token_embd/output identical to the
+  Huihui M2 records).
+- E3: 23/23 canonical presets accepted by the pinned quantizer and parsed;
+  all-tensor payload residual <= 5,161 bytes on every preset (display
+  rounding only, tolerance 4,467,036); zero ladder inversions. The full
+  ladder: IQ1_S 7,149,825,216 / IQ1_M 7,631,084,736 / IQ2_XXS 8,433,183,936 /
+  IQ2_XS 9,090,591,936 / IQ2_S 9,362,914,496 / IQ2_M 10,004,593,856 /
+  Q2_K_S 10,248,326,336 / Q2_K 10,711,665,856 / IQ3_XXS 11,186,371,776 /
+  IQ3_XS 11,967,130,816 / Q3_K_S 12,073,954,496 / IQ3_S 12,419,329,216 /
+  IQ3_M 12,580,875,456 / Q3_K_M 13,301,443,776 / Q3_K_L 14,344,776,896 /
+  IQ4_XS 15,082,507,456 / Q4_K_S 15,586,315,456 / IQ4_NL 15,801,928,896 /
+  Q4_K_M 16,547,400,896 / Q5_K_S 18,679,614,656 / Q5_K_M 19,231,100,096 /
+  Q6_K 22,082,530,496 / Q8_0 28,595,764,416 (`preset-ladder.json`).
+- E4: three probe artifacts at zero-byte error -
+  probe-low (IQ1_M/IQ3_XXS, target 9,408,728,256): 9,408,523,456 bytes,
+  293 upgrades, 204,800 unused;
+  probe-mid (Q5_K_S/Q5_K_M, target 18,955,357,376): 18,953,268,416 bytes,
+  36 upgrades, 2,088,960 unused;
+  probe-top (Q6_K/Q8_0, target 25,339,147,456): 25,333,750,976 bytes,
+  348 upgrades, 5,396,480 unused.
+  SHA-256 values in `probes/*/artifact-sha256.txt` and `gate-verdict.json`.
+- E5: 55/55 unit tests pass, including the two source-checking tests that
+  re-parse the pinned ggml-common.h and llama.h.
+
+The probe GGUFs were deleted after hashing per the owner disk policy; sizes,
+hashes, plans, and quantize records are retained here. Every new quantization
+type (iq1_s, iq1_m, iq2_xxs, iq2_xs, iq2_s, iq3_xxs, q2_k, q3_k, q8_0,
+iq4_nl) appeared in at least one predicted-and-verified artifact or preset
+recipe. FIT's size-control claim now spans IQ1_S..Q8_0 on this architecture,
+with per-artifact self-proof at the envelope extremes.
+
 ## 3. Honest scope notes
 
 - Size control per artifact remains self-proving (predict -> quantize ->

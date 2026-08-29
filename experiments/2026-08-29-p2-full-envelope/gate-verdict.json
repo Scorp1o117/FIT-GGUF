@@ -1,0 +1,83 @@
+{
+  "all_pass": true,
+  "e4_details": {
+    "probe-low": {
+      "actual": 9408523456,
+      "ok": true,
+      "predicted": 9408523456,
+      "selected": 293,
+      "sha256": "8ffcd827057d235981bad20959ecba66d1e3a71a0f5798afed60f1577c78a1fb",
+      "target": 9408728256,
+      "unused": 204800
+    },
+    "probe-mid": {
+      "actual": 18953268416,
+      "ok": true,
+      "predicted": 18953268416,
+      "selected": 36,
+      "sha256": "87866cb1467609a28e6063d546eee8f1b037ad0f6c083b0f8592eb4031d7356d",
+      "target": 18955357376,
+      "unused": 2088960
+    },
+    "probe-top": {
+      "actual": 25333750976,
+      "ok": true,
+      "predicted": 25333750976,
+      "selected": 348,
+      "sha256": "421a559fbaeb81a1f50c8fe3d76327379f36f8abd8dabb391e0690e59a5150f5",
+      "target": 25339147456,
+      "unused": 5396480
+    }
+  },
+  "e5_pytest": "55 passed in 0.08s",
+  "gates": {
+    "E1": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "BF16 conversion recorded",
+      "pass": true
+    },
+    "E2prime": {
+      "conditions": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "description": "imatrix provenance and coverage",
+      "pass": true
+    },
+    "E3": {
+      "conditions": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "description": "preset ladder sweep",
+      "pass": true
+    },
+    "E4": {
+      "conditions": [
+        true,
+        true,
+        true
+      ],
+      "description": "three zero-byte probe quantizes",
+      "pass": true
+    },
+    "E5": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "test suite unchanged and green",
+      "pass": true
+    }
+  },
+  "schema_version": 1
+}
