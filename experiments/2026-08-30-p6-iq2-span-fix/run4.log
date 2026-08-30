@@ -1,0 +1,40 @@
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+plan written: policy=balanced target=8,589,934,592 predicted=8,588,831,936 unused=1,102,656 selected=166
+dominant qtype: IQ2_XXS (70.4% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf
+plan written: policy=balanced target=9,126,805,504 predicted=9,125,571,776 unused=1,233,728 selected=296
+dominant qtype: IQ2_XXS (39.3% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XXS.gguf
+== plan FIT-9G (target 9663676416) ==
+plan written: policy=balanced target=9,663,676,416 predicted=9,662,291,136 unused=1,385,280 selected=378
+dominant qtype: Q2_K (70.6% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-9G-Q2_K.gguf
+plan written: policy=balanced target=10,200,547,328 predicted=10,200,526,016 unused=21,312 selected=411
+dominant qtype: Q2_K (76.4% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-9.5G-Q2_K.gguf
+plan written: policy=balanced target=10,737,418,240 predicted=10,736,671,936 unused=746,304 selected=257
+dominant qtype: Q2_K (51.0% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-10G-Q2_K.gguf
+retired old artifacts -> artifacts/fit/release/retired-p6
+be3b322e795b681cb5db5e4e3f6678400e0de4420957d1faae8e0ac16372fcdb  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf
+f7beca3cd1438e68169169143948698dd183dfe7ee407a2fd0ee06342816efb9  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XXS.gguf
+== quantize FIT-9G -> Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-9G-Q2_K.gguf (expect 9662291136) ==
+474523da60dc018ba52c3628289f695358422723a2907444b147d00a4b7f6c7d  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-9G-Q2_K.gguf
+002a7a20b90771cee86dabed38ff89eb21208a0a0122132c20906c29dc51482d  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-9.5G-Q2_K.gguf
+4b2f37c9f5e9b6bf01c80290a98ef372ebdc8f30cffaf0505a7bd19188644f2b  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-10G-Q2_K.gguf
+== eval FIT-9G wiki_test ==
+== eval FIT-9G wiki_valid ==
+== eval FIT-9G chinese ==
+== eval FIT-9G code ==
+== eval FIT-9G agent_chat ==
+{"G1": true, "G2": true, "G3": true, "G4": true, "G5": true, "G6": true}
+new macro KLD: {"FIT-8G": 0.4837744, "FIT-8.5G": 0.4526626, "FIT-9G": 0.3363428, "FIT-9.5G": 0.2736624, "FIT-10G": 0.22992339999999997}
+ALL_PASS=True
+P4 tiers.csv: 4 rows moved to the P6 spans
+parsed 28 artifacts -> results/p4-results.json
+wrote results/comparison-table.md
+wrote results/kl-curve.png and results/sametop-curve.png
+{"R1": true, "R2": true, "R3": true, "R4": true, "R5": true, "R6": true}
+ALL_PASS=True
+STAGE P6 DONE: release swapped, results re-rendered, P4 gates re-run

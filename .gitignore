@@ -26,3 +26,7 @@ __pycache__/
 *.swp
 *~
 /Qwen3.8-27B-Uncensored-FIT-GGUF/
+
+# Promo video build outputs (Remotion)
+/promo-video/node_modules/
+/promo-video/out/

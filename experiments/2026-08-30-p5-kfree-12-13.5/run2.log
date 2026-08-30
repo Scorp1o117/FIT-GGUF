@@ -1,0 +1,39 @@
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+plan written: policy=balanced target=13,421,772,800 predicted=13,418,650,816 unused=3,121,984 selected=284
+dominant qtype: IQ3_S (58.7% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-12.5G-IQ3_S.gguf
+plan written: policy=balanced target=13,958,643,712 predicted=13,956,046,016 unused=2,597,696 selected=348
+dominant qtype: IQ4_XS (41.1% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-13G-IQ4_XS.gguf
+plan written: policy=balanced target=14,495,514,624 predicted=14,493,031,616 unused=2,483,008 selected=414
+dominant qtype: IQ4_XS (58.8% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-13.5G-IQ4_XS.gguf
+273f5fe52077226a27da0fe2ed49c72922e702ab51217cb7253b0372c7c1b15e  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-12.5G-IQ3_S.gguf
+59615e105013c6acee689fdcd71b239d6e91d3cc0bb444f64478ed130c8e08d4  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-13G-IQ4_XS.gguf
+bac511e5fa674b0fb163626f9a6c950d4e9bc7a34668fc3a94f6c75a08c57403  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-13.5G-IQ4_XS.gguf
+== eval FIT-12.5G wiki_test ==
+== eval FIT-12.5G wiki_valid ==
+== eval FIT-12.5G chinese ==
+== eval FIT-12.5G code ==
+== eval FIT-12.5G agent_chat ==
+== eval FIT-13G wiki_test ==
+== eval FIT-13G wiki_valid ==
+== eval FIT-13G chinese ==
+== eval FIT-13G code ==
+== eval FIT-13G agent_chat ==
+== eval FIT-13.5G wiki_test ==
+== eval FIT-13.5G wiki_valid ==
+== eval FIT-13.5G chinese ==
+== eval FIT-13.5G code ==
+== eval FIT-13.5G agent_chat ==
+{"K1": true, "K2": true, "K3": true, "K4": true, "K5": true}
+new macro KLD: {"FIT-12.5G": 0.111572, "FIT-13G": 0.0987018, "FIT-13.5G": 0.0837682}
+ALL_PASS=True
+P4 tiers.csv: 3 rows moved to the K-free IQ3_M->IQ4_XS pair
+parsed 28 artifacts -> results/p4-results.json
+wrote results/comparison-table.md
+wrote results/kl-curve.png and results/sametop-curve.png
+{"R1": true, "R2": true, "R3": true, "R4": true, "R5": true, "R6": true}
+ALL_PASS=True
+STAGE P5 DONE: release swapped, results re-rendered, P4 gates re-run

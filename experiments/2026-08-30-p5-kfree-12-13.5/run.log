@@ -1,0 +1,23 @@
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+== plan FIT-12.5G (target 13421772800) ==
+plan written: policy=balanced target=13,421,772,800 predicted=13,418,650,816 unused=3,121,984 selected=284
+dominant qtype: IQ3_S (58.7% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-12.5G-IQ3_S.gguf
+== plan FIT-13G (target 13958643712) ==
+plan written: policy=balanced target=13,958,643,712 predicted=13,956,046,016 unused=2,597,696 selected=348
+dominant qtype: IQ4_XS (41.1% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-13G-IQ4_XS.gguf
+== plan FIT-13.5G (target 14495514624) ==
+plan written: policy=balanced target=14,495,514,624 predicted=14,493,031,616 unused=2,483,008 selected=414
+dominant qtype: IQ4_XS (58.8% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-13.5G-IQ4_XS.gguf
+== quantize FIT-12.5G -> Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-12.5G-IQ3_S.gguf (expect 13418650816) ==
+273f5fe52077226a27da0fe2ed49c72922e702ab51217cb7253b0372c7c1b15e  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-12.5G-IQ3_S.gguf
+== quantize FIT-13G -> Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-13G-IQ4_XS.gguf (expect 13956046016) ==
+59615e105013c6acee689fdcd71b239d6e91d3cc0bb444f64478ed130c8e08d4  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-13G-IQ4_XS.gguf
+== quantize FIT-13.5G -> Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-13.5G-IQ4_XS.gguf (expect 14493031616) ==
+bac511e5fa674b0fb163626f9a6c950d4e9bc7a34668fc3a94f6c75a08c57403  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-13.5G-IQ4_XS.gguf
+{"K1": true, "K2": true, "K3": true, "K4": false, "K5": false}
+new macro KLD: {"FIT-12.5G": 0.1315594, "FIT-13G": 0.1303854, "FIT-13.5G": 0.11635}
+ALL_PASS=False

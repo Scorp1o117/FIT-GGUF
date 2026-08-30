@@ -1,0 +1,22 @@
+{
+  "name": "fit-gguf-promo-video",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "remotion studio src/index.ts",
+    "check": "tsc --noEmit",
+    "render:preview": "remotion render src/index.ts FitPromoCN out/fit-gguf-promo-cn-preview.mp4 --codec=h264 --crf=26 --concurrency=1",
+    "render:master": "remotion render src/index.ts FitPromoCN out/fit-gguf-promo-cn-master.mp4 --codec=h264 --crf=17 --concurrency=1"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.518",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "remotion": "4.0.518"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.17",
+    "@types/react-dom": "19.1.11",
+    "typescript": "5.9.2"
+  }
+}

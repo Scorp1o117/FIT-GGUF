@@ -1,0 +1,9 @@
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+plan written: policy=balanced target=8,589,934,592 predicted=8,588,831,936 unused=1,102,656 selected=166
+dominant qtype: IQ2_XXS (70.4% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf
+plan written: policy=balanced target=9,126,805,504 predicted=9,125,571,776 unused=1,233,728 selected=296
+dominant qtype: IQ2_XXS (39.3% of quantized parameters)
+suggested filename: Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XXS.gguf
+== plan FIT-9G (target 9663676416) ==
