@@ -1160,19 +1160,6 @@
       "utility_per_byte": 5.01987336167337e-09
     },
     {
-      "block": 3,
-      "delta_bytes": 6266880,
-      "expected_gain": 0.031191398098002157,
-      "from_qtype": "iq2_xxs",
-      "importance": 0.05545137439644828,
-      "profiled": true,
-      "raw_importance": 0.02168792591650743,
-      "role": "ffn_gate",
-      "tensor": "blk.3.ffn_gate.weight",
-      "to_qtype": "q2_k",
-      "utility_per_byte": 4.977181324359515e-09
-    },
-    {
       "block": 2,
       "delta_bytes": 2211840,
       "expected_gain": 0.010273669754211071,
@@ -2391,19 +2378,6 @@
       "raw_importance": 0.19384881289221004,
       "role": "ffn_gate",
       "tensor": "blk.20.ffn_gate.weight",
-      "to_qtype": "q2_k",
-      "utility_per_byte": 4.448653573378409e-08
-    },
-    {
-      "block": 20,
-      "delta_bytes": 6266880,
-      "expected_gain": 0.27879178105933683,
-      "from_qtype": "iq2_xxs",
-      "importance": 0.4956298329943766,
-      "profiled": true,
-      "raw_importance": 0.19384881289221004,
-      "role": "ffn_up",
-      "tensor": "blk.20.ffn_up.weight",
       "to_qtype": "q2_k",
       "utility_per_byte": 4.448653573378409e-08
     },
@@ -3630,19 +3604,6 @@
       "utility_per_byte": 1.1230028529343567e-07
     },
     {
-      "block": 43,
-      "delta_bytes": 6266880,
-      "expected_gain": 0.7037724118997262,
-      "from_qtype": "iq2_xxs",
-      "importance": 1.251150954488402,
-      "profiled": true,
-      "raw_importance": 0.48934529588594006,
-      "role": "ffn_up",
-      "tensor": "blk.43.ffn_up.weight",
-      "to_qtype": "q2_k",
-      "utility_per_byte": 1.1230028529343567e-07
-    },
-    {
       "block": 60,
       "delta_bytes": 17280,
       "expected_gain": 0.9580114855578201,
@@ -4852,38 +4813,25 @@
       "utility_per_byte": 2.0896708355196095e-07
     },
     {
-      "block": 53,
-      "delta_bytes": 6266880,
-      "expected_gain": 1.309571636570113,
+      "block": 16,
+      "delta_bytes": 2211840,
+      "expected_gain": 0.08943054473121612,
       "from_qtype": "iq2_xxs",
-      "importance": 2.328127353902423,
+      "importance": 0.15898763507771754,
       "profiled": true,
-      "raw_importance": 0.9105681171153137,
-      "role": "ffn_up",
-      "tensor": "blk.53.ffn_up.weight",
+      "raw_importance": 0.0021056402087152406,
+      "role": "ssm_out",
+      "tensor": "blk.16.ssm_out.weight",
       "to_qtype": "q2_k",
-      "utility_per_byte": 2.0896708355196095e-07
-    },
-    {
-      "block": 52,
-      "delta_bytes": 6266880,
-      "expected_gain": 1.2575510970930295,
-      "from_qtype": "iq2_xxs",
-      "importance": 2.2356463948320524,
-      "profiled": true,
-      "raw_importance": 0.8743973240405397,
-      "role": "ffn_gate",
-      "tensor": "blk.52.ffn_gate.weight",
-      "to_qtype": "q2_k",
-      "utility_per_byte": 2.006662162181228e-07
+      "utility_per_byte": 4.0432646453276965e-08
     }
   ],
-  "predicted_size_bytes": 9649388736,
+  "predicted_size_bytes": 9620266176,
   "schema_version": 1,
-  "selected_cost_bytes": 1216204800,
-  "selected_count": 375,
-  "skipped_count": 58,
-  "target_bytes": 9651415488,
-  "unused_bytes": 2026752,
+  "selected_cost_bytes": 1187082240,
+  "selected_count": 371,
+  "skipped_count": 62,
+  "target_bytes": 9622019264,
+  "unused_bytes": 1753088,
   "upper_preset": "Q2_K_S"
 }

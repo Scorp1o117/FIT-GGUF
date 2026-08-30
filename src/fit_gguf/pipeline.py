@@ -538,7 +538,12 @@ def plan(
             tensor_types=types_path,
         )
         prediction = predict_quantized_size(layout, effective_recipe, metadata)
-        if prediction.total_bytes <= effective_target:
+        # Accept as soon as the oracle prediction fits the ORIGINAL target:
+        # the effective target is only a chase parameter, and counter shifts
+        # respond in whole-tensor steps, so shrinking past a step boundary
+        # makes the chase outrun the recipe and thrash (P6 amendment 4:
+        # FIT-9G oscillated with a ~4.5 MB lag under the old rule).
+        if prediction.total_bytes <= target:
             break
         if oracle_iterations >= ORACLE_MAX_ITERATIONS:
             raise PipelineError(

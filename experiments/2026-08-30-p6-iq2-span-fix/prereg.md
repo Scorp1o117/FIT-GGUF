@@ -128,3 +128,21 @@ exhausts the raised cap and still raises PipelineError.
 
 The affected stage (FIT-9G plan) re-runs with the raised cap; the failed
 plan attempt is recorded by this amendment.
+
+## Amendment 4 (2026-08-30, run-3 oracle chase root-caused; convergence rule fixed)
+
+Run 3 exhausted even the raised cap (8 iterations) with prediction
+9,626,533,056 vs shrunk target 9,622,019,264 - but that prediction is
+37 MB BELOW the original 9,663,676,416 target. Root cause: the loop's
+break condition compared against the SHRUNK effective target, which the
+loop itself lowers every round; counter shifts respond in whole-tensor
+steps (~4.4 MB on this span), so the chase kept landing ~4.5 MB above an
+ever-lower target while the prediction had already satisfied the product
+constraint for many iterations.
+
+Fix (code, recorded before any re-run): the oracle loop now accepts the
+first prediction that fits the ORIGINAL target (slack reported as
+unused_bytes, same precedent as FIT-11.5G's accepted 0.55% slack); the
+effective-target chase continues only while the prediction exceeds the
+original target. Plans that converged under the old rule are unaffected
+(their first prediction already fit). Test suite re-run green.
