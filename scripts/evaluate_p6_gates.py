@@ -65,9 +65,9 @@ def main() -> int:
         )
         g1 = g1 and ok
     gates["G1"] = {
-        "description": "4 balanced plans with exact tier labels",
-        "pass": g1 and len(tiers) == 4,
-        "conditions": [g1, len(tiers) == 4],
+        "description": "5 balanced plans with exact tier labels",
+        "pass": g1 and len(tiers) == 5,
+        "conditions": [g1, len(tiers) == 5],
     }
 
     # G2: zero-byte quantizes
@@ -86,7 +86,7 @@ def main() -> int:
         )
         g2 = g2 and ok
     gates["G2"] = {
-        "description": "4 FIT artifacts at zero-byte size error",
+        "description": "5 FIT artifacts at zero-byte size error",
         "pass": g2,
         "conditions": [g2],
     }

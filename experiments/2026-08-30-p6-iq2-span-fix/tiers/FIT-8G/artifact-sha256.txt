@@ -1,0 +1,1 @@
+be3b322e795b681cb5db5e4e3f6678400e0de4420957d1faae8e0ac16372fcdb  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf

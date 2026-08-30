@@ -78,3 +78,32 @@ quantizes -> evals -> gates -> (on pass) release swap -> re-summarize ->
 P4 gate re-run. Failure handling: any gate failure is recorded as-is; the
 retired artifacts stay recoverable under `artifacts/fit/release/
 retired-p6/` until the swap succeeds.
+
+## Amendment 2 (2026-08-30, run-1 G5 failure root-caused; FIT-9G joins the redo)
+
+Run 1: all four tiers quantized zero-byte; G1-G4 and G6 pass with large
+improvements (8G 0.5664->0.4838, 8.5G 0.5752->0.4527, 9.5G 0.3098->0.2737,
+10G 0.2391->0.2299); G5 (whole-curve monotonicity) FAILS: new FIT-8.5G
+(0.4527) beats FIT-9G (0.4589, unchanged). Correctly stopped before the
+swap; verdict recorded.
+
+Root cause: the run-1 measurements expose the IQ2_XXS->IQ2_M fill
+trajectory as non-monotone in fill fraction - 0% 0.5403, 10% 0.4838, 44%
+0.4527, 100% (the IQ2_M preset itself) 0.4609. FIT-9G sits in the IQ2
+dead zone between the 8.5G mix and the Q2_K_S step: no IQ2-family recipe
+at 9.0G can beat the 8.5G mix (every native preset in 8.7-9.3G is
+dominated by it). Leaving 9G unchanged reintroduces exactly the
+size-up-quality-down defect this program is eliminating.
+
+Change: FIT-9G moves to the span IQ2_XXS -> Q2_K_S (target 9,663,676,416;
+fill ~68%, bulk upgrades iq2_xxs -> q2_k, zero q3_k by endpoint recipes -
+Q2_K_S contains none). Consistent with run-1's 9.5G result (0.2737 beats
+the Q2_K_S preset itself) showing q2_k-directed fill is the strong path
+in this region. Everything else from run 1 is kept (artifacts hash-pinned;
+eval sentinels make re-evaluation a no-op for them).
+
+Gates: G4 for FIT-9G = strictly below 0.458876 (its replaced value); G5
+now requires monotonicity with the new 9G value; G3 unchanged (no q3_k in
+any override set). Runner hardened: the retire step skips tiers whose P6
+artifact is already hash-recorded, so a resume never retires completed
+artifacts.

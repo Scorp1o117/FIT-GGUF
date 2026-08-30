@@ -1,0 +1,1 @@
+002a7a20b90771cee86dabed38ff89eb21208a0a0122132c20906c29dc51482d  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-9.5G-Q2_K.gguf

@@ -1,0 +1,118 @@
+{
+  "all_pass": false,
+  "gates": {
+    "G1": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "4 balanced plans with exact tier labels",
+      "pass": true
+    },
+    "G2": {
+      "conditions": [
+        true
+      ],
+      "description": "4 FIT artifacts at zero-byte size error",
+      "pass": true
+    },
+    "G3": {
+      "conditions": [
+        true
+      ],
+      "description": "no q3_k tensors in any override set",
+      "pass": true,
+      "qtype_counts": {
+        "FIT-10G": {
+          "iq3_s": 12,
+          "iq3_xxs": 245
+        },
+        "FIT-8.5G": {
+          "iq2_s": 285,
+          "iq3_s": 11
+        },
+        "FIT-8G": {
+          "iq2_s": 159,
+          "iq3_s": 7
+        },
+        "FIT-9.5G": {
+          "q2_k": 408,
+          "q4_k": 3
+        }
+      }
+    },
+    "G4": {
+      "conditions": [
+        true
+      ],
+      "description": "each new tier strictly beats the tier it replaces",
+      "detail": {
+        "FIT-10G": {
+          "new": 0.22992339999999997,
+          "old": 0.2390816
+        },
+        "FIT-8.5G": {
+          "new": 0.4526626,
+          "old": 0.575169
+        },
+        "FIT-8G": {
+          "new": 0.4837744,
+          "old": 0.566418
+        },
+        "FIT-9.5G": {
+          "new": 0.2736624,
+          "old": 0.309781
+        }
+      },
+      "pass": true
+    },
+    "G5": {
+      "conditions": [
+        [
+          1.1327057999999999,
+          0.5898125999999999,
+          0.4837744,
+          0.4526626,
+          0.45887580000000006,
+          0.2736624,
+          0.22992339999999997,
+          0.1873002,
+          0.15151399999999998,
+          0.1439258,
+          0.12273939999999998,
+          0.111572,
+          0.0987018,
+          0.0837682
+        ]
+      ],
+      "description": "macro KLD non-increasing across all 14 FIT tiers",
+      "pass": false,
+      "sequence": [
+        1.1327057999999999,
+        0.5898125999999999,
+        0.4837744,
+        0.4526626,
+        0.45887580000000006,
+        0.2736624,
+        0.22992339999999997,
+        0.1873002,
+        0.15151399999999998,
+        0.1439258,
+        0.12273939999999998,
+        0.111572,
+        0.0987018,
+        0.0837682
+      ]
+    },
+    "G6": {
+      "conditions": [
+        true,
+        true
+      ],
+      "description": "8G and 8.5G beat the IQ2_XXS reference",
+      "pass": true,
+      "reference": 0.540252
+    }
+  },
+  "schema_version": 1
+}

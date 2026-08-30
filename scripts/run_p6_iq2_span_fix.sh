@@ -61,6 +61,9 @@ done < "$P6/tiers.csv"
 # plans), in the bundle and in artifacts/fit/release (original P4 records).
 while IFS=, read -r tier lower upper target; do
   [[ "$tier" == "tier" ]] && continue
+  # Resume guard: never retire a tier whose P6 artifact is already
+  # hash-recorded from a prior run.
+  [[ -f "$P6/tiers/$tier/artifact-sha256.txt" ]] && continue
   old=$(python3 -c "
 import json;print(json.load(open('$P6/results/baseline/p4-results.json'))['artifacts']['$tier']['suggested_filename'])")
   new=$(python3 -c "
@@ -147,6 +150,7 @@ p4 = Path("experiments/2026-08-29-p4-release-batch/tiers.csv")
 new = {
     "FIT-8G": "IQ2_XXS,IQ2_M,8589934592",
     "FIT-8.5G": "IQ2_XXS,IQ2_M,9126805504",
+    "FIT-9G": "IQ2_XXS,Q2_K_S,9663676416",
     "FIT-9.5G": "IQ2_M,Q2_K_S,10200547328",
     "FIT-10G": "Q2_K_S,IQ3_XXS,10737418240",
 }
