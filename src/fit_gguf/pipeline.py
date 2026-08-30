@@ -43,6 +43,9 @@ from fit_gguf.optimizer import (
 ANALYSIS_SCHEMA_VERSION = 1
 PLAN_SCHEMA_VERSION = 1
 FIT_GGUF_VERSION = "0.1.0"
+# P6 amendment 3: counter shifts move the oracle's effective recipe in
+# whole-tensor steps; 3 rounds were not always enough to absorb them.
+ORACLE_MAX_ITERATIONS = 8
 
 # general.file_type values from pinned include/llama.h (LLAMA_FTYPE enum),
 # covering every quantization preset pinned quantize.cpp accepts as a
@@ -516,7 +519,10 @@ def plan(
     # Oracle loop (P4 amendment 1): overrides skip llama.cpp's counter-based
     # category rules, so only a dry-run WITH the override file captures the
     # effective recipe. Adopt its prediction; on overshoot, re-select with a
-    # reduced target (max 3 iterations).
+    # reduced target. Counter shifts move the effective recipe in whole-tensor
+    # steps, so convergence can need more rounds than the original cap of 3
+    # (P6 amendment 3: raised to 8 after FIT-9G on IQ2_XXS->Q2_K_S oscillated
+    # at ~1-tensor granularity).
     runtime_binary = str(payload["runtime"]["llama_quantize"])
     source_path = str(payload["source"]["path"])
     imatrix_arg = str(payload["imatrix"]["arg"])
@@ -534,7 +540,7 @@ def plan(
         prediction = predict_quantized_size(layout, effective_recipe, metadata)
         if prediction.total_bytes <= effective_target:
             break
-        if oracle_iterations >= 3:
+        if oracle_iterations >= ORACLE_MAX_ITERATIONS:
             raise PipelineError(
                 f"Oracle prediction {prediction.total_bytes:,} still exceeds target "
                 f"{effective_target:,} after {oracle_iterations} iterations"

@@ -458,7 +458,7 @@ def test_plan_oracle_adopts_effective_recipe(e2e, monkeypatch):
     assert record["unused_bytes"] == record["target_bytes"] - oracle_size
 
 
-def test_plan_oracle_gives_up_after_three_overshoots(e2e, monkeypatch):
+def test_plan_oracle_gives_up_after_exhausted_iterations(e2e, monkeypatch):
     from fit_gguf.pipeline import PipelineError, plan as plan_fn
 
     out_dir = e2e["tmp"] / "oracle2"

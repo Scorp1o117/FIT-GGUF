@@ -107,3 +107,24 @@ now requires monotonicity with the new 9G value; G3 unchanged (no q3_k in
 any override set). Runner hardened: the retire step skips tiers whose P6
 artifact is already hash-recorded, so a resume never retires completed
 artifacts.
+
+## Amendment 3 (2026-08-30, run-2 oracle non-convergence; code fix before re-run)
+
+Run 2 stopped at the FIT-9G plan step: the oracle loop hit its 3-iteration
+cap with prediction 9,655,655,616 still above the shrunk target
+9,651,415,488 - a residual overshoot of 4,240,128 bytes, i.e. roughly one
+tensor at q2_k granularity. On this span the counter-shift response moves
+in whole-tensor steps (the IQ2-family ffn_down window interacts with a
+~68% override set), so the overshoot+1MiB shrink per round needs more
+rounds than the original cap allowed.
+
+Fix (code, recorded before any re-run): the iteration cap becomes the
+module constant `ORACLE_MAX_ITERATIONS = 8` in `fit_gguf.pipeline`
+(previously hard-coded 3). Tiers that converge within 3 iterations are
+unaffected - the loop exits at the first <= target prediction, and the
+planner is deterministic, so all hash-pinned run-1 plans and artifacts are
+unchanged. Test suite re-run green (61 passed); the give-up test now
+exhausts the raised cap and still raises PipelineError.
+
+The affected stage (FIT-9G plan) re-runs with the raised cap; the failed
+plan attempt is recorded by this amendment.
