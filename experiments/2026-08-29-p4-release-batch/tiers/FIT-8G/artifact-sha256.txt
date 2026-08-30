@@ -1,1 +1,1 @@
-cc08128b3f53d04d939b0e3e48cc6628fb3bcb45387a031585199af6f67fcad4  artifacts/fit/release/orcarouter-Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf
+be3b322e795b681cb5db5e4e3f6678400e0de4420957d1faae8e0ac16372fcdb  Qwen3.8-27B-Uncensored-FIT-GGUF/Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf

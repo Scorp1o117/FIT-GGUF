@@ -38,39 +38,39 @@
       "target_bytes": 11274289152
     },
     "FIT-10G": {
-      "actual_bytes": 10737040576,
+      "actual_bytes": 10736671936,
       "domains": {
         "agent_chat": {
-          "mean_kld": 0.237254,
-          "ppl_q": 7.07171,
-          "same_top": 85.443
+          "mean_kld": 0.234099,
+          "ppl_q": 6.670742,
+          "same_top": 85.324
         },
         "chinese": {
-          "mean_kld": 0.345968,
-          "ppl_q": 10.552381,
-          "same_top": 81.856
+          "mean_kld": 0.339977,
+          "ppl_q": 9.257481,
+          "same_top": 82.0
         },
         "code": {
-          "mean_kld": 0.340753,
-          "ppl_q": 6.055922,
-          "same_top": 85.233
+          "mean_kld": 0.301896,
+          "ppl_q": 5.353586,
+          "same_top": 86.042
         },
         "wiki_test": {
-          "mean_kld": 0.148037,
-          "ppl_q": 6.162964,
-          "same_top": 83.896
+          "mean_kld": 0.14616,
+          "ppl_q": 6.182491,
+          "same_top": 84.326
         },
         "wiki_valid": {
-          "mean_kld": 0.123396,
-          "ppl_q": 5.877285,
-          "same_top": 85.25
+          "mean_kld": 0.127485,
+          "ppl_q": 5.866771,
+          "same_top": 85.3
         }
       },
       "dominant_qtype": "q2_k",
       "kind": "fit",
-      "macro_kld": 0.2390816,
-      "macro_same_top": 84.3356,
-      "pair": "Q2_K->IQ3_XXS",
+      "macro_kld": 0.22992339999999997,
+      "macro_same_top": 84.5984,
+      "pair": "Q2_K_S->IQ3_XXS",
       "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-10G-Q2_K.gguf",
       "target_bytes": 10737418240
     },
@@ -371,151 +371,151 @@
       "target_bytes": 7516192768
     },
     "FIT-8.5G": {
-      "actual_bytes": 9125981376,
+      "actual_bytes": 9125571776,
       "domains": {
         "agent_chat": {
-          "mean_kld": 0.61554,
-          "ppl_q": 12.263312,
-          "same_top": 77.207
+          "mean_kld": 0.481565,
+          "ppl_q": 10.317503,
+          "same_top": 78.206
         },
         "chinese": {
-          "mean_kld": 0.853138,
-          "ppl_q": 23.19347,
-          "same_top": 72.418
+          "mean_kld": 0.663388,
+          "ppl_q": 17.68365,
+          "same_top": 75.137
         },
         "code": {
-          "mean_kld": 0.954757,
-          "ppl_q": 13.290041,
-          "same_top": 74.596
+          "mean_kld": 0.662036,
+          "ppl_q": 8.885346,
+          "same_top": 78.407
         },
         "wiki_test": {
-          "mean_kld": 0.237122,
-          "ppl_q": 6.685983,
-          "same_top": 80.013
+          "mean_kld": 0.239446,
+          "ppl_q": 6.724375,
+          "same_top": 79.911
         },
         "wiki_valid": {
-          "mean_kld": 0.215288,
-          "ppl_q": 6.423572,
-          "same_top": 80.86
-        }
-      },
-      "dominant_qtype": "iq2_xs",
-      "kind": "fit",
-      "macro_kld": 0.575169,
-      "macro_same_top": 77.0188,
-      "pair": "IQ2_XS->IQ2_S",
-      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XS.gguf",
-      "target_bytes": 9126805504
-    },
-    "FIT-8G": {
-      "actual_bytes": 8589733056,
-      "domains": {
-        "agent_chat": {
-          "mean_kld": 0.597017,
-          "ppl_q": 11.508962,
-          "same_top": 75.888
-        },
-        "chinese": {
-          "mean_kld": 0.779279,
-          "ppl_q": 19.63311,
-          "same_top": 71.778
-        },
-        "code": {
-          "mean_kld": 0.862605,
-          "ppl_q": 11.070717,
-          "same_top": 75.294
-        },
-        "wiki_test": {
-          "mean_kld": 0.311066,
-          "ppl_q": 7.220129,
-          "same_top": 76.799
-        },
-        "wiki_valid": {
-          "mean_kld": 0.282123,
-          "ppl_q": 6.798066,
-          "same_top": 77.913
+          "mean_kld": 0.216878,
+          "ppl_q": 6.344916,
+          "same_top": 80.417
         }
       },
       "dominant_qtype": "iq2_xxs",
       "kind": "fit",
-      "macro_kld": 0.566418,
-      "macro_same_top": 75.5344,
-      "pair": "IQ2_XXS->IQ2_XS",
+      "macro_kld": 0.4526626,
+      "macro_same_top": 78.4156,
+      "pair": "IQ2_XXS->IQ2_M",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-8.5G-IQ2_XXS.gguf",
+      "target_bytes": 9126805504
+    },
+    "FIT-8G": {
+      "actual_bytes": 8588831936,
+      "domains": {
+        "agent_chat": {
+          "mean_kld": 0.499632,
+          "ppl_q": 9.659937,
+          "same_top": 77.291
+        },
+        "chinese": {
+          "mean_kld": 0.670528,
+          "ppl_q": 15.606242,
+          "same_top": 73.987
+        },
+        "code": {
+          "mean_kld": 0.668968,
+          "ppl_q": 8.358488,
+          "same_top": 77.598
+        },
+        "wiki_test": {
+          "mean_kld": 0.302917,
+          "ppl_q": 7.129534,
+          "same_top": 77.419
+        },
+        "wiki_valid": {
+          "mean_kld": 0.276827,
+          "ppl_q": 6.657015,
+          "same_top": 78.191
+        }
+      },
+      "dominant_qtype": "iq2_xxs",
+      "kind": "fit",
+      "macro_kld": 0.4837744,
+      "macro_same_top": 76.8972,
+      "pair": "IQ2_XXS->IQ2_M",
       "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-8G-IQ2_XXS.gguf",
       "target_bytes": 8589934592
     },
     "FIT-9.5G": {
-      "actual_bytes": 10200362176,
+      "actual_bytes": 10200526016,
       "domains": {
         "agent_chat": {
-          "mean_kld": 0.329816,
-          "ppl_q": 9.056328,
-          "same_top": 82.709
+          "mean_kld": 0.259715,
+          "ppl_q": 7.508799,
+          "same_top": 83.553
         },
         "chinese": {
-          "mean_kld": 0.471272,
-          "ppl_q": 14.357201,
-          "same_top": 79.399
+          "mean_kld": 0.391476,
+          "ppl_q": 10.670418,
+          "same_top": 80.85
         },
         "code": {
-          "mean_kld": 0.429805,
-          "ppl_q": 6.86067,
-          "same_top": 82.684
+          "mean_kld": 0.364873,
+          "ppl_q": 6.039641,
+          "same_top": 84.228
         },
         "wiki_test": {
-          "mean_kld": 0.170129,
-          "ppl_q": 6.258755,
-          "same_top": 82.694
+          "mean_kld": 0.189606,
+          "ppl_q": 6.437535,
+          "same_top": 82.808
         },
         "wiki_valid": {
-          "mean_kld": 0.147883,
-          "ppl_q": 5.928872,
-          "same_top": 84.048
+          "mean_kld": 0.162642,
+          "ppl_q": 6.117822,
+          "same_top": 83.858
         }
       },
-      "dominant_qtype": "iq2_s",
+      "dominant_qtype": "q2_k",
       "kind": "fit",
-      "macro_kld": 0.309781,
-      "macro_same_top": 82.3068,
-      "pair": "IQ2_M->Q2_K",
-      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-9.5G-IQ2_S.gguf",
+      "macro_kld": 0.2736624,
+      "macro_same_top": 83.05940000000001,
+      "pair": "IQ2_M->Q2_K_S",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-9.5G-Q2_K.gguf",
       "target_bytes": 10200547328
     },
     "FIT-9G": {
-      "actual_bytes": 9663478976,
+      "actual_bytes": 9662291136,
       "domains": {
         "agent_chat": {
-          "mean_kld": 0.452646,
-          "ppl_q": 10.342927,
-          "same_top": 79.81
+          "mean_kld": 0.340062,
+          "ppl_q": 8.503156,
+          "same_top": 81.165
         },
         "chinese": {
-          "mean_kld": 0.702915,
-          "ppl_q": 19.453377,
-          "same_top": 75.961
+          "mean_kld": 0.469522,
+          "ppl_q": 12.825565,
+          "same_top": 77.987
         },
         "code": {
-          "mean_kld": 0.761266,
-          "ppl_q": 10.961441,
-          "same_top": 77.929
+          "mean_kld": 0.466735,
+          "ppl_q": 7.024527,
+          "same_top": 81.605
         },
         "wiki_test": {
-          "mean_kld": 0.197432,
-          "ppl_q": 6.461449,
-          "same_top": 81.569
+          "mean_kld": 0.215513,
+          "ppl_q": 6.621723,
+          "same_top": 81.139
         },
         "wiki_valid": {
-          "mean_kld": 0.18012,
-          "ppl_q": 6.143877,
-          "same_top": 81.898
+          "mean_kld": 0.189882,
+          "ppl_q": 6.338892,
+          "same_top": 82.226
         }
       },
-      "dominant_qtype": "iq2_xs",
+      "dominant_qtype": "q2_k",
       "kind": "fit",
-      "macro_kld": 0.45887580000000006,
-      "macro_same_top": 79.4334,
-      "pair": "IQ2_S->IQ2_M",
-      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-9G-IQ2_XS.gguf",
+      "macro_kld": 0.3363428,
+      "macro_same_top": 80.8244,
+      "pair": "IQ2_XXS->Q2_K_S",
+      "suggested_filename": "Qwen3.8-27B-Uncensored-FIT-9G-Q2_K.gguf",
       "target_bytes": 9663676416
     },
     "IQ1_M": {

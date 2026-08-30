@@ -58,6 +58,7 @@
 ^blk\.18\.ssm_beta\.weight$=q2_k
 ^blk\.18\.ssm_out\.weight$=q2_k
 ^blk\.19\.attn_k\.weight$=q2_k
+^blk\.19\.attn_output\.weight$=q2_k
 ^blk\.19\.attn_q\.weight$=q2_k
 ^blk\.2\.attn_gate\.weight$=q2_k
 ^blk\.2\.ssm_alpha\.weight$=q2_k
@@ -66,6 +67,7 @@
 ^blk\.20\.attn_gate\.weight$=q2_k
 ^blk\.20\.ffn_down\.weight$=q2_k
 ^blk\.20\.ffn_gate\.weight$=q2_k
+^blk\.20\.ffn_up\.weight$=q2_k
 ^blk\.20\.ssm_alpha\.weight$=q2_k
 ^blk\.20\.ssm_beta\.weight$=q2_k
 ^blk\.20\.ssm_out\.weight$=q2_k
@@ -132,6 +134,7 @@
 ^blk\.29\.ssm_out\.weight$=q2_k
 ^blk\.3\.attn_k\.weight$=q2_k
 ^blk\.3\.attn_q\.weight$=q2_k
+^blk\.3\.ffn_gate\.weight$=q2_k
 ^blk\.30\.attn_gate\.weight$=q2_k
 ^blk\.30\.ffn_down\.weight$=q2_k
 ^blk\.30\.ffn_gate\.weight$=q2_k
@@ -218,6 +221,7 @@
 ^blk\.43\.attn_q\.weight$=q2_k
 ^blk\.43\.ffn_down\.weight$=q2_k
 ^blk\.43\.ffn_gate\.weight$=q2_k
+^blk\.43\.ffn_up\.weight$=q2_k
 ^blk\.44\.attn_gate\.weight$=q2_k
 ^blk\.44\.ffn_down\.weight$=q2_k
 ^blk\.44\.ffn_gate\.weight$=q2_k
@@ -271,12 +275,14 @@
 ^blk\.51\.ffn_down\.weight$=q2_k
 ^blk\.52\.attn_gate\.weight$=q2_k
 ^blk\.52\.ffn_down\.weight$=q2_k
+^blk\.52\.ffn_gate\.weight$=q2_k
 ^blk\.52\.ssm_alpha\.weight$=q2_k
 ^blk\.52\.ssm_beta\.weight$=q2_k
 ^blk\.52\.ssm_out\.weight$=q2_k
 ^blk\.53\.attn_gate\.weight$=q2_k
 ^blk\.53\.ffn_down\.weight$=q2_k
 ^blk\.53\.ffn_gate\.weight$=q2_k
+^blk\.53\.ffn_up\.weight$=q2_k
 ^blk\.53\.ssm_alpha\.weight$=q2_k
 ^blk\.53\.ssm_beta\.weight$=q2_k
 ^blk\.53\.ssm_out\.weight$=q2_k
@@ -351,6 +357,7 @@
 ^blk\.63\.ffn_gate\.weight$=q2_k
 ^blk\.63\.ffn_up\.weight$=q2_k
 ^blk\.7\.attn_k\.weight$=q2_k
+^blk\.7\.attn_output\.weight$=q2_k
 ^blk\.7\.attn_q\.weight$=q2_k
 ^blk\.7\.ffn_down\.weight$=q4_k
 ^blk\.7\.ffn_gate\.weight$=q2_k

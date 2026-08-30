@@ -205,3 +205,30 @@ Improvements over the K-based tiers: -0.0200 / -0.0317 / -0.0326 macro KL;
 the FIT curve is now monotonically improving from FIT-12G through FIT-13.5G
 (0.1227 -> 0.1116 -> 0.0987 -> 0.0838), removing the pair-boundary
 regression. P4 gates R1-R6 re-run ALL_PASS after the swap.
+
+## Amendment 5 (2026-08-30, owner-directed P6: IQ2 span fix + Q3_K-free 9.5G/10G)
+
+The owner flagged FIT-8G as fully dominated by the IQ2_XXS preset (8.000G
+macro KL 0.5664 vs 0.5403 at 7.854G). Reference deltas identified iq2_xs as
+a toxic tensor type on this model (IQ2_XXS->IQ2_XS: +0.1037 KLD/GiB; the
+IQ2_XS preset is an outlier like Q3_K_S), while IQ2_S->IQ2_M is the golden
+path (-0.1831/G). FIT-8.5G was dominated as well. Per preregistered
+experiment `experiments/2026-08-30-p6-iq2-span-fix/` (amendments 1-4
+documented there: 9G joined after run-1 G5 monotonicity failure; oracle
+loop convergence rule fixed), five tiers moved to new native-preset spans:
+
+| Tier | New pair | Actual GiB | Macro KLD | Macro Same-top % |
+| --- | --- | ---: | ---: | ---: |
+| FIT-8G | IQ2_XXS -> IQ2_M | 7.999 | 0.483774 | 76.897 |
+| FIT-8.5G | IQ2_XXS -> IQ2_M | 8.499 | 0.452663 | 78.416 |
+| FIT-9G | IQ2_XXS -> Q2_K_S | 8.999 | 0.336343 | 80.824 |
+| FIT-9.5G | IQ2_M -> Q2_K_S | 9.500 | 0.273662 | 83.059 |
+| FIT-10G | Q2_K_S -> IQ3_XXS | 9.999 | 0.229923 | 84.598 |
+
+Improvements over the replaced tiers: -0.083 / -0.123 / -0.123 / -0.036 /
+-0.009 macro KL. The full 14-tier FIT curve is now strictly monotone in
+measured quality, and in the 8-10 GiB region every FIT tier beats its
+surrounding native presets (8G/8.5G beat IQ2_XXS, 9.5G beats Q2_K_S, 10G
+beats Q2_K). All override sets are q3_k-free. Old plan files archived
+under `tiers/<tier>/prev-span/`. Gates G1-G6 pass; P4 gates R1-R6 re-run
+ALL_PASS after the swap.
