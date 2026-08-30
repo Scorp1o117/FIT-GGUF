@@ -163,14 +163,16 @@ and Same-top are primary directional metrics; short-corpus PPL is diagnostic.
 
 ## Project records
 
-- `PROJECT_STATE.md` — current source of truth.
-- `HANDOFF.md` — continuation entry point.
-- `DECISIONS.md` — accepted and rejected design decisions.
+- `DECISIONS.md` — accepted and rejected design decisions (D-0001..D-0024).
+- `FINAL_REPORT.md` — the v0.1 research report and its validated claims.
 - `docs/llama-integration.md` — reviewed integration path through llama.cpp.
-- `docs/asset-inventory.md` — local asset provenance.
+- `eval-data/PROVENANCE.md` — sources, offsets and SHA-256 of the five
+  preregistered KL evaluation slices.
+- `experiments/` — preregistered experiment records (gates frozen before
+  execution, results recorded as measured).
 
 ## License
 
-The repository does not yet declare a software license. Do not infer one from
-the Apache-2.0 license of the released base model; the project owner should add
-an explicit repository license before public distribution.
+MIT — see [LICENSE](LICENSE). The released base model
+(`orcarouter/Qwen3.8-27B-Uncensored`) carries its own license terms; the
+released FIT quantizations inherit the model's usage restrictions.

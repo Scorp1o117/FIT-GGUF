@@ -30,3 +30,11 @@ __pycache__/
 # Promo video build outputs (Remotion)
 /promo-video/node_modules/
 /promo-video/out/
+
+# Internal working records (kept local, not part of the public repo)
+/HANDOFF.md
+/PROJECT_STATE.md
+/V0.2_PROPOSAL.md
+/FIT-GGUF — Autonomous Project Master Spec.md
+/docs/asset-inventory.md
+/promo-video/

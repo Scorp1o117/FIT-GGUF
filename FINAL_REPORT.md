@@ -168,7 +168,7 @@ value cannot affect size prediction.
 
 - Version: **v0.1** (not v1.0 — the allocation claim is model-scoped).
 - Deliverables: `fit` CLI, 53 unit tests, this report, updated
-  PROJECT_STATE/HANDOFF/DECISIONS (D-0023), preregistered experiment record
+  DECISIONS (D-0023), preregistered experiment record
   M0-M16 and P1.
 - Research freeze: M16 closed allocator research. A future v0.2, if reopened,
   should use the conditional-marginal-utility design (local marginal probe →

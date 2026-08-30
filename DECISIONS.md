@@ -529,7 +529,7 @@ Evidence:
 P5/P6 measured improvements (-0.020/-0.032/-0.033 and -0.083/-0.123/
 -0.123/-0.036/-0.009 macro KL per tier), the strictly monotone 14-tier
 release curve, and every 8-10G tier beating its surrounding native
-presets after span-only changes. Full proposal: V0.2_PROPOSAL.md.
+presets after span-only changes. Full proposal recorded in the project's internal records (owner-deferred).
 
 Status:
 Recorded only, per owner direction (2026-08-30: "先记录在项目里，之后
