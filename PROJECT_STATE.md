@@ -206,10 +206,12 @@ None. M0-M16 and P1 are complete; FIT-GGUF v0.1 is frozen and shipped
 
 ## Next task
 
-Nothing scheduled. If allocator research reopens as v0.2, it requires a new
-preregistered design (conditional marginal utility per D-0020) on a fresh
-third model; Huihui and Granite are development data only and must not be
-tuned on.
+Nothing scheduled. The v0.2 direction (quality-aware span selection:
+`fit probe`, `--auto-span`, domination self-check) is recorded in
+V0.2_PROPOSAL.md and DECISIONS.md D-0024, deferred by the owner on
+2026-08-30 pending the first release. Execution requires a new
+preregistered design and a fresh sealed third model; Huihui, Granite and
+orcarouter are development data only and must not be tuned on.
 
 ## Acceptance status
 

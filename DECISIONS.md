@@ -506,3 +506,34 @@ Accepted. Version FIT-GGUF v0.1 (not v1.0; the allocation claim remains
 model-scoped per D-0022). Research stays frozen: no allocator tuning on either
 model; any future allocator experiment requires a new preregistered design on
 a fresh third model.
+
+## D-0024: Record the v0.2 quality-aware span selection direction, deferred
+
+Reason:
+P4-P6 showed release quality outcomes were decided by hand-picked span
+selection (which native presets bracket a target, which bulk types the
+fill path uses), not by the allocator; both owner-triggered fixes (P5
+K-free 12.5-13.5G, P6 IQ2 span fix) were span corrections found by hand
+from reference measurements. The capability should become a measured,
+automatic part of the tool (fit probe frontier map, --auto-span,
+domination self-check) rather than manual post-hoc analysis.
+
+Alternatives:
+Hard-code the observed type toxicities into the planner (rejected:
+model-specific overfitting), reopen tensor-level allocation research
+(rejected: D-0022's non-transfer finding, and P5/P6 wins were
+span-level), or do nothing and keep manual span selection (viable for
+one-off releases; rejected as the long-term direction).
+
+Evidence:
+P5/P6 measured improvements (-0.020/-0.032/-0.033 and -0.083/-0.123/
+-0.123/-0.036/-0.009 macro KL per tier), the strictly monotone 14-tier
+release curve, and every 8-10G tier beating its surrounding native
+presets after span-only changes. Full proposal: V0.2_PROPOSAL.md.
+
+Status:
+Recorded only, per owner direction (2026-08-30: "先记录在项目里，之后
+再说"). Not preregistered; not scheduled. Execution requires a new
+preregistration and the D-0022/D-0023 standard of a fresh sealed third
+model for transfer validation; Huihui and orcarouter are development
+data from now on.
