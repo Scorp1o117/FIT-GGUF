@@ -1,4 +1,8 @@
 <p align="center">
+  <span>English</span> · <a href="README.zh-CN.md">简体中文</a>
+</p>
+
+<p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="branding/fit-gguf-logo-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="branding/fit-gguf-logo-light.svg">

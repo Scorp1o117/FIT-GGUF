@@ -30,6 +30,40 @@ GRID = "#313338"
 ORANGE = "#FF5A1F"
 BLUE = "#5593FF"
 
+REF_LABEL_OFFSETS_KL = {
+    "IQ1_S": (-48, 18),
+    "IQ1_M": (14, 20),
+    "IQ2_XXS": (-58, -18),
+    "IQ2_XS": (-48, 20),
+    "IQ2_S": (14, 18),
+    "IQ2_M": (-56, 20),
+    "Q2_K_S": (-58, 20),
+    "Q2_K": (14, -20),
+    "IQ3_XXS": (-68, -24),
+    "IQ3_XS": (-68, -24),
+    "Q3_K_S": (14, 20),
+    "IQ3_S": (14, 22),
+    "IQ3_M": (18, -26),
+    "IQ4_XS": (14, -8),
+}
+
+REF_LABEL_OFFSETS_SAME = {
+    "IQ1_S": (-48, -15),
+    "IQ1_M": (14, 15),
+    "IQ2_XXS": (-62, -18),
+    "IQ2_XS": (-54, 20),
+    "IQ2_S": (14, -20),
+    "IQ2_M": (-54, -20),
+    "Q2_K_S": (-58, 20),
+    "Q2_K": (14, -20),
+    "IQ3_XXS": (-68, 20),
+    "IQ3_XS": (-64, 20),
+    "Q3_K_S": (-64, -20),
+    "IQ3_S": (14, 22),
+    "IQ3_M": (18, -24),
+    "IQ4_XS": (-64, 16),
+}
+
 
 def configure() -> None:
     mpl.rcParams.update(
@@ -151,15 +185,18 @@ def render_kl(fits: list[dict], refs: list[dict], lang: str) -> None:
             color=ORANGE,
         )
 
-    for name in ("IQ1_S", "IQ2_XXS", "Q2_K", "IQ3_XS", "Q3_K_S", "IQ3_M", "IQ4_XS"):
-        item = next(x for x in refs if x["name"] == name)
+    for item in refs:
+        dx, dy = REF_LABEL_OFFSETS_KL[item["name"]]
         ax.annotate(
-            name,
+            item["name"],
             (item["gib"], item["macro_kld"]),
-            xytext=(8, -4 if name != "Q3_K_S" else 10),
+            xytext=(dx, dy),
             textcoords="offset points",
-            fontsize=10,
+            ha="left" if dx > 0 else "right",
+            va="center",
+            fontsize=9.5,
             color=BLUE,
+            arrowprops={"arrowstyle": "-", "color": BLUE, "lw": 0.7, "alpha": 0.65},
         )
 
     best = next(x for x in fits if x["name"] == "FIT-13.5G")
@@ -238,6 +275,19 @@ def render_same_top(fits: list[dict], refs: list[dict], lang: str) -> None:
             ha="center",
             fontsize=10,
             color=ORANGE,
+        )
+    for item in refs:
+        dx, dy = REF_LABEL_OFFSETS_SAME[item["name"]]
+        ax.annotate(
+            item["name"],
+            (item["gib"], item["macro_same_top"]),
+            xytext=(dx, dy),
+            textcoords="offset points",
+            ha="left" if dx > 0 else "right",
+            va="center",
+            fontsize=9.5,
+            color=BLUE,
+            arrowprops={"arrowstyle": "-", "color": BLUE, "lw": 0.7, "alpha": 0.65},
         )
     ax.set_xlim(6.45, 14.45)
     ax.set_ylim(60, 95.5)
