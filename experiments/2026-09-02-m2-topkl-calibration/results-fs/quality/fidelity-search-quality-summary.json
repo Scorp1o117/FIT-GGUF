@@ -1,0 +1,19 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 17443851488,
+  "macro_kl": 0.049672,
+  "same_top": 0.9487719999999998,
+  "passed": true,
+  "eval_index": 0,
+  "source": "observed"
+ },
+ "fresh_evals": 0,
+ "budget": 8,
+ "bracket_fail_bytes": 17425501408,
+ "bracket_pass_bytes": 17443851488,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": null
+}

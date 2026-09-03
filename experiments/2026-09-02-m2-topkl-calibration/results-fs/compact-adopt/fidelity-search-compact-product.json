@@ -1,0 +1,22 @@
+{
+ "status": "noise_inversion",
+ "guarantee": "smallest verified PASS; bracket inverted (curve within eval noise)",
+ "best": {
+  "size_bytes": 11991706848,
+  "macro_kl": 0.1485924,
+  "same_top": 0.8909180000000001,
+  "passed": true,
+  "eval_index": 0,
+  "source": "observed"
+ },
+ "fresh_evals": 0,
+ "budget": 8,
+ "bracket_fail_bytes": 12076248288,
+ "bracket_pass_bytes": 11991706848,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {},
+ "artifact_analyses": {},
+ "artifact": null
+}

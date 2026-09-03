@@ -12,6 +12,7 @@ from fractions import Fraction
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 
 from fit_gguf.candidates import (
@@ -42,7 +43,7 @@ from fit_gguf.optimizer import (
 
 ANALYSIS_SCHEMA_VERSION = 1
 PLAN_SCHEMA_VERSION = 1
-FIT_GGUF_VERSION = "0.1.0"
+FIT_GGUF_VERSION = "0.2.0"
 # P6 amendment 3: counter shifts move the oracle's effective recipe in
 # whole-tensor steps; 3 rounds were not always enough to absorb them.
 ORACLE_MAX_ITERATIONS = 8
@@ -97,8 +98,12 @@ def _sha256_file(path: Path, chunk_size: int = 1 << 20) -> str:
 
 
 def _truncate_kv_string(value: str) -> str:
+    # llama.cpp strncpy semantics: exactly the first 127 UTF-8 BYTES survive
+    # (val_str[127] = '\0'), even when the cut lands mid-codepoint. Keep the
+    # byte length faithful via surrogateescape so size prediction matches the
+    # artifact byte-for-byte; decode-ignore would silently drop 1-3 bytes.
     encoded = value.encode("utf-8")[:KV_OVERRIDE_STRING_MAX_BYTES]
-    return encoded.decode("utf-8", errors="ignore")
+    return encoded.decode("utf-8", errors="surrogateescape")
 
 
 def derive_imatrix_provenance(
@@ -297,11 +302,14 @@ def _dump_json(payload: object, path: str | Path) -> None:
         json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False, allow_nan=False)
         + "\n",
         encoding="utf-8",
+        errors="surrogatepass",
     )
 
 
 def _load_json(path: str | Path) -> dict[str, object]:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+    return json.loads(
+        Path(path).read_text(encoding="utf-8", errors="surrogatepass")
+    )
 
 
 def analyze(
@@ -443,6 +451,77 @@ def resolve_target(lower_size: int, upper_size: int, fit: str) -> int:
     return lower_size + gap * fraction.numerator // fraction.denominator
 
 
+_BLOCK_RE = re.compile(r"^blk\.(\d+)\.")
+
+
+def _tensor_block(tensor: str) -> int | None:
+    match = _BLOCK_RE.match(tensor)
+    return int(match.group(1)) if match else None
+
+
+def _apply_role_corrections(
+    candidate_set: CandidateSet, corrections: dict[str, float]
+) -> CandidateSet:
+    """v0.2 utility re-weighting: I* = I x C_role (Refine Profile bootstrap).
+
+    Multiplies each upgrade candidate's utility_per_byte by the profile's
+    C_role for its tensor role (neutral 1.0 for roles outside the profile).
+    Size deltas and the candidate budget are unchanged — only the ranking
+    feature moves.
+    """
+    reweighted = tuple(
+        replace(
+            c,
+            utility_per_byte=c.utility_per_byte * float(corrections.get(c.role, 1.0)),
+        )
+        for c in candidate_set.candidates
+    )
+    return CandidateSet(
+        candidates=reweighted,
+        rejected=candidate_set.rejected,
+        lower_size_bytes=candidate_set.lower_size_bytes,
+        upper_size_bytes=candidate_set.upper_size_bytes,
+    )
+
+
+def _apply_refine_corrections(
+    candidate_set: CandidateSet, profile: dict
+) -> tuple[CandidateSet, dict[str, int]]:
+    """Apply a loaded refine profile: band-conditional when cells exist.
+
+    Band-conditional profiles (M6b) resolve C per candidate from the
+    narrowest measured utility cell covering the tensor's block, falling
+    back to C_role(role) elsewhere; role-only (v0) profiles take the
+    plain role path. Returns the reweighted set plus a per-cell usage
+    count for the plan record.
+    """
+    from fit_gguf.refine.profile import resolve_band_correction
+
+    band_cells = (profile.get("band_correction") or {}).get("cells") or []
+    if not band_cells:
+        corrections = {r: float(c) for r, c in profile["role_correction"].items()}
+        return _apply_role_corrections(candidate_set, corrections), {}
+
+    usage: dict[str, int] = {}
+    reweighted = []
+    for candidate in candidate_set.candidates:
+        factor, cell_id = resolve_band_correction(
+            profile, candidate.role, _tensor_block(candidate.tensor)
+        )
+        if cell_id is not None:
+            usage[cell_id] = usage.get(cell_id, 0) + 1
+        reweighted.append(replace(candidate, utility_per_byte=candidate.utility_per_byte * factor))
+    return (
+        CandidateSet(
+            candidates=tuple(reweighted),
+            rejected=candidate_set.rejected,
+            lower_size_bytes=candidate_set.lower_size_bytes,
+            upper_size_bytes=candidate_set.upper_size_bytes,
+        ),
+        usage,
+    )
+
+
 def plan(
     analysis_path: str | Path,
     out_prefix: str | Path,
@@ -453,6 +532,10 @@ def plan(
     seed: str | int | None = None,
     block_span: int | str = "auto",
     model_name: str | None = None,
+    refine_profile: str | Path | None = None,
+    fidelity_tier: str | None = None,
+    guard_registry: str | Path | None = None,
+    source_sha256: str | None = None,
 ) -> dict[str, object]:
     """Plan one artifact from a frozen analysis and write its three records."""
     if policy not in _POLICIES:
@@ -480,6 +563,22 @@ def plan(
             "upper_size_bytes": payload["presets"]["upper"]["predicted_size_bytes"],  # type: ignore[index]
         }
     )
+    refine_note = None
+    if refine_profile is not None:
+        from fit_gguf.refine.profile import load_profile
+
+        profile = load_profile(refine_profile)
+        candidate_set, band_usage = _apply_refine_corrections(candidate_set, profile)
+        refine_note = {
+            "profile_id": profile["profile_id"],
+            "c_role_form": profile["calibration_status"]["c_role_form"],
+            "role_corrections": {r: float(c) for r, c in profile["role_correction"].items()},
+        }
+        if band_usage:
+            refine_note["band_cells_applied"] = band_usage
+            refine_note["band_cells_available"] = len(
+                (profile.get("band_correction") or {}).get("cells") or []
+            )
     lower_recipe = _recipe_from_json(payload["lower_recipe"])  # type: ignore[arg-type]
     layout = read_gguf_layout(payload["source"]["path"])  # type: ignore[arg-type]
 
@@ -571,6 +670,24 @@ def plan(
         )
     } if total_elements else {}
     resolved_model_name = model_name or default_model_name(str(payload["source"]["path"]))
+    fidelity_note = None
+    if fidelity_tier is not None:
+        # Fidelity Contract v1: a named tier requires a validated Guard Profile
+        # covering this model; unvalidated models are refused, never silently
+        # defaulted (planner-verdict-m3.md §5).
+        from fit_gguf.fidelity import require_guard_profile
+
+        registry = guard_registry or Path("profiles/guard")
+        profile = require_guard_profile(
+            resolved_model_name, fidelity_tier, registry, source_sha256
+        )
+        fidelity_note = {
+            "tier": fidelity_tier.strip().lower(),
+            "guard_profile_id": profile.profile_id,
+            "source_sha256": profile.source_sha256,
+            "same_top_floor": profile.floor_for(fidelity_tier.strip().lower()),
+            "kl_anchor": profile.kl_anchors[fidelity_tier.strip().lower()],
+        }
     suggested = (
         suggested_filename(resolved_model_name, target, dominant) if dominant else None
     )
@@ -605,6 +722,8 @@ def plan(
         "model_name": resolved_model_name,
         "dominant_qtype": dominant,
         "qtype_parameter_shares": shares,
+        "refine_profile": refine_note,
+        "fidelity": fidelity_note,
         "suggested_filename": suggested,
     }
     plan_record_path = prefix.with_name(prefix.name + "-plan.json")
@@ -618,22 +737,57 @@ def quantize(
     out_path: str | Path,
     *,
     expect_bytes: int | None = None,
+    imatrix_arg: str | None = None,
 ) -> dict[str, object]:
-    """Quantize per a tensor-types file and verify the exact output size."""
+    """Quantize per a tensor-types file and verify the exact output size.
+
+    G2 exact-size contract: the gate re-finalizes the prediction from THIS
+    invocation before running the quantizer. b10666 embeds
+    ``quantize.imatrix.file`` = the imatrix path string as passed on its own
+    command line and re-emits tensor infos with trailing singleton dims
+    dropped, so the analyze-time prediction frozen in analysis.json is only
+    faithful when quantize reuses that exact string (artifact size is
+    path-length dependent). Static KVs come from the frozen analysis; the
+    dynamic file string comes from the actual invocation.
+    """
     payload = load_analysis(analysis_path)
     binary = Path(payload["runtime"]["llama_quantize"])  # type: ignore[index]
     if not binary.is_file():
         raise PipelineError(f"llama-quantize not found at {binary}")
     source = payload["source"]["path"]  # type: ignore[index]
-    imatrix_arg = payload["imatrix"]["arg"]  # type: ignore[index]
     lower_preset = payload["presets"]["lower"]["name"]  # type: ignore[index]
+    analysis_imatrix_arg = str(payload["imatrix"]["arg"])  # type: ignore[index]
+    actual_imatrix_arg = imatrix_arg or analysis_imatrix_arg
+
+    layout = read_gguf_layout(source)
+    static_imatrix = ImatrixProvenance(**payload["metadata"]["imatrix"])  # type: ignore[arg-type]
+    metadata = QuantizationMetadata(
+        file_type=int(payload["metadata"]["file_type"]),  # type: ignore[arg-type]
+        quantization_version=int(payload["metadata"]["quantization_version"]),  # type: ignore[arg-type]
+        imatrix=replace(static_imatrix, file=_truncate_kv_string(actual_imatrix_arg)),
+    )
 
     output = Path(out_path)
     output.parent.mkdir(parents=True, exist_ok=True)
+    # Re-run the override oracle: the effective recipe under
+    # --tensor-type-file is what llama-quantize will actually write, so the
+    # re-finalized gate is byte-exact rather than a replay of the plan-time
+    # selection.
+    effective_recipe = run_dry_run(
+        binary.parent,
+        source,
+        actual_imatrix_arg,
+        lower_preset,
+        output.with_name(output.name + ".quantize-oracle.log"),
+        tensor_types=tensor_types_path,
+    )
+    prediction = predict_quantized_size(layout, effective_recipe, metadata)
+    expected_bytes = prediction.total_bytes
+
     command = [
         str(binary),
         "--imatrix",
-        str(imatrix_arg),
+        actual_imatrix_arg,
         "--tensor-type-file",
         str(tensor_types_path),
         str(source),
@@ -651,6 +805,10 @@ def quantize(
         "returncode": completed.returncode,
         "output_path": str(output),
         "size_bytes": size,
+        "imatrix_arg": actual_imatrix_arg,
+        "analysis_imatrix_arg": analysis_imatrix_arg,
+        "refinalized_expected_bytes": expected_bytes,
+        "size_matches_refinalization": size == expected_bytes,
         "expect_bytes": expect_bytes,
         "size_matches_expectation": expect_bytes is None or size == int(expect_bytes),
         "sha256": _sha256_file(output) if size else None,
@@ -659,6 +817,11 @@ def quantize(
     _dump_json(record, Path(str(output) + ".quantize-record.json"))
     if completed.returncode != 0:
         raise PipelineError(f"llama-quantize failed with code {completed.returncode}")
+    if size != expected_bytes:
+        raise PipelineError(
+            f"G2 exact-size gate failed: output is {size:,} bytes, re-finalized "
+            f"prediction is {expected_bytes:,} bytes"
+        )
     if expect_bytes is not None and size != int(expect_bytes):
         raise PipelineError(
             f"Output is {size:,} bytes; expected {int(expect_bytes):,} bytes"

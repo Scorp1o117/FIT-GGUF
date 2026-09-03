@@ -1,0 +1,53 @@
+{
+ "artifact": "orcarouter-Qwen3.8-27B-Uncensored-FIT-COMPACT-11.17GiB.gguf",
+ "size_bytes": 11991706848,
+ "sha256": "c6a29c40b524b9f43b2f42f7eb02bbd48ca4b0e9f6d7977a13c82daaa3264955",
+ "fit.fidelity.search_status": "noise_inversion",
+ "fit.fidelity.release_status": "verified_manual_promotion",
+ "fit.fidelity.final_artifact_verified": true,
+ "fit.fidelity.active_constraint": "kl",
+ "fit.fidelity.adjudication_id": "planner-verdict-r2.md",
+ "tier_contract": {
+  "kl_anchor": 0.15,
+  "same_top_floor": 0.8894
+ },
+ "g2": {
+  "finalized": 11991706848,
+  "actual": 11991706848,
+  "delta": 0,
+  "pass": true
+ },
+ "final_body_verify_eval": {
+  "wiki_test": {
+   "mean_kld": 0.065163,
+   "same_top_pct": 89.766
+  },
+  "wiki_valid": {
+   "mean_kld": 0.064523,
+   "same_top_pct": 90.095
+  },
+  "chinese": {
+   "mean_kld": 0.242919,
+   "same_top_pct": 86.588
+  },
+  "code": {
+   "mean_kld": 0.225417,
+   "same_top_pct": 89.265
+  },
+  "agent_chat": {
+   "mean_kld": 0.14494,
+   "same_top_pct": 89.745
+  },
+  "macro_kl": 0.1485924,
+  "macro_same_top_pct": 89.0918,
+  "bit_exact_match_with_adopted_evidence": true
+ },
+ "provenance": {
+  "recipe": "results-fs/r2-compact/archive-oldbfs-1137G/R2A-compact-off-192-plan-recipe.json",
+  "tensor_types": "results-fs/r2-compact/archive-oldbfs-1137G/R2A-compact-off-192-plan-tensor-types.txt",
+  "analysis": "orcarouter-analysis-IQ3_XS-IQ3_S",
+  "imatrix_arg_invocation": "/run/media/s117/OS/FIT-GGUF/imatrix_unsloth.gguf",
+  "note": "rebuild must use the same absolute imatrix invocation string as the original sweep (path string is written into the GGUF; 32B delta otherwise)"
+ },
+ "release_history": "R2 initial FAIL -> corrective fidelity-search rerun (noise_inversion, best 11.17G, 0 fresh evals) -> B_FS adopted -> grid regenerated -> R2 amended PASS -> GPT adjudication A1 -> rebuild + G2 + final-body eval PASS -> RELEASE APPROVED"
+}

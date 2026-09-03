@@ -21,6 +21,7 @@ OUTPUT_DIRS = (
     ROOT / "docs/assets",
     ROOT / "Qwen3.8-27B-Uncensored-FIT-GGUF/results",
 )
+VIDEO_OUTPUT_DIR = ROOT / "promo-video/public"
 
 BG = "#070707"
 PANEL = "#101112"
@@ -62,6 +63,23 @@ REF_LABEL_OFFSETS_SAME = {
     "IQ3_S": (14, 22),
     "IQ3_M": (18, -24),
     "IQ4_XS": (-64, 16),
+}
+
+VIDEO_REF_LABEL_OFFSETS_KL = {
+    "IQ1_S": (-12, 30),
+    "IQ1_M": (14, 30),
+    "IQ2_XXS": (-32, -34),
+    "IQ2_XS": (-46, 38),
+    "IQ2_S": (42, 18),
+    "IQ2_M": (-28, 38),
+    "Q2_K_S": (-28, 40),
+    "Q2_K": (30, 32),
+    "IQ3_XXS": (-46, -36),
+    "IQ3_XS": (-42, -38),
+    "Q3_K_S": (18, 32),
+    "IQ3_S": (14, -42),
+    "IQ3_M": (62, 10),
+    "IQ4_XS": (-22, 34),
 }
 
 
@@ -310,6 +328,103 @@ def render_same_top(fits: list[dict], refs: list[dict], lang: str) -> None:
     save(fig, "sametop-curve", lang)
 
 
+def render_kl_video_zh(fits: list[dict], refs: list[dict]) -> None:
+    """Large-label chart for the 1080p launch film.
+
+    The repository chart carries its own title, subtitle and protocol footer.
+    The film already supplies those layers, so this version spends the available
+    pixels on point labels and keeps every native preset inside a glass-backed
+    callout.
+    """
+    fig, ax = plt.subplots(figsize=(16, 8.35))
+    fig.subplots_adjust(left=0.085, right=0.985, top=0.965, bottom=0.16)
+    ax.set_yscale("log")
+    ax.yaxis.set_major_locator(FixedLocator([0.05, 0.10, 0.20, 0.50, 1.00]))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value:.4f}"))
+    ax.yaxis.set_minor_formatter(NullFormatter())
+
+    ax.scatter(
+        [x["gib"] for x in refs],
+        [x["macro_kld"] for x in refs],
+        s=128,
+        marker="D",
+        facecolor=PANEL,
+        edgecolor=BLUE,
+        linewidth=2.4,
+        label="llama.cpp 原生预设",
+        zorder=5,
+    )
+    ax.plot(
+        [x["gib"] for x in fits],
+        [x["macro_kld"] for x in fits],
+        color=ORANGE,
+        linewidth=4.0,
+        marker="o",
+        markersize=9,
+        markeredgecolor=BG,
+        markeredgewidth=1.5,
+        label="FIT 档位",
+        zorder=4,
+    )
+
+    for index, item in enumerate(fits):
+        dy = 18 if index % 2 == 0 else -26
+        ax.annotate(
+            item["name"].removeprefix("FIT-"),
+            (item["gib"], item["macro_kld"]),
+            xytext=(0, dy),
+            textcoords="offset points",
+            ha="center",
+            va="center",
+            fontsize=12.5,
+            weight="bold",
+            color=ORANGE,
+            zorder=8,
+            bbox={"boxstyle": "round,pad=0.20", "fc": PANEL, "ec": "none", "alpha": 0.90},
+        )
+
+    for item in refs:
+        dx, dy = VIDEO_REF_LABEL_OFFSETS_KL[item["name"]]
+        ax.annotate(
+            item["name"],
+            (item["gib"], item["macro_kld"]),
+            xytext=(dx, dy),
+            textcoords="offset points",
+            ha="left" if dx >= 0 else "right",
+            va="center",
+            fontsize=13,
+            weight="bold",
+            color="#8AB7FF",
+            zorder=9,
+            bbox={"boxstyle": "round,pad=0.28", "fc": "#090B0F", "ec": BLUE, "lw": 0.7, "alpha": 0.94},
+            arrowprops={"arrowstyle": "-", "color": BLUE, "lw": 1.05, "alpha": 0.8},
+        )
+
+    ax.set_xlim(6.35, 14.55)
+    ax.set_ylim(0.043, 1.55)
+    frame(
+        ax,
+        xlabel="主 GGUF 文件大小  GiB  越低越好",
+        ylabel="五域宏平均 KL 散度  越低越好",
+    )
+    ax.tick_params(axis="both", labelsize=15)
+    ax.xaxis.label.set_size(18)
+    ax.yaxis.label.set_size(18)
+    legend = ax.legend(loc="upper right", frameon=True, fontsize=15, labelcolor=INK)
+    legend.get_frame().set_facecolor("#090B0F")
+    legend.get_frame().set_edgecolor(GRID)
+    legend.get_frame().set_alpha(0.92)
+
+    VIDEO_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    fig.savefig(
+        VIDEO_OUTPUT_DIR / "kl-curve-video-zh.png",
+        dpi=150,
+        bbox_inches="tight",
+        pad_inches=0.12,
+    )
+    plt.close(fig)
+
+
 def render_utilization(fits: list[dict], lang: str) -> None:
     zh = lang == "zh"
     fig, ax = plt.subplots(figsize=(16, 9))
@@ -439,6 +554,7 @@ def main() -> None:
         render_same_top(fits, refs, lang)
         render_utilization(fits, lang)
         render_strategy_improvement(fits, baseline, lang)
+    render_kl_video_zh(fits, refs)
 
 
 if __name__ == "__main__":

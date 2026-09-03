@@ -285,7 +285,23 @@ def test_analysis_plan_quantize_end_to_end_with_stub_runtime(e2e):
     )
     assert random_record["seed"] == "unit-seed"
 
-    stub_bytes = 4096
+    # The G2 re-finalization gate demands byte-exact output, so the stub must
+    # emit exactly the re-finalized prediction, computed here via the public
+    # API over the same canned dry-run output the stub serves.
+    from dataclasses import replace as _replace
+
+    from fit_gguf import parse_dry_run, predict_quantized_size, read_gguf_layout
+    from fit_gguf.gguf import ImatrixProvenance, QuantizationMetadata
+
+    layout = read_gguf_layout(e2e["source"])
+    recipe = parse_dry_run(_dry_run_log("IQ3_M"))
+    static = ImatrixProvenance(**payload["metadata"]["imatrix"])
+    meta = QuantizationMetadata(
+        file_type=payload["metadata"]["file_type"],
+        quantization_version=payload["metadata"]["quantization_version"],
+        imatrix=_replace(static, file="imx.gguf"),
+    )
+    stub_bytes = predict_quantized_size(layout, recipe, meta).total_bytes
     os.environ["STUB_OUT_BYTES"] = str(stub_bytes)
     try:
         quant_record = quantize(
@@ -294,6 +310,14 @@ def test_analysis_plan_quantize_end_to_end_with_stub_runtime(e2e):
             e2e["tmp"] / "out.gguf",
             expect_bytes=stub_bytes,
         )
+        assert quant_record["size_matches_refinalization"] is True
+        with pytest.raises(PipelineError):
+            quantize(
+                analysis,
+                record["tensor_types_path"],
+                e2e["tmp"] / "out2.gguf",
+                expect_bytes=stub_bytes + 1,
+            )
     finally:
         os.environ.pop("STUB_OUT_BYTES", None)
     assert quant_record["sha256"] == hashlib.sha256(

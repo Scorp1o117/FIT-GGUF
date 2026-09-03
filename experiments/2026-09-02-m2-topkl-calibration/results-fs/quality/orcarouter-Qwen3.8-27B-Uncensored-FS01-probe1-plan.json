@@ -1,0 +1,70 @@
+{
+  "analysis_path": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-02-m2-topkl-calibration/orcarouter-analysis-Q4_K_M-Q5_K_M/analysis.json",
+  "analysis_sha256": "2f9a1bbc6a2e8ecd9828e74f39b56efc59f33cf98c066378da1b4db41cd3cd1d",
+  "block_span": 16,
+  "dominant_qtype": "q4_k",
+  "fidelity": {
+    "guard_profile_id": "guard-orcarouter-qwen3.8-27b-uncensored-exact-v1",
+    "kl_anchor": 0.05,
+    "same_top_floor": 0.9475,
+    "tier": "quality"
+  },
+  "fit": null,
+  "fit_gguf_version": "0.1.0",
+  "lower_preset": "Q4_K_M",
+  "lower_size_bytes": 16547400928,
+  "metadata_bytes": 10994912,
+  "model_name": "orcarouter-Qwen3.8-27B-Uncensored",
+  "oracle_iterations": 1,
+  "policy": "balanced",
+  "predicted_size_bytes": 17318063328,
+  "qtype_parameter_shares": {
+    "q4_k": 0.4303538356564967,
+    "q5_k": 0.36796958767911103,
+    "q6_k": 0.20167657666439223
+  },
+  "recipe_path": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-02-m2-topkl-calibration/results-fs/quality/orcarouter-Qwen3.8-27B-Uncensored-FS01-probe1-recipe.json",
+  "recipe_sha256": "3227997e01c9363cc13f827d6acd4542df7071f0957d3bb2d26f69b3f6df306c",
+  "refine_profile": {
+    "band_cells_applied": {
+      "attn_qkv:0:q3_K->q6_K": 4,
+      "attn_qkv:1:q3_K->q6_K": 8,
+      "ffn_down:0:q3_K->q6_K": 6,
+      "ffn_down:1:q3_K->q6_K": 10,
+      "ffn_down:2:q3_K->q6_K": 11,
+      "ffn_down:3:q4_K->q6_K": 5,
+      "qwen38-27b-networkcal:nc-v4:ssm_out": 30
+    },
+    "band_cells_available": 7,
+    "c_role_form": "band-conditional-bootstrap-v1",
+    "profile_id": "qwen-hybrid-band-v1",
+    "role_corrections": {
+      "attn_gate": 0.5,
+      "attn_k": 0.9604,
+      "attn_output": 0.9723,
+      "attn_q": 1.0206,
+      "attn_qkv": 1.0356,
+      "attn_v": 1.2646,
+      "ffn_down": 1.2403,
+      "ffn_gate": 0.8412,
+      "ffn_up": 0.9856,
+      "ssm_alpha": 1.0692,
+      "ssm_beta": 1.0099,
+      "ssm_out": 0.8332
+    }
+  },
+  "schema_version": 1,
+  "seed": null,
+  "selected_cost_bytes": 1236992000,
+  "selected_count": 297,
+  "skipped_count": 136,
+  "suggested_filename": "orcarouter-Qwen3.8-27B-Uncensored-FIT-17G-Q4_K.gguf",
+  "target_bytes": 17784446144,
+  "tensor_padding_bytes": 0,
+  "tensor_payload_bytes": 17307068416,
+  "tensor_types_path": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-02-m2-topkl-calibration/results-fs/quality/orcarouter-Qwen3.8-27B-Uncensored-FS01-probe1-tensor-types.txt",
+  "tensor_types_sha256": "b8502bf78d36a5328dd5eb3168d008d2134d80450e986805ddc2a0b3c0251ff0",
+  "unused_bytes": 466382816,
+  "upper_preset": "Q5_K_M",
+  "upper_size_bytes": 19231100128
+}

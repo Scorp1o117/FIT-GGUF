@@ -1,0 +1,288 @@
+{
+ "tiers": {
+  "quality": {
+   "b_fs": 17443851488,
+   "grid": [
+    {
+     "offset_mib": -256,
+     "target": 17175416032,
+     "delivered": 16795782368,
+     "clipped": false,
+     "macro_kl": 0.0582,
+     "same_top_pct": 94.4,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -192,
+     "target": 17242524896,
+     "delivered": 16859311328,
+     "clipped": false,
+     "macro_kl": 0.0545,
+     "same_top_pct": 94.34,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -128,
+     "target": 17309633760,
+     "delivered": 16916655328,
+     "clipped": false,
+     "macro_kl": 0.0559,
+     "same_top_pct": 94.6,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -64,
+     "target": 17376742624,
+     "delivered": 16971295968,
+     "clipped": false,
+     "macro_kl": 0.057,
+     "same_top_pct": 94.51,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": 64,
+     "target": 17510960352,
+     "delivered": 17090817248,
+     "clipped": false,
+     "macro_kl": 0.0566,
+     "same_top_pct": 94.61,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    }
+   ],
+   "lowest_grid_pass": null,
+   "delta_vs_fs_mib": null,
+   "r2_verdict": "PASS",
+   "compact_dual_margins": null
+  },
+  "balanced": {
+   "b_fs": 13790608608,
+   "grid": [
+    {
+     "offset_mib": -256,
+     "target": 13522173152,
+     "delivered": 13520354528,
+     "clipped": false,
+     "macro_kl": 0.1113,
+     "same_top_pct": 90.89,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -192,
+     "target": 13589282016,
+     "delivered": 13588307168,
+     "clipped": false,
+     "macro_kl": 0.1089,
+     "same_top_pct": 91.16,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -128,
+     "target": 13656390880,
+     "delivered": 13656259808,
+     "clipped": false,
+     "macro_kl": 0.1039,
+     "same_top_pct": 91.39,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -64,
+     "target": 13723499744,
+     "delivered": 13722819808,
+     "clipped": false,
+     "macro_kl": 0.104,
+     "same_top_pct": 91.48,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": 64,
+     "target": 13857717472,
+     "delivered": 13855735008,
+     "clipped": false,
+     "macro_kl": 0.0994,
+     "same_top_pct": 91.75,
+     "passed": true,
+     "verdict": "PASS",
+     "source": "cache-hit"
+    }
+   ],
+   "lowest_grid_pass": 13855735008,
+   "delta_vs_fs_mib": 62.1,
+   "r2_verdict": "PASS",
+   "compact_dual_margins": null
+  },
+  "compact": {
+   "b_fs": 11991706848,
+   "grid": [
+    {
+     "offset_mib": -256,
+     "target": 11967130848,
+     "delivered": 11967130848,
+     "clipped": true,
+     "macro_kl": 0.1512,
+     "same_top_pct": 89.05,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -192,
+     "target": 11967130848,
+     "delivered": 11967130848,
+     "clipped": true,
+     "macro_kl": 0.1512,
+     "same_top_pct": 89.05,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -128,
+     "target": 11967130848,
+     "delivered": 11967130848,
+     "clipped": true,
+     "macro_kl": 0.1512,
+     "same_top_pct": 89.05,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": -64,
+     "target": 11967130848,
+     "delivered": 11967130848,
+     "clipped": true,
+     "macro_kl": 0.1512,
+     "same_top_pct": 89.05,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "cache-hit"
+    },
+    {
+     "offset_mib": 64,
+     "target": 12058815712,
+     "delivered": 12016037088,
+     "clipped": false,
+     "macro_kl": 0.1519,
+     "same_top_pct": 89.04,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "fresh"
+    }
+   ],
+   "lowest_grid_pass": null,
+   "delta_vs_fs_mib": null,
+   "r2_verdict": "PASS",
+   "compact_dual_margins": [
+    {
+     "offset_mib": -256,
+     "kl_margin": -0.0012,
+     "top_margin_pct": 0.11
+    },
+    {
+     "offset_mib": -192,
+     "kl_margin": -0.0012,
+     "top_margin_pct": 0.11
+    },
+    {
+     "offset_mib": -128,
+     "kl_margin": -0.0012,
+     "top_margin_pct": 0.11
+    },
+    {
+     "offset_mib": -64,
+     "kl_margin": -0.0012,
+     "top_margin_pct": 0.11
+    },
+    {
+     "offset_mib": 64,
+     "kl_margin": -0.0019,
+     "top_margin_pct": 0.1
+    }
+   ]
+  },
+  "mini": {
+   "b_fs": 11116944608,
+   "grid": [
+    {
+     "offset_mib": -256,
+     "target": 10848509152,
+     "delivered": 10848001248,
+     "clipped": false,
+     "macro_kl": 0.2277,
+     "same_top_pct": 84.73,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "fresh"
+    },
+    {
+     "offset_mib": -192,
+     "target": 10915618016,
+     "delivered": 10914807008,
+     "clipped": false,
+     "macro_kl": 0.2208,
+     "same_top_pct": 85.27,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "fresh"
+    },
+    {
+     "offset_mib": -128,
+     "target": 10982726880,
+     "delivered": 10981899488,
+     "clipped": false,
+     "macro_kl": 0.2156,
+     "same_top_pct": 85.65,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "fresh"
+    },
+    {
+     "offset_mib": -64,
+     "target": 11049835744,
+     "delivered": 11048418528,
+     "clipped": false,
+     "macro_kl": 0.2057,
+     "same_top_pct": 86.01,
+     "passed": false,
+     "verdict": "FAIL-KL",
+     "source": "fresh"
+    },
+    {
+     "offset_mib": 64,
+     "target": 11184053472,
+     "delivered": 11183750368,
+     "clipped": false,
+     "macro_kl": 0.1922,
+     "same_top_pct": 86.4,
+     "passed": true,
+     "verdict": "PASS",
+     "source": "fresh"
+    }
+   ],
+   "lowest_grid_pass": 11183750368,
+   "delta_vs_fs_mib": 63.7,
+   "r2_verdict": "PASS",
+   "compact_dual_margins": null
+  }
+ },
+ "fresh_evals": 6,
+ "cache_hits": 14
+}

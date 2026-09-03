@@ -1,0 +1,23 @@
+{
+ "candidate": "FIT-12G-repro (sha e0a406ef…, byte-identical to release)",
+ "domain": "wiki_test",
+ "max_abs_delta_kl": 0.0,
+ "mean_kld_values": [
+  0.052627,
+  0.052627,
+  0.052627
+ ],
+ "runs": 3,
+ "same_top_exact_match": true,
+ "same_top_pct_values": [
+  90.968,
+  90.968,
+  90.968
+ ],
+ "schema": "fit.eval_v1_determinism_smoke.v1",
+ "tolerance": {
+  "kl_delta": 1e-08,
+  "same_top": "exact"
+ },
+ "verdict": "PASS"
+}

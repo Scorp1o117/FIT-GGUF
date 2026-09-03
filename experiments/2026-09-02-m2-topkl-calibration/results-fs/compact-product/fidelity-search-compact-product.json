@@ -1,0 +1,34 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 12206255328,
+  "macro_kl": 0.146456,
+  "same_top": 0.890468,
+  "passed": true,
+  "eval_index": 0,
+  "source": "observed"
+ },
+ "fresh_evals": 0,
+ "budget": 8,
+ "bracket_fail_bytes": 12072070368,
+ "bracket_pass_bytes": 12206255328,
+ "active_constraint": "same_top",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {},
+ "artifact_analyses": {},
+ "artifact": {
+  "path": "experiments/2026-09-02-m2-topkl-calibration/results-fs/compact-product/orcarouter-Qwen3.8-27B-Uncensored-FIT-COMPACT-11.37GiB.gguf",
+  "size_bytes": 12206255328,
+  "g2_delta": 0,
+  "naming": "orcarouter-Qwen3.8-27B-Uncensored-FIT-COMPACT-<size>-<primary-qtype>.gguf",
+  "search_tolerance_mib": 128,
+  "active_constraint": "same_top",
+  "healthy_frontier": true,
+  "verified_metrics": {
+   "macro_kl": 0.146456,
+   "same_top_pct": 89.0468
+  }
+ }
+}

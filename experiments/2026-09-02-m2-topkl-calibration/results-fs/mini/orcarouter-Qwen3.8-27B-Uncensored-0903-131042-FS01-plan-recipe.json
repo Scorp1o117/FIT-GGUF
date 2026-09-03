@@ -1,0 +1,13 @@
+{
+  "lower_preset": "Q2_K",
+  "lower_size_bytes": 10711665888,
+  "overrides": [],
+  "predicted_size_bytes": 10711665888,
+  "schema_version": 1,
+  "selected_cost_bytes": 0,
+  "selected_count": 0,
+  "skipped_count": 321,
+  "target_bytes": 10711665888,
+  "unused_bytes": 0,
+  "upper_preset": "IQ3_XXS"
+}

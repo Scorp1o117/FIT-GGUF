@@ -1,0 +1,1 @@
+d82690e0dc827f2c43effeb3d489f572afbe2541fa8b4895b0d958ce473925a6  granite-4.2-8b-BF16.gguf (M2 re-conversion)

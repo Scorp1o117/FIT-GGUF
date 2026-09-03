@@ -1,0 +1,40 @@
+{
+ "contract_id": "eval-v1",
+ "date": "2026-09-02",
+ "final_contract_digest": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+ "final_freeze_note": "rc2 fixes protocol self-consistency flagged in planner review: the frozen contract now pins HOW the reference is produced (phase 1 without --kl-divergence) separately from how it is consumed (phase 2). Verified against real b10666 behavior on 2026-09-02.",
+ "freeze_conditions": {
+  "end_to_end_reproduction": {
+   "chain": "orcarouter safetensors --no-nextn--> BF16 (53,808,282,624 B, sha f9545645…) --fit quantize FIT-12G--> sha e0a406ef… == published quantize-record; five-domain eval macro 0.1227394/90.3242% == published 0.122739/90.324",
+   "official_result": "result-fit12g-eval-v1.json",
+   "verdict": "PASS"
+  },
+  "real_runtime_repeat_determinism": {
+   "evidence": "determinism-smoke.json",
+   "max_abs_delta_kl": 0.0,
+   "same_top_exact": true,
+   "tolerance": "kl_delta<1e-8, same_top exact",
+   "verdict": "PASS"
+  },
+  "reference_regeneration": {
+   "evidence": "5/5 regenerated .kld byte-identical to P4 legacy (sha256 match per domain)",
+   "manifest": "reference-manifest-orcarouter.json",
+   "manifest_sha256_prefix": "631fc09ff9b19bee",
+   "verdict": "PASS",
+   "repin_note": "2026-09-04 Codex audit: prefix updated 59bf2b031f7b2a69 -> 631fc09ff9b19bee; the manifest was re-pinned to the rc2 contract digest and bound to the source weights digest. Domain pins unchanged. The rc2 CONTRACT itself is untouched (final_contract_digest unchanged)."
+  }
+ },
+ "next": [
+  "Top|KL boundary sampling on DEV models (orcarouter + Granite)",
+  "P5/P10 same-top floor analysis",
+  "Fidelity Contract v1 freeze (contract + evaluator dual-hash metadata)"
+ ],
+ "rc0_digest_archived": "7d987e47989d8bb6fe38a9a298998b21ca4f7aa2dc7c846f10777947abde4783",
+ "revision_history": {
+  "rc0": "7d987e47989d8bb6fe38a9a298998b21ca4f7aa2dc7c846f10777947abde4783 (pre-review candidate, archived)",
+  "rc1": "ddac5c3ae47d687b7d4b46d0ecb94f44b008918c2f553cfcd9ce3b2dfce68c6c (4 blockers fixed)",
+  "rc2": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c (explicit two-phase reference generation commands added; all else unchanged)"
+ },
+ "schema": "fit.eval_v1_freeze.v1",
+ "status": "FROZEN"
+}

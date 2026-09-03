@@ -1,0 +1,56 @@
+{
+ "domains": {
+  "agent_chat": {
+   "corpus_sha256": "01c79b525330a642d89d0b8a00f0b42931ce0b94546c894047d8da041c86188b",
+   "expected_valid_tokens": 16863,
+   "legacy_p4_sha256_match": true,
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "051935846d98085d182d4bda35ba16a9918a68d76b2749d06ee1a8298ce570f4",
+   "unicode_codepoints": 65470
+  },
+  "chinese": {
+   "corpus_sha256": "a7584dc67f2e3050d42326da91f2801bf29c381596eb1364896490c98bad56d5",
+   "expected_valid_tokens": 15330,
+   "legacy_p4_sha256_match": true,
+   "raw_bytes": 65534,
+   "reference_kld_sha256": "014b46923334525ae04742f90f0549dd47ad5bedfc06250c571965583ae198a0",
+   "unicode_codepoints": 61792
+  },
+  "code": {
+   "corpus_sha256": "da9cae0047be52338c7710d7b6cc00354f05d2c8009b9bb3d7914f08d65a4084",
+   "expected_valid_tokens": 16352,
+   "legacy_p4_sha256_match": true,
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "a6363be71909a86e70dd4a7f2241d22e97b4771855aa6718c131bacab368eaf7",
+   "unicode_codepoints": 65532
+  },
+  "wiki_test": {
+   "corpus_sha256": "d400318e1ad6981e3fa332514ae5a59e98d888592428d152a0ffc3ceb135620e",
+   "expected_valid_tokens": 15841,
+   "legacy_p4_sha256_match": true,
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "092250a16f617d13a357b14ec2b420339b16d121718a48bf76c792750eaaf913",
+   "unicode_codepoints": 65342
+  },
+  "wiki_valid": {
+   "corpus_sha256": "9b455800b98525e0f6ec3ac18f4a6b789622f7d9ae381e5a174f5c3d42173402",
+   "expected_valid_tokens": 15841,
+   "legacy_p4_sha256_match": true,
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "326f0193df5642be4eb0618e08035ca12763b962aea4b120627e55d90daa9b73",
+   "unicode_codepoints": 65417
+  }
+ },
+ "evaluator_contract_hash": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+ "manifest_schema": "fit.eval_reference_manifest.v1",
+ "runtime_provenance": {
+  "backend": "ROCm",
+  "gpu_arch": "gfx1151 (Strix Halo)",
+  "llama_cpp_source_revision": "b10666 (commit 4e97ac86e)",
+  "llama_perplexity_binary_sha256_prefix": "3e4557a6c1e13bad",
+  "runtime_dir": "tools/llama-b10666-rocm"
+ },
+ "source_bf16_gguf_sha256": "f95456457fededfaf9f51cd4739a00aada0795be372882844071cc19146634cd",
+ "tokenizer_hash": "embedded-in-source-gguf f9545645… (Qwen3.8 vocab 248320 incl. vision tokens)",
+ "repin_note": "2026-09-04 Codex audit: evaluator_contract_hash re-pinned from the rc1-era digest to the frozen rc2 digest; source_bf16_gguf_sha256 added. Domain pins unchanged (kld/corpus SHAs are content-addressed)."
+}

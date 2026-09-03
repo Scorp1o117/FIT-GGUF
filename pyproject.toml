@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fit-gguf"
-version = "0.1.0"
+version = "0.2.0"
 description = "Fit-to-Size Intelligent Tensor Quantization for GGUF"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -14,7 +14,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-dependencies = []
+dependencies = [
+    "PyYAML>=6.0",
+]
 
 [project.scripts]
 fit = "fit_gguf.cli:main"

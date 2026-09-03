@@ -1,0 +1,13 @@
+{
+  "lower_preset": "IQ3_M",
+  "lower_size_bytes": 12580875488,
+  "overrides": [],
+  "predicted_size_bytes": 12580875488,
+  "schema_version": 1,
+  "selected_cost_bytes": 0,
+  "selected_count": 0,
+  "skipped_count": 473,
+  "target_bytes": 12580875488,
+  "unused_bytes": 0,
+  "upper_preset": "IQ4_XS"
+}

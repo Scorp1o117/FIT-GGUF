@@ -50,6 +50,8 @@ GGML_TYPE_TRAITS: dict[str, tuple[int, int]] = {
     "q2_k": (256, 84),
     "q3_k": (256, 110),
     "q4_k": (256, 144),
+    "q5_0": (32, 22),
+    "q5_1": (32, 24),
     "q5_k": (256, 176),
     "q6_k": (256, 210),
     "q8_0": (32, 34),
@@ -206,6 +208,22 @@ def _canonical_shape(shape: tuple[int, ...]) -> tuple[int, ...]:
     return shape[:end]
 
 
+def _output_tensor_info_bytes(layout: GGUFLayout) -> int:
+    """Tensor-info section size as the pinned quantizer re-emits it.
+
+    llama.cpp writes output tensor infos from ggml_n_dims, dropping trailing
+    singleton dims of the source layout (minimum one dim); each dropped dim
+    removes 8 bytes from that tensor's ne[] block. The source layout keeps the
+    raw padded rank (bailingmoe conv1d (4,1,2048,1) is written back as
+    (4,1,2048)), so the output model must re-derive the trimmed rank here.
+    """
+    total = 0
+    for tensor in layout.tensors:
+        dims = len(_canonical_shape(tensor.shape))
+        total += 8 + len(tensor.name.encode("utf-8")) + 4 + 8 * dims + 4 + 8
+    return total
+
+
 def read_gguf_layout(path: str | Path) -> GGUFLayout:
     """Read GGUF metadata and tensor descriptors without reading tensor data."""
     with Path(path).open("rb") as file:
@@ -279,7 +297,9 @@ def _encoded_field_size(key: str, value_type: int, value: int | str) -> int:
     if value_type == _UINT32:
         return key_size + 4
     if value_type == _STRING:
-        return key_size + 8 + len(str(value).encode("utf-8"))
+        # surrogatepass keeps byte-length semantics for path strings cut
+        # mid-codepoint by the 127-byte KV override truncation.
+        return key_size + 8 + len(str(value).encode("utf-8", errors="surrogateescape"))
     raise GGUFError(f"Unsupported synthesized GGUF value type: {value_type}")
 
 
@@ -318,8 +338,9 @@ def predict_output_metadata_size(
         for key, value_type, value in additions:
             fields[key] = _encoded_field_size(key, value_type, value)
 
-    # magic + version + tensor count + metadata count
-    raw_size = 24 + sum(fields.values()) + layout.tensor_info_bytes
+    # magic + version + tensor count + metadata count; tensor infos are
+    # re-modeled with build-10666's trailing-singleton-dims normalization.
+    raw_size = 24 + sum(fields.values()) + _output_tensor_info_bytes(layout)
     return _align(raw_size, GGUF_DEFAULT_ALIGNMENT)
 
 

@@ -38,3 +38,11 @@ __pycache__/
 /FIT-GGUF — Autonomous Project Master Spec.md
 /docs/asset-inventory.md
 /promo-video/
+/profiles/*
+!/profiles/guard/
+/V0.2_PROGRESS.md
+build/
+*.egg-info/
+# generated reference/corpus artifacts and model binaries stay local
+experiments/**/refs-*/
+experiments/**/*.gguf

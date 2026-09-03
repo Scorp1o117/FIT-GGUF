@@ -1,0 +1,42 @@
+calibration_manifest_hashes:
+- path: experiments/2026-09-02-m2-topkl-calibration/results/candidate-calibration-v1.json
+  sha256: 07df6b0778ffe1363b87c9d95c2e1b0292e4e776e0cf534be383592c5027cd72
+- path: experiments/2026-09-02-eval-v1/reference-manifest-orcarouter.json
+  sha256: e8d10125d1a62a19db284519114f6ee70b06e43919dfdb87e329c728410f75e4
+calibration_models:
+- orcarouter-Qwen3.8-27B-Uncensored
+confidence:
+  known_caveats:
+  - Q3_K_S poison outlier on this model (kld 0.2148) excluded from frontier by dominated-curve
+    rule
+  note: model-calibrated on 39 orcarouter points (eval-v1); floors = per-tier window
+    P5 (TopFloor~P5 principle)
+  window_n:
+    balanced: 4
+    compact: 5
+    mini: 6
+    quality: 4
+evaluator_contract: eval-v1
+generalization_scope: exact_model_only
+guard_profile_id: guard-orcarouter-qwen3.8-27b-uncensored-exact-v1
+guard_profile_version: 1
+profile_hash: 3f5e330460cc00c29847497665499ac9bc4c2eb95db441a08082ad23227d3985
+scope:
+  identifier: orcarouter-Qwen3.8-27B-Uncensored
+  type: exact_model
+status: validated
+tiers:
+  balanced:
+    kl_anchor: 0.1
+    same_top_floor: 0.9118
+  compact:
+    kl_anchor: 0.15
+    same_top_floor: 0.8894
+  mini:
+    kl_anchor: 0.2
+    same_top_floor: 0.8503
+  quality:
+    kl_anchor: 0.05
+    same_top_floor: 0.9475
+validation_basis: dev_calibration
+source_sha256: f95456457fededfaf9f51cd4739a00aada0795be372882844071cc19146634cd

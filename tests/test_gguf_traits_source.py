@@ -20,12 +20,15 @@ LLAMA_H = REPO / "third_party/llama.cpp/include/llama.h"
 BLOCK_CONSTANTS = {
     "QK_K": 256,
     "QK4_NL": 32,
+    "QK5_0": 32,
+    "QK5_1": 32,
     "QK8_0": 32,
     "K_SCALE_SIZE": 12,
     "IQ3S_N_SCALE": 4,
     "sizeof(ggml_half)": 2,
     "sizeof(ggml_half2)": 4,
     "sizeof(uint16_t)": 2,
+    "sizeof(uint32_t)": 4,
     "sizeof(uint8_t)": 1,
     "sizeof(float)": 4,
 }
@@ -44,13 +47,20 @@ BLOCK_TO_QTYPE = {
     "block_q2_K": "q2_k",
     "block_q3_K": "q3_k",
     "block_q4_K": "q4_k",
+    "block_q5_0": "q5_0",
+    "block_q5_1": "q5_1",
     "block_q5_K": "q5_k",
     "block_q6_K": "q6_k",
     "block_q8_0": "q8_0",
 }
 
 # ggml blck_size constant per block struct, from ggml.c type_traits table.
-BLOCK_ELEMENTS = {"block_iq4_nl": "QK4_NL", "block_q8_0": "QK8_0"}
+BLOCK_ELEMENTS = {
+    "block_iq4_nl": "QK4_NL",
+    "block_q5_0": "QK5_0",
+    "block_q5_1": "QK5_1",
+    "block_q8_0": "QK8_0",
+}
 
 
 @pytest.mark.skipif(not COMMON_H.is_file(), reason="pinned llama.cpp checkout absent")

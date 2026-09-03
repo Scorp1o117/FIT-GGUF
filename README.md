@@ -36,6 +36,10 @@ space. Tensor/qtype transitions are discrete, so a small amount of target
 slack may remain. The predictor is required to match the resulting artifact;
 it does not pretend that every byte target is exactly representable.
 
+**v0.2 extends the slider into a quality dial: choose the fidelity you want;
+FIT finds the smallest verified GGUF that safely meets it.** See
+[Fidelity tiers](#v02-fidelity-tiers) below.
+
 ## First release: Qwen3.8-27B-Uncensored
 
 The first public batch contains **14 FIT tiers from 7 GiB to 13.5 GiB in
@@ -60,6 +64,74 @@ Additional release charts:
 - Old-to-final allocation comparison: [English](docs/assets/strategy-improvement-en.png) · [中文](docs/assets/strategy-improvement-zh.png)
 - Target-budget utilization: [English](docs/assets/target-utilization-en.png) · [中文](docs/assets/target-utilization-zh.png)
 
+## v0.2: Fidelity tiers
+
+v0.2 adds **fidelity tiers** on top of exact-size planning. A tier is a dual
+hard gate:
+
+**PASS = macro KL ≤ tier limit ∧ Same-top ≥ validated model-specific Guard.**
+
+- Tier KL limits come from a frozen Global KL Core: `Quality` ≤ 0.05,
+  `Balanced` ≤ 0.10, `Compact` ≤ 0.15, `Mini` ≤ 0.20, measured under the
+  frozen eval-v1 protocol.
+- The Same-top floor is resolved from a **Guard Profile** validated for the
+  exact model. With no validated profile, the CLI refuses to emit an official
+  tier instead of borrowing a floor from another model.
+
+`fit fidelity-search` then walks the healthy preset frontier (poison presets
+excluded), brackets the crossing, and returns the **minimum verified PASS** —
+not an extrapolation.
+
+### Minimum Verified Size @ Fixed Fidelity
+
+Flagship case study — [`orcarouter/Qwen3.8-27B-Uncensored`](https://huggingface.co/orcarouter/Qwen3.8-27B-Uncensored) (27B MoE; exact-model scope, not a cross-model claim).
+
+| Tier | Nearest smaller frontier preset | FIT v0.2 | Nearest larger preset | Saving | Active |
+| --- | --- | --- | --- | --- | --- |
+| Quality | Q4_K_M · 15.41G · .0658 / 93.79 · FAIL-BOTH | **16.25G · .0497 / 94.88 · PASS** | Q5_K_S · 17.40G · .0455 / 95.59 · PASS | −6.6% | KL |
+| Balanced | IQ3_M · 11.72G · .1445 / 89.38 · FAIL-BOTH | **12.84G · .0997 / 91.57 · PASS** | IQ4_XS · 14.05G · .0624 / 93.79 · PASS | −8.6% | KL |
+| Compact‡ | IQ3_XS · 11.15G · .1512 / 89.05 · FAIL-KL | **11.17G · .1486 / 89.09 · PASS** | IQ3_S · 11.57G · .1424 / 89.53 · PASS | −3.4% | KL |
+| Mini† | Q2_K · 9.98G · .2439 / 84.08 · FAIL-BOTH | **10.35G · .1924 / 86.31 · PASS** | IQ3_XXS · 10.42G · .1946 / 87.12 · PASS | −0.6% | KL |
+
+**Minimum verified within the validated healthy frontier and configured search
+tolerance (128 MiB).** Sizes are GiB; quality columns are macro KL / Same-top %
+under the frozen eval-v1 protocol.
+
+`†` Mini: the search stopped at the validated healthy-frontier boundary; the
+region below it lacks a valid interpolation window.
+
+`‡` Compact lies in a locally non-monotonic allocation region. Nearby larger
+recipes can score worse, so FIT reports `noise_inversion`, refuses automatic
+delivery, and requires verification of the final artifact itself. The released
+11.17 GiB artifact was rebuilt and independently re-evaluated at KL 0.148592 /
+Same-top 89.092%.
+
+### Why FIT verifies the final artifact instead of trusting size monotonicity
+
+```
+11.17G  KL .1486  PASS
+11.19G  KL .1519  FAIL
+11.20G  KL .1493  PASS
+11.21G  KL .1502  FAIL
+```
+
+Mixed-quantization recipes form a discrete, locally non-monotonic quality
+surface: a larger artifact is not guaranteed to outperform every nearby
+smaller artifact. FIT therefore treats noisy crossings as `noise_inversion`,
+fails closed, and verifies the actual release artifact before promotion.
+
+### v0.2 release gates (flagship model)
+
+```
+R1 Fidelity correctness        PASS
+R2 Search accuracy             PASS
+R3 Search budget               PASS
+R4 Exact-byte guarantee        PASS
+R5 v0.1 non-regression         PASS
+R6 Reproducibility             PASS
+Release Gates                  6 / 6 PASS
+```
+
 ## Install
 
 FIT-GGUF requires Python 3.11+ and a compatible llama.cpp runtime containing
@@ -72,8 +144,8 @@ python -m pip install -e '.[test]'
 python -m pytest tests/
 ```
 
-The Python package itself has no runtime dependencies outside the standard
-library. Real analysis and quantization use the supplied llama.cpp binary.
+The Python package's only runtime dependency is PyYAML (Guard Profile
+parsing). Real analysis and quantization use the supplied llama.cpp binary.
 
 ## CLI workflow
 
@@ -119,6 +191,34 @@ fit quantize \
 
 The command rejects a size mismatch and records the output SHA-256.
 
+### 4. Or search by fidelity (v0.2)
+
+```bash
+fit fidelity-search \
+  --source model-BF16.gguf \
+  --imatrix imatrix.gguf \
+  --runtime /path/to/llama.cpp/bin \
+  --refs-dir refs/bf16 \
+  --eval-data-dir eval-slices \
+  --guard-registry profiles/guard \
+  --tier compact \
+  --preset-ladder IQ2_XXS,IQ2_M,IQ3_XXS,IQ3_XS,IQ3_S,IQ3_M,IQ4_XS \
+  --manifest work/manifest.txt \
+  --logs-dir work/logs \
+  --out-dir out/compact \
+  --work-dir /dev/shm/fit-compact
+```
+
+This resolves the tier contract (KL limit + validated Guard floor), searches
+the healthy preset frontier for the minimum verified PASS, then builds the
+exact-size artifact and re-evaluates **the final artifact itself** against the
+tier contract. `--preset-ladder` auto-analyzes adjacent preset pairs; pass
+frozen `--analysis` directories instead when you need byte-stable
+reproducibility. Search budgets: `--profile normal` ≤ 8 fresh evaluations,
+`--profile precise` ≤ 16. If the crossing lies in a locally non-monotonic
+region the search reports `noise_inversion` and fails closed rather than
+delivering automatically.
+
 ## How it works
 
 1. **Anchor** — select the largest supported lower preset whose predicted
@@ -150,6 +250,14 @@ The published measurements use llama.cpp b10666 (`4e97ac86e`), Linux x86_64,
 ROCm, 512-token context, 512 batch size, aligned BF16 references and five fixed
 64 KiB slices (`wiki_test`, `wiki_valid`, Chinese, code and `agent_chat`). KL
 and Same-top are primary directional metrics; short-corpus PPL is diagnostic.
+Macro KL is the two-level domain mean (per-domain mean first, then across
+domains) under the frozen eval-v1 evaluator contract.
+
+Exact-size semantics: `quantize.imatrix.file` is serialized into GGUF metadata
+by the pinned llama.cpp runtime. FIT finalizes size prediction using the exact
+quantize-time imatrix path, so target-size accuracy remains exact. Reproducing
+an artifact byte-for-byte, including its SHA-256, additionally requires the
+same serialized imatrix path string.
 
 ## Boundaries
 
