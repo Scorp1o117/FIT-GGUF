@@ -46,3 +46,10 @@ build/
 # generated reference/corpus artifacts and model binaries stay local
 experiments/**/refs-*/
 experiments/**/*.gguf
+# generated reference/corpus artifacts and model binaries stay local
+experiments/**/refs-*/
+experiments/**/refs/
+experiments/**/*.gguf
+
+# local release bundles
+/Qwen3.8-27B-Uncensored-FIT-GGUF-v0.2/

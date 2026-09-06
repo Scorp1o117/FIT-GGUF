@@ -1,0 +1,37 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 2877626752,
+  "macro_kl": 0.0738706,
+  "same_top": 0.891496,
+  "passed": true,
+  "eval_index": 0,
+  "source": "observed"
+ },
+ "fresh_evals": 7,
+ "budget": 8,
+ "bracket_fail_bytes": 2783009216,
+ "bracket_pass_bytes": 2877626752,
+ "active_constraint": "same_top",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {
+  "2697689536": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/results-fs/balanced/spark-x25-4b-abliterated-0906-110319-FS01-plan-tensor-types.txt",
+  "2703382976": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/results-fs/balanced/spark-x25-4b-abliterated-0906-110319-FS02-plan-tensor-types.txt",
+  "2706659776": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/results-fs/balanced/spark-x25-4b-abliterated-0906-110319-FS03-plan-tensor-types.txt",
+  "2707315136": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/results-fs/balanced/spark-x25-4b-abliterated-0906-110319-FS04-plan-tensor-types.txt",
+  "2708625856": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/results-fs/balanced/spark-x25-4b-abliterated-0906-110319-FS05-plan-tensor-types.txt",
+  "2709281216": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/results-fs/balanced/spark-x25-4b-abliterated-0906-110319-FS06-plan-tensor-types.txt",
+  "2783009216": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/results-fs/balanced/spark-x25-4b-abliterated-0906-110319-FS07-plan-tensor-types.txt"
+ },
+ "artifact_analyses": {
+  "2697689536": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S",
+  "2703382976": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S",
+  "2706659776": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S",
+  "2707315136": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S",
+  "2708625856": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S",
+  "2709281216": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S",
+  "2783009216": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S"
+ }
+}

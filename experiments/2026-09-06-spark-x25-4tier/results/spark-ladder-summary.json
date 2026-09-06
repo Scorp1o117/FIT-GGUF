@@ -1,0 +1,118 @@
+{
+ "points": [
+  {
+   "point": "Q8_0",
+   "size_bytes": 4375021952,
+   "macro_kl": 0.0063004,
+   "same_top": 0.970158
+  },
+  {
+   "point": "Q6_K",
+   "size_bytes": 3379172992,
+   "macro_kl": 0.028918,
+   "same_top": 0.934952
+  },
+  {
+   "point": "0906-105115-FS01",
+   "size_bytes": 3323467456,
+   "macro_kl": 0.030844,
+   "same_top": 0.93128
+  },
+  {
+   "point": "Q5_K_M",
+   "size_bytes": 2977896832,
+   "macro_kl": 0.058677400000000005,
+   "same_top": 0.901134
+  },
+  {
+   "point": "Q5_K_S",
+   "size_bytes": 2877626752,
+   "macro_kl": 0.0738706,
+   "same_top": 0.891496
+  },
+  {
+   "point": "CAL-cal-2750000000",
+   "size_bytes": 2672785856,
+   "macro_kl": 0.1293876,
+   "same_top": 0.859988
+  },
+  {
+   "point": "CAL-cal-2650000000",
+   "size_bytes": 2611714496,
+   "macro_kl": 0.1458314,
+   "same_top": 0.8488120000000001
+  },
+  {
+   "point": "Q4_K_M",
+   "size_bytes": 2600225152,
+   "macro_kl": 0.1699314,
+   "same_top": 0.834506
+  },
+  {
+   "point": "Q4_K_S",
+   "size_bytes": 2426554752,
+   "macro_kl": 0.183386,
+   "same_top": 0.8261479999999999
+  },
+  {
+   "point": "IQ4_XS",
+   "size_bytes": 2376045952,
+   "macro_kl": 0.224428,
+   "same_top": 0.814554
+  },
+  {
+   "point": "Q3_K_M",
+   "size_bytes": 2165197952,
+   "macro_kl": 0.3704362,
+   "same_top": 0.7583840000000001
+  },
+  {
+   "point": "IQ3_M",
+   "size_bytes": 2043300992,
+   "macro_kl": 0.4025022,
+   "same_top": 0.74602
+  },
+  {
+   "point": "IQ3_XS",
+   "size_bytes": 1912884352,
+   "macro_kl": 0.47326860000000004,
+   "same_top": 0.726622
+  },
+  {
+   "point": "IQ3_XXS",
+   "size_bytes": 1801895552,
+   "macro_kl": 0.5520676,
+   "same_top": 0.7065319999999999
+  },
+  {
+   "point": "Q2_K",
+   "size_bytes": 1787396992,
+   "macro_kl": 1.14391,
+   "same_top": 0.5927720000000001
+  },
+  {
+   "point": "IQ2_M",
+   "size_bytes": 1636324992,
+   "macro_kl": 0.8185926,
+   "same_top": 0.632846
+  },
+  {
+   "point": "IQ2_XS",
+   "size_bytes": 1487348352,
+   "macro_kl": 2.9223548,
+   "same_top": 0.34931799999999996
+  },
+  {
+   "point": "IQ2_XXS",
+   "size_bytes": 1390308992,
+   "macro_kl": 3.8779772,
+   "same_top": 0.257224
+  }
+ ],
+ "floors": {
+  "quality": 0.9316,
+  "balanced": 0.8914,
+  "compact": 0.8488,
+  "mini": 0.8261
+ }
+}

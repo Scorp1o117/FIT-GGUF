@@ -1,0 +1,43 @@
+calibration_manifest_hashes:
+- path: experiments/2026-09-06-spark-x25-4tier/results/spark-ladder-summary.json
+  sha256: cb5bf38c3676f642f65834eea8c471ce286d9831c0ce821d89a4b3e25a033b9a
+calibration_models:
+- spark-x25-4b-abliterated
+confidence:
+  known_caveats:
+  - calibration-run floors derived from the 15-point preset ladder plus 2 compact-gap
+    calibration probes; floor = per-tier window minimum (P5 degenerates at n<=2; TopFloor~P5
+    principle)
+  - product-CLI provenance (freeze manifest prefix) is orcarouter-pinned and does
+    not cover this model
+  note: model-calibrated on the eval-v1 five-domain ladder; floors = per-tier window
+    minimum (TopFloor~P5 principle)
+  window_n:
+    quality: 3
+    balanced: 2
+    compact: 2
+    mini: 2
+evaluator_contract: eval-v1
+generalization_scope: exact_model_only
+guard_profile_id: guard-spark-x25-4b-abliterated-exact-v1
+guard_profile_version: 3
+scope:
+  identifier: spark-x25-4b-abliterated
+  type: exact_model
+source_sha256: aa73aeb45870f7ebb9e5d523323b88468a2b3b613918e941bda439d8c1b59d42
+status: validated
+tiers:
+  quality:
+    kl_anchor: 0.05
+    same_top_floor: 0.9316
+  balanced:
+    kl_anchor: 0.1
+    same_top_floor: 0.8914
+  compact:
+    kl_anchor: 0.15
+    same_top_floor: 0.8488
+  mini:
+    kl_anchor: 0.2
+    same_top_floor: 0.8261
+validation_basis: dev_calibration
+profile_hash: 0c922489c0d64faec3bd8268c31b97431acd82304bdb576116caf73141db0863

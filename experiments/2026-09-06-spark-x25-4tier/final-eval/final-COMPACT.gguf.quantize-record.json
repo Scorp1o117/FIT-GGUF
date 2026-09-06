@@ -1,0 +1,27 @@
+{
+  "analysis_imatrix_arg": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/spark-imatrix.gguf",
+  "analysis_path": "experiments/2026-09-06-spark-x25-4tier/analysis/spark-analysis-Q4_K_M-Q5_K_S/analysis.json",
+  "command": [
+    "/home/s117/llama.cpp-spark-pr/build-rocm/bin/llama-quantize",
+    "--imatrix",
+    "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/spark-imatrix.gguf",
+    "--tensor-type-file",
+    "experiments/2026-09-06-spark-x25-4tier/probes/cal-2650000000-tensor-types.txt",
+    "/run/media/s117/OS/Models/Spark-X2.5-4B-abliterated-GGUF/Spark-X2.5-4B-abliterated-BF16.gguf",
+    "/dev/shm/spark/art/final-COMPACT.gguf",
+    "Q4_K_M"
+  ],
+  "expect_bytes": null,
+  "imatrix_arg": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/spark-imatrix.gguf",
+  "output_path": "/dev/shm/spark/art/final-COMPACT.gguf",
+  "refinalized_expected_bytes": 2611714496,
+  "returncode": 0,
+  "schema_version": 1,
+  "sha256": "eb9e935c0e501a1d7a98e17504d7adcc36e07a76c830781652c4019e6eb2ad49",
+  "size_bytes": 2611714496,
+  "size_matches_expectation": true,
+  "size_matches_refinalization": true,
+  "stderr_tail": "290] blk.34.ffn_norm.weight               - [  2560,      1,      1,      1], type =    f32, size =    0.010 MiB\n[ 282/ 290] blk.34.ffn_up.weight                 - [  2560,  10240,      1,      1], type =   bf16, converting to q4_K .. size =    50.00 MiB ->    14.06 MiB\n[ 283/ 290] blk.35.attn_gate.weight              - [  2560,     16,      1,      1], type =   bf16, converting to q5_K .. size =     0.08 MiB ->     0.03 MiB\n[ 284/ 290] blk.35.attn_norm.weight              - [  2560,      1,      1,      1], type =    f32, size =    0.010 MiB\n[ 285/ 290] blk.35.attn_output.weight            - [  4096,   2560,      1,      1], type =   bf16, converting to q5_K .. size =    20.00 MiB ->     6.88 MiB\n[ 286/ 290] blk.35.attn_qkv.weight               - [  2560,   6144,      1,      1], type =   bf16, converting to q4_K .. size =    30.00 MiB ->     8.44 MiB\n[ 287/ 290] blk.35.ffn_down.weight               - [ 10240,   2560,      1,      1], type =   bf16, converting to q6_K .. size =    50.00 MiB ->    20.51 MiB\n[ 288/ 290] blk.35.ffn_gate.weight               - [  2560,  10240,      1,      1], type =   bf16, converting to q4_K .. size =    50.00 MiB ->    14.06 MiB\n[ 289/ 290] blk.35.ffn_norm.weight               - [  2560,      1,      1,      1], type =    f32, size =    0.010 MiB\n[ 290/ 290] blk.35.ffn_up.weight                 - [  2560,  10240,      1,      1], type =   bf16, converting to q4_K .. size =    50.00 MiB ->    14.06 MiB\nllama_model_quantize_impl: model size  =  7843.53 MiB (16.00 BPW)\nllama_model_quantize_impl: quant size  =  2485.59 MiB (5.07 BPW)\nload_imatrix: imatrix datasets=['/run/media/s117/OS/Models/imatrix-calibration/APEX-imatrix-Small.txt']\nload_imatrix: loaded 216 importance matrix entries from /run/media/s117/OS/FIT-GGUF/experiments/2026-09-06-spark-x25-4tier/spark-imatrix.gguf computed on 500 chunks\nprepare_imatrix: have 216 importance matrix entries\n\nllama_quantize: quantize time = 14545.74 ms\nllama_quantize:    total time = 14545.74 ms\n",
+  "tensor_types_path": "experiments/2026-09-06-spark-x25-4tier/probes/cal-2650000000-tensor-types.txt",
+  "tensor_types_sha256": "971acc20b848eab36f499dfaa8526aa40ac8a36c99d17dd745303c46820deb05"
+}

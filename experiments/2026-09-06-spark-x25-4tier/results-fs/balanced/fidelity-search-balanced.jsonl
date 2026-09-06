@@ -1,0 +1,31 @@
+{"t": 0.0, "event": "seed", "size_bytes": 3323467456, "macro_kl": 0.030844, "same_top": 0.93128, "passed": true, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2611714496, "macro_kl": 0.1458314, "same_top": 0.8488120000000001, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2672785856, "macro_kl": 0.1293876, "same_top": 0.859988, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 1636324992, "macro_kl": 0.8185926, "same_top": 0.632846, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 1390308992, "macro_kl": 3.8779772, "same_top": 0.257224, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2043300992, "macro_kl": 0.4025022, "same_top": 0.74602, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 1912884352, "macro_kl": 0.47326860000000004, "same_top": 0.726622, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 1801895552, "macro_kl": 0.5520676, "same_top": 0.7065319999999999, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2376045952, "macro_kl": 0.224428, "same_top": 0.814554, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 1787396992, "macro_kl": 1.14391, "same_top": 0.5927720000000001, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2165197952, "macro_kl": 0.3704362, "same_top": 0.7583840000000001, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2600225152, "macro_kl": 0.1699314, "same_top": 0.834506, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2426554752, "macro_kl": 0.183386, "same_top": 0.8261479999999999, "passed": false, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2977896832, "macro_kl": 0.058677400000000005, "same_top": 0.901134, "passed": true, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 2877626752, "macro_kl": 0.0738706, "same_top": 0.891496, "passed": true, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 3379172992, "macro_kl": 0.028918, "same_top": 0.934952, "passed": true, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "seed", "size_bytes": 4375021952, "macro_kl": 0.0063004, "same_top": 0.970158, "passed": true, "eval_index": 0, "source": "observed"}
+{"t": 0.0, "event": "eval_submit", "size_bytes": 2775206304, "source": "bracket", "eval_index": 1}
+{"t": 74.692, "event": "eval_result", "size_bytes": 2697689536, "macro_kl": 0.1286106, "same_top": 0.85991, "passed": false, "eval_index": 1, "source": "bracket"}
+{"t": 74.692, "event": "eval_submit", "size_bytes": 2787658144, "source": "bracket", "eval_index": 2}
+{"t": 149.605, "event": "eval_result", "size_bytes": 2703382976, "macro_kl": 0.1280424, "same_top": 0.859642, "passed": false, "eval_index": 2, "source": "bracket"}
+{"t": 149.606, "event": "eval_submit", "size_bytes": 2790504864, "source": "bracket", "eval_index": 3}
+{"t": 224.393, "event": "eval_result", "size_bytes": 2706659776, "macro_kl": 0.12737700000000002, "same_top": 0.8608199999999999, "passed": false, "eval_index": 3, "source": "bracket"}
+{"t": 224.393, "event": "eval_submit", "size_bytes": 2792143264, "source": "bracket", "eval_index": 4}
+{"t": 298.92, "event": "eval_result", "size_bytes": 2707315136, "macro_kl": 0.128312, "same_top": 0.859032, "passed": false, "eval_index": 4, "source": "bracket"}
+{"t": 298.921, "event": "eval_submit", "size_bytes": 2792470944, "source": "bracket", "eval_index": 5}
+{"t": 372.959, "event": "eval_result", "size_bytes": 2708625856, "macro_kl": 0.1272858, "same_top": 0.860086, "passed": false, "eval_index": 5, "source": "bracket"}
+{"t": 372.959, "event": "eval_submit", "size_bytes": 2793126304, "source": "bracket", "eval_index": 6}
+{"t": 447.073, "event": "eval_result", "size_bytes": 2709281216, "macro_kl": 0.12837700000000002, "same_top": 0.858988, "passed": false, "eval_index": 6, "source": "bracket"}
+{"t": 447.073, "event": "eval_submit", "size_bytes": 2793453984, "source": "bracket", "eval_index": 7}
+{"t": 521.591, "event": "eval_result", "size_bytes": 2783009216, "macro_kl": 0.11737979999999999, "same_top": 0.864186, "passed": false, "eval_index": 7, "source": "bracket"}
