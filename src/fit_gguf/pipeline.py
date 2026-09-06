@@ -43,7 +43,7 @@ from fit_gguf.optimizer import (
 
 ANALYSIS_SCHEMA_VERSION = 1
 PLAN_SCHEMA_VERSION = 1
-FIT_GGUF_VERSION = "0.2.0"
+FIT_GGUF_VERSION = "0.2.1"
 # P6 amendment 3: counter shifts move the oracle's effective recipe in
 # whole-tensor steps; 3 rounds were not always enough to absorb them.
 ORACLE_MAX_ITERATIONS = 8
@@ -202,10 +202,11 @@ def run_dry_run(
     if tensor_types is not None:
         command += ["--tensor-type-file", str(tensor_types)]
     command += [str(source), preset]
-    completed = subprocess.run(command, capture_output=True, text=True)
-    # Historical logs capture unbuffered stderr before buffered stdout; keep
-    # that order so the parsed text matches the M2/M16 ground truth.
-    text = completed.stderr + completed.stdout
+    # Decode with errors="replace": llama.cpp dumps token-array previews that
+    # can truncate mid-codepoint (e.g. spark2_5 fullwidth special tokens),
+    # producing invalid UTF-8 on stderr; recipe lines are ASCII and unaffected.
+    completed = subprocess.run(command, capture_output=True)
+    text = (completed.stderr + completed.stdout).decode("utf-8", errors="replace")
     Path(log_path).write_text(text, encoding="utf-8")
     if completed.returncode != 0:
         raise PipelineError(
@@ -794,7 +795,10 @@ def quantize(
         str(output),
         str(lower_preset),
     ]
-    completed = subprocess.run(command, capture_output=True, text=True)
+    completed = subprocess.run(command, capture_output=True)
+    # errors="replace": model-loader token previews can truncate mid-codepoint
+    # (spark2_5 fullwidth special tokens) and emit invalid UTF-8 on stderr.
+    quantize_log = (completed.stderr + completed.stdout).decode("utf-8", errors="replace")
     size = output.stat().st_size if output.is_file() else 0
     record = {
         "schema_version": PLAN_SCHEMA_VERSION,
@@ -812,7 +816,7 @@ def quantize(
         "expect_bytes": expect_bytes,
         "size_matches_expectation": expect_bytes is None or size == int(expect_bytes),
         "sha256": _sha256_file(output) if size else None,
-        "stderr_tail": completed.stderr[-2000:],
+        "stderr_tail": quantize_log[-2000:],
     }
     _dump_json(record, Path(str(output) + ".quantize-record.json"))
     if completed.returncode != 0:

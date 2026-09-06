@@ -355,14 +355,15 @@ class SearchExecutor:
                         "--kl-divergence-base", str(ref_file),
                     ],
                     capture_output=True,
-                    text=True,
                     timeout=3600,
                 )
                 # llama.cpp writes the KL statistics to stderr with irregular
                 # spacing ("Mean    KLD:") — the parser's own regex is the
                 # single acceptance criterion, not a substring guess. A clean
                 # parse with a nonzero exit code is still a failed eval.
-                combined = result.stdout + result.stderr
+                # errors="replace": model-loader token previews can truncate
+                # mid-codepoint (spark2_5 fullwidth special tokens).
+                combined = (result.stdout + result.stderr).decode("utf-8", errors="replace")
                 try:
                     parsed = parse_llama_kl_log(combined)
                 except Exception:  # noqa: BLE001 — incomplete eval output: retry
