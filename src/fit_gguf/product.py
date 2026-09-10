@@ -243,11 +243,19 @@ def fidelity_search_product(
         raise ProductError("no healthy windows — tier is NOT REACHABLE")
 
     # historical manifests may use a shorter naming convention than the
-    # guard identifier, so the seed prefix is explicit
+    # guard identifier, so the seed prefix is explicit — but the default is a
+    # match-all, because the manifest and log directory handed in here already
+    # scope the search to one model's bundle. Cross-model contamination cannot
+    # ride in on that: a seed is admitted only when the provenance sidecar
+    # attests the live frozen contract AND the exact reference-manifest file
+    # being used, and only when its name appears in the given size manifest.
+    # Making the prefix mandatory would instead force every model to be named
+    # the same way in three places (logs, manifest, CLI) just to reuse its own
+    # calibration.
     seeds = load_seeds(
         manifest_path,
         logs_dir,
-        seed_prefix or f"{model_name}-",
+        seed_prefix if seed_prefix is not None else "",
         exclude_names=tuple(exclude_seeds or ()),
         # release path: every bracket seed must carry a provenance sidecar
         # attesting the same frozen eval closure AND the same reference

@@ -16,6 +16,8 @@ import pytest
 from fit_gguf import calibration as cal
 from fit_gguf import registry as reg
 from fit_gguf.calibration import CalibrationError
+from fit_gguf.eval import contract_digest
+from fit_gguf.fidelity_runner import load_seeds
 
 REPO = Path(__file__).resolve().parent.parent
 SPARK_SHA = "aa73aeb45870f7ebb9e5d523323b88468a2b3b613918e941bda439d8c1b59d42"
@@ -314,3 +316,96 @@ def test_gap_probes_never_anchor_on_probe_observations(tmp_path, monkeypatch):
     assert len(new_obs) == 3
     assert unresolved == []
     assert all(o["point_id"].startswith("probe-mini-") for o in new_obs)
+
+
+# ------------------------------------------- seed material for the search
+
+
+def _observation(point_id, size, sha, kl):
+    return {
+        "point_id": point_id,
+        "size_bytes": size,
+        "artifact_sha256": sha,
+        "macro_kl": kl,
+        "same_top": 0.9,
+    }
+
+
+def test_calibration_bundle_feeds_the_search_as_seeds(tmp_path):
+    """The end-to-end point of the seed material: a ladder arrives as evidence.
+
+    `fit calibrate` spends five-domain evals on every ladder preset. This test
+    drives the exact pair of files it emits back through `load_seeds` — the
+    search's own admission path — and requires the ladder to come out the far
+    side as budget-free bracket evidence, with the poison preset excluded.
+    """
+    from fit_gguf.calibrate import write_seed_material
+
+    bundle = tmp_path / "bundle"
+    logs = bundle / "logs"
+    logs.mkdir(parents=True)
+    observations = [
+        _observation("IQ3_M", 1_100_000_000, "a" * 64, 0.30),
+        _observation("IQ4_XS", 1_300_000_000, "b" * 64, 0.12),
+        _observation("Q4_K_M", 1_560_000_000, "c" * 64, 0.07),
+        # poison: in the standard ladder, must never become bracket evidence
+        _observation("IQ2_XS", 800_000_000, "d" * 64, 1.93),
+    ]
+    for obs in observations:
+        for domain in ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat"):
+            (logs / f"eval-{obs['point_id']}-{domain}.log").write_text(
+                "====== KL divergence statistics ======\n"
+                f"Mean KLD: {obs['macro_kl']:.6f} \u00b1 0.010000\n"
+                "Same top p: 90.0000 \u00b1 0.1000 %\n",
+                encoding="utf-8",
+            )
+    manifest_sha = "e" * 64
+    write_seed_material(
+        bundle,
+        observations,
+        set(CONTRACT["ladder_standard_presets"]),
+        reference_manifest_sha256=manifest_sha,
+        evaluator_contract_sha256=contract_digest(),
+    )
+
+    seeds = load_seeds(
+        bundle / "state-artifact-manifest.txt",
+        logs,
+        "",
+        require_seed_provenance=True,
+        reference_manifest_sha256=manifest_sha,
+    )
+    by_size = {seed.size_bytes: seed for seed in seeds}
+    assert set(by_size) == {1_100_000_000, 1_300_000_000, 1_560_000_000}
+    assert 800_000_000 not in by_size, "IQ2_XS is poison and must not be a seed"
+    assert by_size[1_560_000_000].macro_kl == pytest.approx(0.07, abs=1e-6)
+
+
+def test_seed_material_is_rejected_against_another_models_manifest(tmp_path):
+    """Admission control is the reference-manifest binding, not the names."""
+    from fit_gguf.calibrate import write_seed_material
+
+    bundle = tmp_path / "bundle"
+    logs = bundle / "logs"
+    logs.mkdir(parents=True)
+    obs = _observation("IQ4_XS", 1_300_000_000, "b" * 64, 0.12)
+    for domain in ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat"):
+        (logs / f"eval-IQ4_XS-{domain}.log").write_text(
+            "====== KL divergence statistics ======\n"
+            "Mean KLD: 0.120000 \u00b1 0.010000\nSame top p: 90.0000 \u00b1 0.1000 %\n",
+            encoding="utf-8",
+        )
+    write_seed_material(
+        bundle, [obs], set(CONTRACT["ladder_standard_presets"]),
+        reference_manifest_sha256="e" * 64,
+        evaluator_contract_sha256=contract_digest(),
+    )
+
+    assert load_seeds(
+        bundle / "state-artifact-manifest.txt", logs, "",
+        require_seed_provenance=True, reference_manifest_sha256="e" * 64,
+    ), "matching manifest must be admitted"
+    assert not load_seeds(
+        bundle / "state-artifact-manifest.txt", logs, "",
+        require_seed_provenance=True, reference_manifest_sha256="f" * 64,
+    ), "a different model's reference manifest must reject every seed"

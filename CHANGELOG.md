@@ -39,12 +39,34 @@ One freeze, every model.
   silently picking one. `fit fidelity-search` therefore needs no per-model
   arguments beyond the model's own inputs.
 
+- **A calibration bundle feeds the search directly.** `fit calibrate` spends
+  five-domain evals on every standard-ladder preset, and the product search
+  could not use a single one of them: bracket seeds are admitted from a
+  `<name> <size> <sha256>` manifest plus an attested provenance sidecar, and the
+  calibration emitted neither. The bundle now carries both
+  (`state-artifact-manifest.txt`, `seed-provenance.jsonl`), so pointing
+  `--manifest`/`--logs-dir` at a bundle turns its ladder into budget-free
+  bracket evidence. Native-preset points name their preset on both window
+  anchors, which is what keeps a poison preset (IQ2_XS) out of bracket evidence
+  downstream; probe points carry no anchors because they are planned inside
+  healthy windows by construction.
+
+- **`--seed-prefix` defaults to a match-all.** The manifest and log directory
+  already scope a search to one model's bundle, so requiring a name prefix on
+  top only forced every model to be spelled identically in three places just to
+  reuse its own calibration. Admission control is unchanged and does the real
+  work: a seed is admitted only when its provenance sidecar attests the live
+  frozen contract *and* the exact reference-manifest file in use, and when its
+  name appears in the given size manifest.
+
 ### Notes
 
-- 219 tests pass, 1 skipped. New coverage pins the generalization: one freeze
-  accepts a second model's manifest while still refusing foreign weights, and
-  manifest discovery prefers the model bundle, falls back to the bootstrap
-  layout, and errors on absence or ambiguity.
+- 221 tests pass, 1 skipped. New coverage pins the generalization: one freeze
+  accepts a second model's manifest while still refusing foreign weights,
+  manifest discovery prefers the model bundle / falls back to the bootstrap
+  layout / errors on absence or ambiguity, and a calibration bundle's own
+  manifest + sidecar round-trip back through `load_seeds` into admissible seeds
+  (poison preset excluded, wrong reference manifest rejected).
 
 ## [0.3.1] — 2026-09-10
 

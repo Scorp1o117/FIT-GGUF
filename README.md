@@ -191,6 +191,22 @@ contract digest, the weights being quantized and every per-domain
 reference/corpus SHA-256, and fails closed on any mismatch — no new freeze
 document, no hand-edited manifest path, no bypass.
 
+The bundle is also **self-consuming**: it carries
+`state-artifact-manifest.txt` and `seed-provenance.jsonl` for the ladder it just
+evaluated, so a search can reuse all of it as budget-free bracket evidence
+instead of paying for the same five-domain evals twice:
+
+```bash
+fit fidelity-search \
+  --source model-BF16.gguf --imatrix model.imatrix.gguf --runtime /path/to/bin \
+  --refs-dir  out/MyModel/references \
+  --manifest  out/MyModel/state-artifact-manifest.txt \
+  --logs-dir  out/MyModel/logs \
+  --eval-data-dir eval-data --tier balanced \
+  --out-dir out/MyModel/fs-balanced --work-dir /dev/shm/fs \
+  --preset-ladder IQ3_M,IQ4_XS,Q4_K_M,Q5_K_M,Q6_K
+```
+
 **Fail-closed, not best-effort.** The calibration line reports what it actually
 measured: a tier whose window cannot be filled reports `INSUFFICIENT_WINDOW`
 and the guard stays `candidate`; floors are never borrowed from another model,

@@ -222,7 +222,12 @@ def _build_parser() -> argparse.ArgumentParser:
     fs_parser.add_argument(
         "--seed-prefix",
         default=None,
-        help="Manifest/log name prefix for prior points (default: <model-name>-)",
+        help=(
+            "Manifest/log name prefix for prior points (default: match every "
+            "name in --manifest/--logs-dir; a fit calibrate bundle's ladder is "
+            "admitted as-is, and model binding comes from the provenance "
+            "sidecar rather than the name)"
+        ),
     )
     fs_parser.add_argument(
         "--exclude-seed",

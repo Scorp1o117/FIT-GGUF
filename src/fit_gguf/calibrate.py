@@ -368,6 +368,50 @@ def _append_curve_point(bundle: Path, obs: dict) -> None:
         handle.write(json.dumps(obs, sort_keys=True) + "\n")
 
 
+def write_seed_material(
+    bundle: Path,
+    observations: list[dict],
+    preset_names: set[str],
+    *,
+    reference_manifest_sha256: str,
+    evaluator_contract_sha256: str,
+) -> None:
+    """Emit the size manifest + attested provenance sidecar for the ladder.
+
+    ``fit fidelity-search`` admits bracket seeds from two files: a
+    ``<name> <size> <sha256>`` manifest and a provenance sidecar attesting the
+    frozen closure and the reference manifest. Without them the search cannot
+    use a single point of the ladder this run just spent five-domain evals on,
+    and re-deriving the two files by hand is exactly the per-model busywork the
+    calibration line exists to remove.
+
+    A native-preset point names its own preset on both window anchors: that is
+    what marks a poison preset's artifact inadmissible as bracket evidence
+    downstream (``_provenance_view``). Probe points carry no anchors — they are
+    planned inside healthy windows by construction.
+    """
+    manifest_lines: list[str] = []
+    provenance_lines: list[str] = []
+    for obs in observations:
+        point = str(obs["point_id"])
+        size = int(obs["size_bytes"])
+        manifest_lines.append(f"{point}  {size}  {obs['artifact_sha256']}")
+        anchor = point if point in preset_names else ""
+        provenance_lines.append(json.dumps({
+            "name": point,
+            "size_bytes": size,
+            "window_lower_preset": anchor,
+            "window_upper_preset": anchor,
+            "attestation": "runtime-verified",
+            "eval_contract_digest": evaluator_contract_sha256,
+            "reference_manifest_sha256": reference_manifest_sha256,
+        }, sort_keys=True))
+    (bundle / "state-artifact-manifest.txt").write_text(
+        "\n".join(manifest_lines) + ("\n" if manifest_lines else ""), encoding="utf-8")
+    (bundle / "seed-provenance.jsonl").write_text(
+        "\n".join(provenance_lines) + ("\n" if provenance_lines else ""), encoding="utf-8")
+
+
 def stage_ladder(cfg: CalibrateConfig, env: dict, imx: Path, refs_dir: Path,
                  missing_matrices: list[str]) -> list[dict]:
     contract, _ = cal.load_contract(cfg.contract_path)
@@ -562,6 +606,7 @@ def stage_emit(
     unresolved: list[str],
 ) -> Path:
     """Emit the Calibration Bundle (GPT-specified eight-piece layout)."""
+    from fit_gguf.eval.contract import contract_digest
     from fit_gguf.fidelity import profile_hash
 
     bundle = cfg.out_dir
@@ -619,6 +664,17 @@ def stage_emit(
         with curve_path.open("w", encoding="utf-8") as handle:
             for obs in observations:
                 handle.write(json.dumps(obs, sort_keys=True) + "\n")
+
+    # Make the bundle self-consuming for the product search: the ladder this run
+    # just evaluated becomes budget-free bracket evidence instead of being
+    # re-derived by hand for every model.
+    write_seed_material(
+        bundle,
+        observations,
+        set(contract["ladder_standard_presets"]) | set(cfg.extra_presets),
+        reference_manifest_sha256=sha256_file(manifest_path),
+        evaluator_contract_sha256=contract_digest(),
+    )
 
     record = {
         "schema": "fit.calibration_record.v1",
