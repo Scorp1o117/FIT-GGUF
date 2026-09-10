@@ -10,6 +10,8 @@ files.
 
 from __future__ import annotations
 
+import os
+
 from pathlib import Path
 
 import pytest
@@ -90,3 +92,58 @@ def test_dry_run_surfaces_a_missing_runtime(tmp_path):
     """The product path must fail with the candidate list, not a bare path."""
     with pytest.raises(PipelineError, match="llama-quantize not found in"):
         run_dry_run(tmp_path, "src.gguf", "imx.gguf", "IQ3_M", tmp_path / "dry.log")
+
+
+# ------------------------------------------------- runtime library discovery
+
+
+def _runtime_tree(tmp_path, *, cudart: bool):
+    """A llama.cpp Windows-style layout: bin/ with a sibling cudart-*/ dir."""
+    root = tmp_path / "llamacpp"
+    binaries = root / "llama-b10690-bin-win-cuda-13.3-x64"
+    binaries.mkdir(parents=True)
+    (binaries / "ggml-cuda.dll").write_bytes(b"")
+    if cudart:
+        runtime = root / "cudart-llama-bin-win-cuda-13.3-x64"
+        runtime.mkdir()
+        (runtime / "cudart64_13.dll").write_bytes(b"")
+        (runtime / "cublas64_13.dll").write_bytes(b"")
+    return binaries
+
+
+def test_cuda_runtime_sibling_is_found(tmp_path):
+    """The CUDA runtime the GPU backend links against lives beside the binaries.
+
+    Missing it is not an error: ggml-cuda.dll fails to load and llama.cpp
+    quietly evaluates on CPU. Measured on a 2.5B BF16 model, pp512: 150 t/s on
+    CPU versus 11,779 t/s on CUDA — a silent 78x, so the sibling must be
+    discovered rather than left to the user's PATH.
+    """
+    binaries = _runtime_tree(tmp_path, cudart=True)
+    siblings = li.cuda_runtime_siblings(binaries)
+    assert [p.name for p in siblings] == ["cudart-llama-bin-win-cuda-13.3-x64"]
+
+
+def test_no_cudart_sibling_is_not_an_error(tmp_path):
+    """A CPU-only runtime has no sibling, and that is fine."""
+    binaries = _runtime_tree(tmp_path, cudart=False)
+    assert li.cuda_runtime_siblings(binaries) == []
+
+
+def test_runtime_env_puts_bin_and_cudart_on_the_loader_path(tmp_path, as_windows):
+    binaries = _runtime_tree(tmp_path, cudart=True)
+    env = li.runtime_env(binaries, base={"PATH": "C:\\existing"})
+    parts = env["PATH"].split(os.pathsep)
+    assert parts[0] == str(binaries)
+    assert parts[1] == str(binaries.parent / "cudart-llama-bin-win-cuda-13.3-x64")
+    # the caller's own search path is preserved, not replaced
+    assert parts[-1] == "C:\\existing"
+
+
+def test_runtime_env_uses_ld_library_path_on_posix(tmp_path, monkeypatch):
+    monkeypatch.setattr(li, "_is_windows", lambda: False)
+    binaries = _runtime_tree(tmp_path, cudart=True)
+    env = li.runtime_env(binaries, base={"LD_LIBRARY_PATH": "/usr/lib"})
+    assert env["LD_LIBRARY_PATH"].startswith(str(binaries))
+    assert env["LD_LIBRARY_PATH"].endswith("/usr/lib")
+    assert "PATH" not in env

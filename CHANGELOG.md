@@ -6,7 +6,28 @@ All notable changes to FIT-GGUF. Format follows
 
 ## [Unreleased]
 
-One freeze, every model.
+One freeze, every model; and no silent CPU evaluation.
+
+### Fixed
+
+- **Evaluation no longer silently falls back to CPU.** A llama.cpp Windows
+  CUDA release ships `ggml-cuda.dll` inside the binary directory but keeps the
+  CUDA runtime it links against (`cudart64_*.dll`, `cublas*_*.dll`) in a
+  separate `cudart-*` directory, and the release notes put "put cudart next to
+  the binaries" on the user. When the two directories sit side by side — which
+  is exactly the layout the llama.cpp-hub launcher produces — `ggml-cuda.dll`
+  fails to load and llama.cpp **quietly evaluates on CPU**. Nothing errors, the
+  numbers are still valid, and the only symptom is time: measured on a 2.5B BF16
+  model at the evaluator's own `-b 512`, **150 t/s on CPU versus 11,779 t/s on
+  CUDA (78x)**. A full 12-preset ladder plus probes went from hours to minutes.
+
+  `llama_integration.cuda_runtime_siblings()` finds such a sibling (any
+  directory beside the runtime that carries `cudart64_*.dll` / `cublas64_*.dll`)
+  and `llama_integration.runtime_env()` puts it, plus the runtime directory
+  itself, on the loader path — `PATH` on Windows, `LD_LIBRARY_PATH` elsewhere.
+  Both evaluation hot loops (`calibrate._run`, `fidelity_runner._eval_domains`)
+  now spawn `llama-perplexity` with that environment instead of inheriting one
+  that may or may not be configured correctly.
 
 ### Changed
 

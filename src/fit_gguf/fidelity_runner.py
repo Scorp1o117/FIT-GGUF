@@ -32,7 +32,7 @@ from fit_gguf.eval.provenance import EvalProvenance
 from fit_gguf.eval.results import parse_llama_kl_log
 from fit_gguf.fidelity import KL_ANCHORS, GuardProfileError, resolve_guard_profile
 from fit_gguf.fidelity_search import EvalOutcome, Seed, TierContract, fidelity_search
-from fit_gguf.llama_integration import resolve_runtime_binary
+from fit_gguf.llama_integration import resolve_runtime_binary, runtime_env
 from fit_gguf.pipeline import plan as pipeline_plan
 from fit_gguf.pipeline import quantize as pipeline_quantize
 
@@ -374,6 +374,10 @@ class SearchExecutor:
                     ],
                     capture_output=True,
                     timeout=3600,
+                    # the runtime's own libraries (and a sibling CUDA runtime)
+                    # must be discoverable, or llama.cpp silently evaluates on
+                    # CPU — same inputs, same verdict, ~78x slower
+                    env=runtime_env(self.config.runtime),
                 )
                 # llama.cpp writes the KL statistics to stderr with irregular
                 # spacing ("Mean    KLD:") — the parser's own regex is the

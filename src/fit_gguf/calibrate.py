@@ -31,7 +31,7 @@ from fit_gguf.calibration import CalibrationError
 from fit_gguf.eval.contract import DOMAINS
 from fit_gguf.eval.provenance import sha256_file
 from fit_gguf.eval.results import parse_llama_kl_log
-from fit_gguf.llama_integration import resolve_runtime_binary
+from fit_gguf.llama_integration import resolve_runtime_binary, runtime_env
 from fit_gguf.registry import (
     REGISTRY_SCHEMA,
     canonical_json_bytes,
@@ -80,17 +80,13 @@ class CalibrateConfig:
 
 
 def _runtime_env(runtime_dir: Path) -> dict:
-    """Environment for a runtime binary, with its directory on the loader path.
+    """Environment for a runtime binary, with its libraries discoverable.
 
-    POSIX loaders search ``LD_LIBRARY_PATH``; Windows resolves DLLs next to the
-    executable and then along ``PATH``, which is the equivalent knob there.
+    Delegates to :func:`fit_gguf.llama_integration.runtime_env`, which also adds
+    a sibling CUDA runtime directory — without it ``ggml-cuda.dll`` fails to load
+    and llama.cpp silently evaluates on CPU instead.
     """
-    env = dict(os.environ)
-    if os.name == "nt":
-        env["PATH"] = str(runtime_dir) + os.pathsep + env.get("PATH", "")
-    else:
-        env["LD_LIBRARY_PATH"] = str(runtime_dir) + os.pathsep + env.get("LD_LIBRARY_PATH", "")
-    return env
+    return runtime_env(runtime_dir)
 
 
 def _run(runtime: Path, cmd: list[str], log_path: Path, env: dict) -> int:
