@@ -1,0 +1,106 @@
+{
+ "replay_schema": "fit.calibration_contract_replay.v1",
+ "contract_id": "fidelity-calibration-v1",
+ "calibration_contract_sha256": "455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47",
+ "input": "experiments/2026-09-06-spark-x25-4tier/results/spark-ladder-summary.json (zero new evals)",
+ "dedup_key": "artifact_sha256",
+ "overall_status": "candidate",
+ "open_failures": [
+  "INSUFFICIENT_WINDOW"
+ ],
+ "tiers": {
+  "balanced": {
+   "window": [
+    0.085,
+    0.115
+   ],
+   "sample_count": 0,
+   "floor": null,
+   "floor_method": null,
+   "witness": null,
+   "validation_status": "candidate",
+   "failure": "INSUFFICIENT_WINDOW"
+  },
+  "compact": {
+   "window": [
+    0.1275,
+    0.1725
+   ],
+   "sample_count": 3,
+   "samples": [
+    {
+     "point": "CAL-cal-2750000000",
+     "macro_kl": 0.1293876,
+     "same_top": 0.859988,
+     "artifact_sha256": "ebeb0decfa574e0b\u2026"
+    },
+    {
+     "point": "CAL-cal-2650000000",
+     "macro_kl": 0.1458314,
+     "same_top": 0.8488120000000001,
+     "artifact_sha256": "eb9e935c0e501a1d\u2026"
+    },
+    {
+     "point": "Q4_K_M",
+     "macro_kl": 0.1699314,
+     "same_top": 0.834506,
+     "artifact_sha256": "b463d9f670190b7c\u2026"
+    }
+   ],
+   "floor": 0.8359,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point": "CAL-cal-2750000000",
+    "macro_kl": 0.1293876,
+    "macro_same_top": 0.859988,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "mini": {
+   "window": [
+    0.17,
+    0.23
+   ],
+   "sample_count": 2,
+   "samples": [
+    {
+     "point": "Q4_K_S",
+     "macro_kl": 0.183386,
+     "same_top": 0.8261479999999999,
+     "artifact_sha256": "ce1f5d92fa801594\u2026"
+    },
+    {
+     "point": "IQ4_XS",
+     "macro_kl": 0.224428,
+     "same_top": 0.814554,
+     "artifact_sha256": "1cb21e04eec9899b\u2026"
+    }
+   ],
+   "floor": 0.8145,
+   "floor_method": "min_fallback",
+   "witness": {
+    "point": "Q4_K_S",
+    "macro_kl": 0.183386,
+    "macro_same_top": 0.8261479999999999,
+    "pass": true
+   },
+   "validation_status": "candidate",
+   "failure": "INSUFFICIENT_WINDOW"
+  },
+  "quality": {
+   "window": [
+    0.0425,
+    0.0575
+   ],
+   "sample_count": 0,
+   "floor": null,
+   "floor_method": null,
+   "witness": null,
+   "validation_status": "candidate",
+   "failure": "INSUFFICIENT_WINDOW"
+  }
+ },
+ "note": "legacy grandfather entry (A3) \u2014 this replay validates the CONTRACT machinery on real data; Spark does not re-onboard under v1 windows. Empty quality/balanced windows under [0.85K,1.15K] are the expected boundary-locality behavior, not an incident."
+}

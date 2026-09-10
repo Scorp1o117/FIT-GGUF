@@ -1,0 +1,57 @@
+calibration_contract: fidelity-calibration-v1
+calibration_contract_sha256: 455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47
+evaluator_contract: eval-v1
+generalization_scope: exact_model_only
+guard_profile_id: guard-spark-x25-4b-abliterated-exact-v1
+guard_profile_version: 1
+scope:
+  identifier: spark-x25-4b-abliterated
+  type: exact_model
+source_sha256: aa73aeb45870f7ebb9e5d523323b88468a2b3b613918e941bda439d8c1b59d42
+status: candidate
+tiers:
+  quality:
+    kl_anchor: 0.05
+    same_top_floor: 0.9057
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: probe-quality-1
+      macro_kl: 0.045839399999999995
+      macro_same_top: 0.913414
+      pass: true
+    validation_status: validated
+  balanced:
+    kl_anchor: 0.1
+    same_top_floor: 0.8699
+    floor_method: min_fallback
+    sample_count: 1
+    witness: null
+    validation_status: candidate
+  compact:
+    kl_anchor: 0.15
+    same_top_floor: 0.8346
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: probe-balanced-2
+      macro_kl: 0.12806900000000002
+      macro_same_top: 0.859426
+      pass: true
+    validation_status: validated
+  mini:
+    kl_anchor: 0.2
+    same_top_floor: 0.8145
+    floor_method: min_fallback
+    sample_count: 2
+    witness: null
+    validation_status: candidate
+validation_basis: fidelity-calibration-v1
+confidence:
+  note: fidelity-calibration-v1 onboarding; floor_method/sample_count per tier
+  window_n:
+    quality: 3
+    balanced: 1
+    compact: 3
+    mini: 2
+profile_hash: 7bec86e8f273d305b2767a397da265f43eb0842fec28a65aeaf9445bca395a41

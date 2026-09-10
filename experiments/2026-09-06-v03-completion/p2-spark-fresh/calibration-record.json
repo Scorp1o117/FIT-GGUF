@@ -1,0 +1,100 @@
+{
+ "schema": "fit.calibration_record.v1",
+ "contract_id": "fidelity-calibration-v1",
+ "calibration_contract_sha256": "455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47",
+ "model_id": "spark-x25-4b-abliterated",
+ "created": "2026-09-06",
+ "inputs": {
+  "source_weights_sha256": "aa73aeb45870f7ebb9e5d523323b88468a2b3b613918e941bda439d8c1b59d42",
+  "imatrix_corpus_sha256": "df82db0baebe0694385a254461db16f4aab48582fbc74eb33ecf5506ba5f7002",
+  "imatrix_chunks": 500,
+  "evaluator_contract_sha256": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+  "runtime_dir": "tools/llama-b10666-rocm"
+ },
+ "process": {
+  "imatrix_missing_matrices": [],
+  "unresolved_tiers": [
+   "balanced",
+   "mini"
+  ],
+  "curve_points": 23
+ },
+ "derivation": {
+  "quality": {
+   "tier": "quality",
+   "anchor": 0.05,
+   "window": [
+    0.0425,
+    0.0575
+   ],
+   "sample_count": 3,
+   "floor": 0.9057,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-quality-1",
+    "macro_kl": 0.045839399999999995,
+    "macro_same_top": 0.913414,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "balanced": {
+   "tier": "balanced",
+   "anchor": 0.1,
+   "window": [
+    0.085,
+    0.115
+   ],
+   "sample_count": 1,
+   "floor": 0.8699,
+   "floor_method": "min_fallback",
+   "witness": null,
+   "validation_status": "candidate",
+   "failure": "WITNESS_MISSING"
+  },
+  "compact": {
+   "tier": "compact",
+   "anchor": 0.15,
+   "window": [
+    0.1275,
+    0.1725
+   ],
+   "sample_count": 3,
+   "floor": 0.8346,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-balanced-2",
+    "macro_kl": 0.12806900000000002,
+    "macro_same_top": 0.859426,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "mini": {
+   "tier": "mini",
+   "anchor": 0.2,
+   "window": [
+    0.17,
+    0.23
+   ],
+   "sample_count": 2,
+   "floor": 0.8145,
+   "floor_method": "min_fallback",
+   "witness": null,
+   "validation_status": "candidate",
+   "failure": "WITNESS_MISSING"
+  }
+ },
+ "artifacts": {
+  "guard_profile_sha256": "b9a62cb43e4d9ea64b4812dcc3c643ab82f1268c079a3495de6ec3d3a705c308",
+  "reference_manifest_sha256": "8410097ab8ba271067cfa311f5ba94accd7cae38327bec4ef40b0a14c8153541",
+  "curve_points_sha256": "6186a129e7afc86a91ce58818411f19fba8489fbc3ae1602e4f6cb89c56f7be0"
+ },
+ "failures": [
+  "INSUFFICIENT_WINDOW",
+  "WITNESS_MISSING"
+ ],
+ "overall_status": "candidate"
+}

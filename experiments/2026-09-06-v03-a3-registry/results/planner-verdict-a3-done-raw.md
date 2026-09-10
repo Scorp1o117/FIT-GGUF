@@ -1,0 +1,164 @@
+  - paragraph:
+    - text: 可以正式签字了。
+    - strong: A3 Fidelity Registry v1：FROZEN ✅
+    - text: 🔐📦
+  - paragraph: 从你这次汇报看，上一轮要求的 6 项修订都已经真正落到了实现、迁移和 clean-package 验证层，没有遗留会阻塞 P1 的 schema 问题。
+  - paragraph: 正式状态我建议记录为：
+  - button "复制":
+  - code: A3 — Fidelity Registry v1 Design / Schema FROZEN ✅ Implementation PASS ✅ Canonical JSON v1 FROZEN ✅ Trust-root semantics FROZEN ✅ Lookup / fail-closed semantics FROZEN ✅ Legacy migration PASS ✅ Package distribution PASS ✅ Cross-object closure PASS ✅ eval-v1 FREEZE UNCHANGED ✅
+  - heading "我重点复核的几个地方都过了" [level=3]
+  - paragraph:
+    - strong: 1. legacy bootstrap 治理正确。
+    - code: legacy_bootstrap_v0
+    - text: 变成明确、有限的 grandfather 机制，而不是“P1 冻结后旧 entry 自动失效”。这解决了 runtime trust 与 admission policy 混淆的问题。
+  - paragraph:
+    - strong: 2. canonical runtime assets 移进 package 是正确修复。
+    - text: 从：
+  - button "复制":
+  - code: experiments/...
+  - paragraph: 变成：
+  - button "复制":
+  - code: src/fit_gguf/registry/ src/fit_gguf/profiles/guard/
+  - paragraph: 再经过 clean wheel 新 venv 的：
+  - button "复制":
+  - code: fit registry verify
+  - paragraph: 实测通过，这一项尤其重要。v0.2.0 那次“repo 里有、包里没”的坑已经被结构性堵死了 😂。
+  - paragraph:
+    - strong: 3. cross-object semantic closure 已达到 Registry v1 要求。
+  - paragraph: 你现在至少有：
+  - button "复制":
+  - code: entry source SHA ↕ guard profile ↕ reference manifest ↕ live eval-v1 digest
+  - paragraph: 并且 corpus pins 在进入 registry 前又做了一次冻结 slices drift check。
+  - paragraph: 这已经不只是：
+  - blockquote:
+    - paragraph: “每个文件自己的 SHA 都正确”
+  - paragraph: 而是：
+  - blockquote:
+    - paragraph: “这些正确的文件确实属于同一个受信任模型 bundle”。
+  - paragraph: 这正是 A3 最核心的安全属性。
+  - separator
+  - heading "关于你说明的 evaluator triple" [level=2]
+  - paragraph: 这一点我接受，不构成 blocker：
+  - button "复制":
+  - code: entry.evaluator_contract_sha256 == live eval-v1 digest == manifest.evaluator_contract_hash
+  - paragraph: 虽然现有 Guard YAML 只保存 contract 名称而没有 digest，但：
+  - list:
+    - paragraph: entry 已经 SHA 绑定 Guard 本体；
+    - paragraph: entry+manifest 对 evaluator digest 双钉；
+    - paragraph: resolver 又做 source / object closure；
+  - paragraph: 所以当前 v1 trust chain 是闭合的。
+  - paragraph: 未来 P1 生成的新 Guard Profile，可以考虑让新的 Guard schema 自身也携带：
+  - button "复制":
+  - code: evaluator_contract_sha256 calibration_contract_sha256
+  - paragraph:
+    - text: 进一步自描述，但这是
+    - strong: Guard/Calibration artifact schema 的演进问题
+    - text: ，不是 A3 Registry v1 的 freeze blocker。
+  - paragraph: 换句话说：
+  - blockquote:
+    - paragraph:
+      - strong: 不为了这个去改 Registry v1。
+  - separator
+  - heading "我建议现在补一个纯归档动作，但不阻塞 FROZEN" [level=1]
+  - paragraph: 既然已经叫正式 freeze，最好落一个：
+  - button "复制":
+  - code: registry/FREEZE.json
+  - paragraph: 或者：
+  - button "复制":
+  - code: experiments/.../a3-registry-v1/FREEZE.json
+  - paragraph: 记录至少：
+  - text: JSON
+  - button "复制":
+  - code: "{ \"schema\": \"fit.fidelity_registry.v1\", \"canonical_json\": \"fit.canonical_json.v1\", \"status\": \"FROZEN\", \"legacy_bootstrap_sources\": [ \"<orcarouter source sha>\", \"<spark source sha>\" ], \"evaluator_contract\": \"eval-v1\", \"evaluator_contract_sha256\": \"5ce78dee...\", \"implementation_commit\": \"...\", \"test_status\": \"175 passed, 1 skipped\" }"
+  - paragraph: 这里的作用只是以后回答：
+  - blockquote:
+    - paragraph: “A3 到底在哪个 commit、以什么规则被冻结？”
+  - paragraph: 不要让“FROZEN”只存在于聊天记录里。
+  - paragraph:
+    - strong: 但这是 archival hygiene，不是重新打开设计。
+  - separator
+  - heading "Registry v1 从现在起哪些东西不能偷偷改" [level=1]
+  - paragraph: 既然正式冻结，下面这些都视为 v1 invariants：
+  - list:
+    - paragraph:
+      - code: source_weights_sha256
+      - text: 是唯一 trust primary key；
+    - paragraph:
+      - text: v0.3 resolver 正式支持
+      - code: exact_model
+      - text: ，family/architecture 不得偷偷启用；
+    - paragraph: canonical JSON v1 序列化规则固定；
+    - paragraph: entry digest 算法固定；
+    - paragraph: candidate 可查看、不可用于正式 Fidelity Tier；
+    - paragraph: legacy bootstrap 只允许冻结名单里的 grandfather entries；
+    - paragraph: runtime resolver 不因未来 P1/P2 时间点改变旧 entry 有效性；
+    - paragraph:
+      - text: reference manifest 随 package 分发，大
+      - code: .kld
+      - text: 不进入 release；
+    - paragraph:
+      - code: .kld
+      - text: transport 与 trust 分离；
+    - paragraph:
+      - text: official registry 的权威来自 release 内容，不存在 public
+      - code: "--official"
+      - text: trust-elevation；
+    - paragraph: path 必须 confinement-safe；
+    - paragraph: registry resolution 全程 fail-closed；
+    - paragraph:
+      - text: eval-v1
+      - code: FREEZE.json
+      - text: 不因为增加模型重新修订。
+  - paragraph: 以后如果需要改变其中任何一条：
+  - blockquote:
+    - paragraph:
+      - text: 不是“顺手改 A3”，而是考虑
+      - code: fit.fidelity_registry.v2
+      - text: 。
+  - paragraph: 这样纪律才有意义。
+  - separator
+  - heading "下一步：直接进入 P1 ✅" [level=1]
+  - paragraph: 不插 A2、不插 Structural Refine，也不再补 Registry 功能。
+  - paragraph: 正式队列：
+  - button "复制":
+  - code: A3 Fidelity Registry v1 ✅ FROZEN ↓ P1 fidelity-calibration-v1 🚧 NEXT ↓ P2 fit calibrate ↓ A2 execution/on-disk ↓ Qwen3-4B fresh DEV ↓ G11 sealed
+  - paragraph: P1 现在要回答的核心问题已经非常清楚：
+  - blockquote:
+    - paragraph:
+      - strong: 什么样的 calibration evidence，有资格生成一个 Registry 可以接纳的 validated exact-model Guard？
+  - paragraph: 我建议你起草 P1 时重点把这几类内容钉死：
+  - list:
+    - paragraph: preset ladder / healthy-frontier / poison 规则；
+    - paragraph: 四档 local-window 如何生成和补点；
+    - paragraph:
+      - code: n≥3
+      - text: 的最低 validation evidence；
+    - paragraph: P5 与 downward truncation 的精确定义；
+    - paragraph:
+      - code: n<3 → candidate
+      - text: 的 fail-closed 行为；
+    - paragraph: Guard floor 的数值精度和 canonical serialization；
+    - paragraph: reference manifest 的生成与 runtime provenance；
+    - paragraph: calibration-record 需要绑定的完整 evidence roots；
+    - paragraph: candidate → validated promotion 条件；
+    - paragraph:
+      - code: fit calibrate
+      - text: 允许失败成什么状态——例如
+      - code: INSUFFICIENT_WINDOW
+      - text: 、
+      - code: NOT_REACHABLE
+      - text: ，绝不能为了“一键完成”偷偷放松门槛。
+  - heading "最终签字" [level=3]
+  - blockquote:
+    - paragraph:
+      - strong: A3 Fidelity Registry v1：FROZEN ✅
+      - strong: A3 implementation & migration：PASS ✅
+      - strong: 无剩余 blocker。
+      - strong:
+        - text: 批准立即进入 P1
+        - code: fidelity-calibration-v1
+        - text: 预注册起草。
+  - paragraph:
+    - text: 这一层冻住之后，v0.3 的地基就算真正打完了：以后第三、第四、第十个模型进 FIT，应该只是在 Registry 里增加受信任的 bundle，而不是再去碰那块神圣不可侵犯的
+    - code: eval-v1 FREEZE.json
+    - text: 了 😼🔐。

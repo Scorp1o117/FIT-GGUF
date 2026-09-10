@@ -1,0 +1,142 @@
+  - paragraph:
+    - text: 可以正式签字。
+    - strong:
+      - text: P1
+      - code: fidelity-calibration-v1
+      - text: ：FROZEN ✅
+    - text: 🔐📏
+  - paragraph:
+    - text: 这轮 replay 反而给了一个很强的冻结证明：新合同没有为了兼容 Spark 旧数据而“迁就历史结果”，而是正确地把远离 boundary 的样本踢出去，宁可得到
+    - code: candidate / INSUFFICIENT_WINDOW
+    - text: 。这说明局部窗口规则真的在约束 calibration，而不是只写在文档里。
+  - paragraph: 正式冻结锚：
+  - button "复制":
+  - code: "Contract ID: fidelity-calibration-v1 Machine contract: src/fit_gguf/contracts/fidelity-calibration-v1.json Canonical JSON: fit.canonical_json.v1 SHA256: 455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47 Status: FROZEN"
+  - paragraph: 我认可四个最终 invariant：
+  - button "复制":
+  - code: W(K) = [0.85K, 1.15K] same_top sample = stored eval-v1 macro_same_top floor = Decimal(repr(v)) → P5/min → ROUND_DOWN to 4 decimals sample_count = unique artifact_sha256 observations
+  - paragraph: 以及：
+  - button "复制":
+  - code: validated tier = n >= 3 AND calibration witness exists AND no open failure
+  - paragraph:
+    - text: Search 不回填 floor、probe ≤4/tier、
+    - code: expected_valid_tokens
+    - text: 继续 authoritative、poison set 固定
+    - code: "{Q3_K_S, IQ2_XS}"
+    - text: ，也全部正式成为 v1 semantics。
+  - heading "Spark replay：结果完全接受" [level=2]
+  - paragraph: 这次：
+  - button "复制":
+  - code: Quality n=0 → INSUFFICIENT_WINDOW Balanced n=0 → INSUFFICIENT_WINDOW Compact n=3 → validated Mini n=2 → candidate Overall profile → candidate
+  - paragraph:
+    - text: 不是 regression，而是
+    - strong: P1 合同正确工作的证据
+    - text: 。
+  - paragraph: 尤其 Compact：
+  - button "复制":
+  - code: "KL samples: .1294 / .1458 / .1699 floor: .8359 witness: .1458 <= .15 .8488 >= .8359"
+  - paragraph: 闭环完整。
+  - paragraph: Mini 的：
+  - button "复制":
+  - code: 0.8145999... → Decimal → trunc4 → 0.8145
+  - paragraph: 也正好验证了 B+C 两个 normative 修订确实改变了真实边界行为，而不是纸面优化。
+  - paragraph: Spark 现有官方 Guard v3 继续由：
+  - button "复制":
+  - code: legacy_bootstrap_v0 grandfather
+  - paragraph: 维持有效；P1 replay 不需要、也不应该倒逼它重新失效。
+  - separator
+  - heading "一个重要的 P2 验收口径调整" [level=1]
+  - paragraph:
+    - text: 进入
+    - code: fit calibrate
+    - text: 后，
+    - strong: 不要再把“Spark 自动产物 == 旧 Guard v3”当主要 acceptance gate
+    - text: 。
+  - paragraph: 因为 P1 现在已经明确改变了 calibration semantics。
+  - paragraph: 正确拆成两级。
+  - heading "Gate P2-A — zero-eval canonical replay" [level=3]
+  - paragraph: 把现有 Spark observation 集喂给实现：
+  - button "复制":
+  - code: fit calibrate --replay-existing ...
+  - paragraph: 或者内部等价路径。
+  - paragraph: 必须逐字段复现这次 P1 replay：
+  - button "复制":
+  - code: Quality n=0 Balanced n=0 Compact floor=.8359 / validated Mini floor=.8145 / candidate overall=candidate open_failure=INSUFFICIENT_WINDOW
+  - paragraph: 这证明：
+  - blockquote:
+    - paragraph: 实现 == frozen contract。
+  - heading "Gate P2-B — fresh onboarding" [level=3]
+  - paragraph: 真正跑完整：
+  - button "复制":
+  - code: fit calibrate Spark ...
+  - paragraph: 此时 A1 应自动发现：
+  - button "复制":
+  - code: Quality n<3 Balanced n<3 Mini n<3
+  - paragraph: 然后用 gap-probe 预算补窗。
+  - paragraph: 最终目标是：
+  - button "复制":
+  - code: 4 tiers n>=3 + 4 calibration witnesses + no open failure → new fidelity-calibration-v1 Guard → validated
+  - paragraph: 如果 ≤4 probes/tier 仍补不齐：
+  - blockquote:
+    - paragraph: 必须诚实输出 candidate。
+  - paragraph:
+    - strong: 绝不能因为 Spark 已经有 grandfather validated Guard，就偷偷复用旧 floor 让新合同 PASS。
+  - paragraph: 这条我建议直接作为 P2 最重要的 integration fixture。
+  - separator
+  - heading "FREEZE.json：批准落盘" [level=1]
+  - paragraph: 建议至少钉：
+  - button "复制":
+  - code: status = FROZEN contract_id = fidelity-calibration-v1 contract_sha256 = 455338c5... canonical_json = fit.canonical_json.v1 evaluator_contract = eval-v1 evaluator_contract_sha256 = 5ce78dee... preregistration = ... replay_report = ... replay_status = expected_candidate
+  - paragraph: 特别建议写：
+  - button "复制":
+  - code: replay_status = expected_candidate
+  - paragraph: 避免半年后有人看到 Spark replay 没 validated，误以为 freeze 时留了失败项 😂。
+  - separator
+  - heading "从现在开始的版本纪律" [level=1]
+  - paragraph: 这些都已经冻结：
+  - list:
+    - paragraph: KL boundary windows；
+    - paragraph: probe budget；
+    - paragraph: sample uniqueness；
+    - paragraph: P5 算法；
+    - paragraph: truncation semantics；
+    - paragraph: witness requirement；
+    - paragraph: candidate/validated promotion；
+    - paragraph: poison set；
+    - paragraph: authoritative valid-token semantics；
+    - paragraph: floor sample freeze timing。
+  - paragraph: 如果 P2 实现过程中发现“不好实现”：
+  - blockquote:
+    - paragraph:
+      - strong: 改实现，不改合同。
+  - paragraph: 如果发现合同本身有实证错误：
+  - blockquote:
+    - paragraph:
+      - text: 出 amendment + 新 digest，或者
+      - code: fidelity-calibration-v2
+      - text: 。
+  - paragraph:
+    - text: 不能原地修改
+    - code: 455338c5…
+    - text: 对应的语义。
+  - separator
+  - heading "正式状态牌" [level=2]
+  - button "复制":
+  - code: A3 Fidelity Registry v1 ✅ FROZEN P1 Calibration Contract v1 ✅ FROZEN SHA 455338c5… P2 fit calibrate 🚧 NEXT ├─ contract library ├─ normative fixtures ├─ reference generation ├─ preset ladder ├─ gap probing ├─ floor derivation ├─ bundle emission └─ candidate registry entry A2 Execution Profile ⏳ Qwen3-4B fresh DEV ⏳ G11 sealed 🔒
+  - paragraph:
+    - strong:
+      - text: 批准立即进入 P2
+      - code: fit calibrate
+      - text: 。
+  - paragraph: 到这里 v0.3 已经有了两个真正冻结的地基：
+  - blockquote:
+    - paragraph:
+      - text: A3 回答“
+      - strong: 信任谁
+      - text: ”，
+      - text: P1 回答“
+      - strong: 怎样才有资格被信任
+      - text: ”。
+  - paragraph: 接下来 P2 就只是把这套规则变成一条别人也能按按钮跑通的生产线了 😼🔧📦。
+  - button "查看另一个版本":
+    - text: 查看另一个版本

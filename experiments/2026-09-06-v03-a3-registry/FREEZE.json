@@ -1,0 +1,31 @@
+{
+  "schema": "fit.fidelity_registry.v1",
+  "canonical_json": "fit.canonical_json.v1",
+  "status": "FROZEN",
+  "frozen_date": "2026-09-06",
+  "frozen_by": "planner GPT sign-off (planner-verdict-a3-done.md); design verdict planner-verdict-a3.md = DESIGN APPROVED / FREEZE PENDING 6 amendments (all incorporated in PREREGISTRATION.md v1.1)",
+  "legacy_bootstrap_sources": [
+    "f95456457fededfaf9f51cd4739a00aada0795be372882844071cc19146634cd",
+    "aa73aeb45870f7ebb9e5d523323b88468a2b3b613918e941bda439d8c1b59d42"
+  ],
+  "evaluator_contract": "eval-v1",
+  "evaluator_contract_sha256": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+  "implementation_commit": "PENDING-COMMIT (worktree 2026-09-06; src/fit_gguf/registry.py + registry data + tests/test_registry.py + cli/pipeline integration)",
+  "test_status": "175 passed, 1 skipped (opt-in package smoke executed separately: clean wheel -> fresh venv -> fit registry verify PASS)",
+  "invariants": [
+    "source_weights_sha256 is the only trust primary key",
+    "v0.3 resolver supports exact_model only; family/architecture reserved",
+    "canonical JSON v1 serialization rules fixed",
+    "entry digest algorithm fixed",
+    "candidate entries viewable but never emit official tiers",
+    "legacy bootstrap limited to the frozen grandfather list",
+    "runtime resolver never re-judges old entries against future P1/P2 timeline",
+    "reference manifests ship with the package; large .kld never enters a release",
+    ".kld transport is separate from trust",
+    "official registry authority comes from release content; no public --official flag",
+    "registry paths must be confinement-safe",
+    "registry resolution is fail-closed end to end",
+    "eval-v1 FREEZE.json is never amended to add models"
+  ],
+  "change_policy": "any invariant change requires a new fit.fidelity_registry.v2, never an in-place edit"
+}

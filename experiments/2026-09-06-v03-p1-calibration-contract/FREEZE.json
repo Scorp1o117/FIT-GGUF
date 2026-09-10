@@ -1,0 +1,33 @@
+{
+  "status": "FROZEN",
+  "contract_id": "fidelity-calibration-v1",
+  "contract_sha256": "455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47",
+  "canonical_json": "fit.canonical_json.v1",
+  "evaluator_contract": "eval-v1",
+  "evaluator_contract_sha256": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+  "machine_contract_path": "src/fit_gguf/contracts/fidelity-calibration-v1.json",
+  "preregistration": "experiments/2026-09-06-v03-p1-calibration-contract/PREREGISTRATION.md (v1.1, 4 normative amendments incorporated)",
+  "design_verdict": "experiments/2026-09-06-v03-p1-calibration-contract/results/planner-verdict-p1.md",
+  "freeze_verdict": "experiments/2026-09-06-v03-p1-calibration-contract/results/planner-verdict-p1-frozen-raw.md",
+  "replay_report": "experiments/2026-09-06-v03-p1-calibration-contract/replay_spark.py -> results/contract-replay-spark.json",
+  "replay_status": "expected_candidate",
+  "replay_note": "Spark legacy observations predate the boundary-local windows W(K)=[0.85K,1.15K]: quality/balanced windows are empty and mini n=2 by design. This is the contract correctly refusing far-from-boundary samples, NOT a freeze-time failure. Spark remains runtime-trusted via legacy_bootstrap_v0 grandfather (A3).",
+  "frozen_date": "2026-09-06",
+  "invariants": [
+    "W(K) = [0.85K, 1.15K] boundary-local windows",
+    "same_top sample = stored eval-v1 macro_same_top full-precision value",
+    "floor = Decimal(repr(v)) -> P5 (n>=3) / min (n<=2) -> ROUND_DOWN to 4 decimals",
+    "sample_count counts unique artifact_sha256 observations",
+    "validated tier = n>=3 AND calibration witness AND no open failure",
+    "search observations never backfill floors; recalibration = new revision",
+    "probe budget <=4 fresh evals per tier",
+    "expected_valid_tokens authoritative; token estimates informational only",
+    "poison set frozen as {Q3_K_S, IQ2_XS}",
+    "fit calibrate failure states are enumerated and fail-closed"
+  ],
+  "change_policy": "implementation bends to the contract; contract errors require an amendment with a new digest, or fidelity-calibration-v2. Never edit 455338c5… semantics in place.",
+  "p2_acceptance": {
+    "gate_p2_a_zero_eval_replay": "implementation must reproduce the P1 replay field-for-field: quality n=0, balanced n=0, compact floor=0.8359/validated, mini floor=0.8145/candidate, overall=candidate, INSUFFICIENT_WINDOW",
+    "gate_p2_b_fresh_onboarding": "fit calibrate on Spark must gap-probe n<3 windows with <=4 fresh evals/tier and honestly emit candidate if still insufficient; NEVER reuse grandfather floors to force PASS"
+  }
+}
