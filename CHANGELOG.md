@@ -4,6 +4,53 @@ All notable changes to FIT-GGUF. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.3] — 2026-09-10
+
+A released file name has to be readable by the tools that read file names.
+
+### Fixed
+
+- **`…-Q4_K.gguf` is not a name any GGUF reader recognises, and the release
+  path could produce it.** `Q4_K`, `Q3_K` and `Q5_K` are *tensor types*, not
+  presets — llama.cpp ships only the `Q4_K_S` / `Q4_K_M` / `Q4_K_L` (and `Q3_K_*`,
+  `Q5_K_*`) variants. A FIT recipe whose element-weighted dominant type landed on
+  one of those three was named after it, producing a file name with no
+  recognisable quantisation token at all. The observed consequence is not
+  cosmetic: **Hugging Face's model page drops such a file from its
+  quantisation-variant panel entirely** — a repository with five GGUFs listed
+  four, silently omitting `…-Q4_K.gguf`, and reported "We're not able to
+  determine the quantization variants."
+
+  `primary_type_from_plan()` now guarantees its return value is a **nameable
+  preset** (`PRESET_FILE_TYPES`), which it did not before:
+
+  | Recipe | Suffix |
+  | --- | --- |
+  | overrides no tensor | the window's lower preset (`Q6_K`, `IQ3_M`, …) |
+  | overridden, dominant type is a preset name | that dominant type (`IQ4_XS`, `IQ3_S`, …) |
+  | overridden, dominant type is a bare tensor type | the recipe's **base preset** |
+
+  The third case is not a guess: `general.file_type` in the artifact's own
+  metadata already carries exactly that preset (analysis.json records
+  `PRESET_FILE_TYPES[lower_preset]`), so the name now agrees with the file
+  instead of contradicting it. On the MiniCPM5-2B-abliterated batch this
+  renamed QUALITY `…-Q4_K.gguf` → `…-Q4_K_M.gguf` (file_type 15) and COMPACT
+  `…-Q3_K.gguf` → `…-Q3_K_M.gguf` (file_type 12); bytes unchanged, and both
+  files were missing from the model page's variant list before the rename.
+
+  As a side effect the zero-override branch is now strict: a plan that records
+  no `lower_preset` returns None and the product path refuses, rather than
+  falling back to the dominant type — that fallback is exactly the IQ3_M →
+  IQ3_S misdescription the rule exists to prevent.
+
+### Notes
+
+- **235 tests pass, 1 skipped.** Naming coverage pins the invariant directly:
+  every case the rule can take must return a member of `PRESET_FILE_TYPES`,
+  and the three bare tensor types are asserted *not* to be preset names. A
+  regression here is invisible in the artifact and visible only on a model page,
+  so it is pinned rather than commented.
+
 ## [0.3.2] — 2026-09-10
 
 One freeze, every model; no silent CPU evaluation; and a release name that

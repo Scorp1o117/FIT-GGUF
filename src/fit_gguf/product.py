@@ -175,6 +175,23 @@ def artifact_filename(
     )
 
 
+def _primary_type_source(plan: dict, primary_type: str) -> str:
+    """Why the suffix reads the way it does — recorded, not inferred by a reader.
+
+    Three distinguishable answers, because a name that had to fall back to the
+    base preset is a weaker claim than one taken straight from the recipe.
+    """
+    if int(plan.get("selected_count") or 0) == 0:
+        return "native preset (no tensor-level override)"
+    dominant = str(plan.get("dominant_qtype") or "").upper()
+    if dominant and dominant == primary_type:
+        return "element-weighted dominant type of the FIT recipe"
+    return (
+        f"base preset of the FIT recipe — the dominant type ({dominant}) is a bare "
+        "tensor type, not a nameable GGUF preset"
+    )
+
+
 def _plan_record_for(tensor_types: Path, result: dict, best_size: int) -> dict | None:
     """Locate the plan record that produced a search-built deliverable.
 
@@ -440,11 +457,7 @@ def fidelity_search_product(
         "size_bytes": int(record["size_bytes"]),
         "g2_delta": int(record["size_bytes"]) - int(record["refinalized_expected_bytes"]),
         "primary_type": primary_type,
-        "primary_type_source": (
-            "native preset (no tensor-level override)"
-            if int((plan_record or {}).get("selected_count") or 0) == 0
-            else "element-weighted dominant type of the FIT recipe"
-        ),
+        "primary_type_source": _primary_type_source(plan_record or {}, primary_type),
         "naming": artifact_filename(
             model_name, tier_key, best_size, "<primary-type>"
         ),

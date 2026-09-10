@@ -1,0 +1,7895 @@
+{
+  "block_span_auto": 11,
+  "candidate_budget_bytes": 65110016,
+  "candidate_count": 41,
+  "candidates": [
+    {
+      "block": 0,
+      "delta_bytes": 65536,
+      "expected_gain": 0.20727325816970918,
+      "from_qtype": "q4_k",
+      "importance": 0.20727325816970918,
+      "profiled": true,
+      "raw_importance": 0.12424005079697764,
+      "role": "attn_v",
+      "tensor": "blk.0.attn_v.weight",
+      "to_qtype": "q5_k",
+      "utility_per_byte": 3.162738924708697e-06
+    },
+    {
+      "block": 0,
+      "delta_bytes": 1572864,
+      "expected_gain": 0.03228672929971628,
+      "from_qtype": "q4_k",
+      "importance": 0.03228672929971628,
+      "profiled": true,
+      "raw_importance": 0.0005310508454738164,
+      "role": "ffn_down",
+      "tensor": "blk.0.ffn_down.weight",
+      "to_qtype": "q5_k",
+      "utility_per_byte": 2.0527349662600378e-08
+    },
+    {
+      "block": 1,
+      "delta_bytes": 65536,
+      "expected_gain": 0.48453878666592176,
+      "from_qtype": "q4_k",
+      "importance": 0.48453878666592176,
+      "profiled": true,
+      "raw_importance": 0.29043362371035236,
+      "role": "attn_v",
+      "tensor": "blk.1.attn_v.weight",
+      "to_qtype": "q5_k",
+      "utility_per_byte": 7.393475138334988e-06
+    },
+    {
+      "block": 1,
+      "delta_bytes": 1572864,
+      "expected_gain": 0.6972245747577472,
+      "from_qtype": "q4_k",
+      "importance": 0.6972245747577472,
+      "profiled": true,
+      "raw_importance": 0.011467922206461386,
+      "role": "ffn_down",
+      "tensor": "blk.1.ffn_down.weight",
+      "to_qtype": "q5_k",
+      "utility_per_byte": 4.4328344647582197e-07
+    },
+    {
+      "block": 10,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.634866099428718,
+      "from_qtype": "iq3_s",
+      "importance": 0.5975210347564405,
+      "profiled": true,
+      "raw_importance": 0.009828002327215776,
+      "role": "ffn_down",
+      "tensor": "blk.10.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 3.79893642906469e-07
+    },
+    {
+      "block": 11,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.7391341617030497,
+      "from_qtype": "iq3_s",
+      "importance": 0.6956556816028703,
+      "profiled": true,
+      "raw_importance": 0.011442117113953524,
+      "role": "ffn_down",
+      "tensor": "blk.11.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 4.422859710711608e-07
+    },
+    {
+      "block": 12,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.712796371372299,
+      "from_qtype": "iq3_s",
+      "importance": 0.6708671730562814,
+      "profiled": true,
+      "raw_importance": 0.011034396706615249,
+      "role": "ffn_down",
+      "tensor": "blk.12.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 4.2652586177589506e-07
+    },
+    {
+      "block": 13,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.6760347497415705,
+      "from_qtype": "iq3_s",
+      "importance": 0.6362679997567723,
+      "profiled": true,
+      "raw_importance": 0.01046531087376934,
+      "role": "ffn_down",
+      "tensor": "blk.13.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 4.045282998128079e-07
+    },
+    {
+      "block": 14,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.6295197522760863,
+      "from_qtype": "iq3_s",
+      "importance": 0.592489178612787,
+      "profiled": true,
+      "raw_importance": 0.00974523855654752,
+      "role": "ffn_down",
+      "tensor": "blk.14.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 3.7669447492776683e-07
+    },
+    {
+      "block": 15,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.7697415294422264,
+      "from_qtype": "iq3_s",
+      "importance": 0.7244626159456249,
+      "profiled": true,
+      "raw_importance": 0.011915932429720518,
+      "role": "ffn_down",
+      "tensor": "blk.15.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 4.606009266825516e-07
+    },
+    {
+      "block": 16,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.6979489627145842,
+      "from_qtype": "iq3_s",
+      "importance": 0.6568931413784321,
+      "profiled": true,
+      "raw_importance": 0.010804552386730393,
+      "role": "ffn_down",
+      "tensor": "blk.16.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 4.176414117040203e-07
+    },
+    {
+      "block": 17,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.6368274294665263,
+      "from_qtype": "iq3_s",
+      "importance": 0.5993669924390835,
+      "profiled": true,
+      "raw_importance": 0.009858364566108927,
+      "role": "ffn_down",
+      "tensor": "blk.17.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 3.810672711938753e-07
+    },
+    {
+      "block": 18,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.5995744817748939,
+      "from_qtype": "iq3_s",
+      "importance": 0.5643053946116648,
+      "profiled": true,
+      "raw_importance": 0.009281672792932719,
+      "role": "ffn_down",
+      "tensor": "blk.18.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 3.587757076337591e-07
+    },
+    {
+      "block": 19,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.6545196003962893,
+      "from_qtype": "iq3_s",
+      "importance": 0.6160184474318017,
+      "profiled": true,
+      "raw_importance": 0.01013224703869279,
+      "role": "ffn_down",
+      "tensor": "blk.19.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 3.91653981165442e-07
+    },
+    {
+      "block": 20,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.7492836505899833,
+      "from_qtype": "iq3_s",
+      "importance": 0.705208141731749,
+      "profiled": true,
+      "raw_importance": 0.011599235600025773,
+      "role": "ffn_down",
+      "tensor": "blk.20.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 4.483592616600984e-07
+    },
+    {
+      "block": 21,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.9877925662520803,
+      "from_qtype": "iq3_s",
+      "importance": 0.9296871211784286,
+      "profiled": true,
+      "raw_importance": 0.01529145696811914,
+      "role": "ffn_down",
+      "tensor": "blk.21.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 5.910791531743549e-07
+    },
+    {
+      "block": 22,
+      "delta_bytes": 1671168,
+      "expected_gain": 1.1372074337479199,
+      "from_qtype": "iq3_s",
+      "importance": 1.0703128788215717,
+      "profiled": true,
+      "raw_importance": 0.017604463863259905,
+      "role": "ffn_down",
+      "tensor": "blk.22.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 6.804866020339786e-07
+    },
+    {
+      "block": 23,
+      "delta_bytes": 1671168,
+      "expected_gain": 1.3255958341586325,
+      "from_qtype": "iq3_s",
+      "importance": 1.2476196086198894,
+      "profiled": true,
+      "raw_importance": 0.020520797936417996,
+      "role": "ffn_down",
+      "tensor": "blk.23.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 7.932151849237375e-07
+    },
+    {
+      "block": 24,
+      "delta_bytes": 1671168,
+      "expected_gain": 1.400569095215524,
+      "from_qtype": "iq3_s",
+      "importance": 1.318182677849905,
+      "profiled": true,
+      "raw_importance": 0.02168141650592285,
+      "role": "ffn_down",
+      "tensor": "blk.24.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 8.380779761313788e-07
+    },
+    {
+      "block": 25,
+      "delta_bytes": 1671168,
+      "expected_gain": 1.895794999263494,
+      "from_qtype": "iq3_s",
+      "importance": 1.7842776463656413,
+      "profiled": true,
+      "raw_importance": 0.029347728098021737,
+      "role": "ffn_down",
+      "tensor": "blk.25.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 1.1344131764511372e-06
+    },
+    {
+      "block": 26,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.3374928694174404,
+      "from_qtype": "iq3_s",
+      "importance": 3.1411697594517087,
+      "profiled": true,
+      "raw_importance": 0.05166583586242268,
+      "role": "ffn_down",
+      "tensor": "blk.26.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 1.997101948707395e-06
+    },
+    {
+      "block": 27,
+      "delta_bytes": 1671168,
+      "expected_gain": 2.501448158450781,
+      "from_qtype": "iq3_s",
+      "importance": 2.354304149130147,
+      "profiled": true,
+      "raw_importance": 0.038723501451386255,
+      "role": "ffn_down",
+      "tensor": "blk.27.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 1.4968262666893938e-06
+    },
+    {
+      "block": 28,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.535786616898749,
+      "from_qtype": "iq3_s",
+      "importance": 3.3277991688458815,
+      "profiled": true,
+      "raw_importance": 0.05473550900054155,
+      "role": "ffn_down",
+      "tensor": "blk.28.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.1157577316575883e-06
+    },
+    {
+      "block": 29,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.433930880190579,
+      "from_qtype": "iq3_s",
+      "importance": 3.2319349460617213,
+      "profiled": true,
+      "raw_importance": 0.05315873805890684,
+      "role": "ffn_down",
+      "tensor": "blk.29.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.0548089002365885e-06
+    },
+    {
+      "block": 30,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.8254336359886465,
+      "from_qtype": "iq3_s",
+      "importance": 3.6004081279893145,
+      "profiled": true,
+      "raw_importance": 0.05921937036949506,
+      "role": "ffn_down",
+      "tensor": "blk.30.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.289077840162477e-06
+    },
+    {
+      "block": 31,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.556278622934398,
+      "from_qtype": "iq3_s",
+      "importance": 3.3470857627617865,
+      "profiled": true,
+      "raw_importance": 0.05505273413382383,
+      "role": "ffn_down",
+      "tensor": "blk.31.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.128019817836626e-06
+    },
+    {
+      "block": 32,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.5624953758708067,
+      "from_qtype": "iq3_s",
+      "importance": 3.3529368243489945,
+      "profiled": true,
+      "raw_importance": 0.05514897216319999,
+      "role": "ffn_down",
+      "tensor": "blk.32.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.13173982260958e-06
+    },
+    {
+      "block": 33,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.6205957332823564,
+      "from_qtype": "iq3_s",
+      "importance": 3.407619513677512,
+      "profiled": true,
+      "raw_importance": 0.056048390872698896,
+      "role": "ffn_down",
+      "tensor": "blk.33.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.1665061401859993e-06
+    },
+    {
+      "block": 34,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.5384817179408126,
+      "from_qtype": "iq3_s",
+      "importance": 3.3303357345325293,
+      "profiled": true,
+      "raw_importance": 0.05477723033254733,
+      "role": "ffn_down",
+      "tensor": "blk.34.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.1173704366890776e-06
+    },
+    {
+      "block": 35,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.765423326826946,
+      "from_qtype": "iq3_s",
+      "importance": 3.5439278370135963,
+      "profiled": true,
+      "raw_importance": 0.05829038477925982,
+      "role": "ffn_down",
+      "tensor": "blk.35.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.2531686382380144e-06
+    },
+    {
+      "block": 36,
+      "delta_bytes": 1671168,
+      "expected_gain": 3.8118171293714154,
+      "from_qtype": "iq3_s",
+      "importance": 3.5875925923495675,
+      "profiled": true,
+      "raw_importance": 0.05900858094658664,
+      "role": "ffn_down",
+      "tensor": "blk.36.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.2809299420354e-06
+    },
+    {
+      "block": 37,
+      "delta_bytes": 1671168,
+      "expected_gain": 4.273236924273851,
+      "from_qtype": "iq3_s",
+      "importance": 4.02187004637539,
+      "profiled": true,
+      "raw_importance": 0.06615155931982979,
+      "role": "ffn_down",
+      "tensor": "blk.37.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.5570361114345483e-06
+    },
+    {
+      "block": 38,
+      "delta_bytes": 1671168,
+      "expected_gain": 5.594214809331153,
+      "from_qtype": "iq3_s",
+      "importance": 5.265143349958732,
+      "profiled": true,
+      "raw_importance": 0.08660086940305216,
+      "role": "ffn_down",
+      "tensor": "blk.38.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 3.3474879900352048e-06
+    },
+    {
+      "block": 39,
+      "delta_bytes": 1671168,
+      "expected_gain": 7.669749536664568,
+      "from_qtype": "iq3_s",
+      "importance": 7.2185877992137115,
+      "profiled": true,
+      "raw_importance": 0.11873104637864647,
+      "role": "ffn_down",
+      "tensor": "blk.39.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 4.589454523222422e-06
+    },
+    {
+      "block": 40,
+      "delta_bytes": 1671168,
+      "expected_gain": 42.86838323093133,
+      "from_qtype": "iq3_s",
+      "importance": 40.34671362911184,
+      "profiled": true,
+      "raw_importance": 0.6636211486747925,
+      "role": "ffn_down",
+      "tensor": "blk.40.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.5651749692987976e-05
+    },
+    {
+      "block": 41,
+      "delta_bytes": 1671168,
+      "expected_gain": 122.500310983627,
+      "from_qtype": "iq3_s",
+      "importance": 115.2944103375313,
+      "profiled": true,
+      "raw_importance": 1.8963578973819797,
+      "role": "ffn_down",
+      "tensor": "blk.41.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 7.330221197607123e-05
+    },
+    {
+      "block": 5,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.26601167164907913,
+      "from_qtype": "iq3_s",
+      "importance": 0.25036392625795684,
+      "profiled": true,
+      "raw_importance": 0.0041179759486074845,
+      "role": "ffn_down",
+      "tensor": "blk.5.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 1.5917709748456116e-07
+    },
+    {
+      "block": 6,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.40139256561773135,
+      "from_qtype": "iq3_s",
+      "importance": 0.37778123822845305,
+      "profiled": true,
+      "raw_importance": 0.006213730852171769,
+      "role": "ffn_down",
+      "tensor": "blk.6.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 2.4018684274575106e-07
+    },
+    {
+      "block": 7,
+      "delta_bytes": 1671168,
+      "expected_gain": 364.8709410250197,
+      "from_qtype": "iq3_s",
+      "importance": 343.4079444941362,
+      "profiled": true,
+      "raw_importance": 5.6483602774728565,
+      "role": "ffn_down",
+      "tensor": "blk.7.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 0.00021833289114261384
+    },
+    {
+      "block": 8,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.8577915551192946,
+      "from_qtype": "iq3_s",
+      "importance": 0.8073332283475714,
+      "profiled": true,
+      "raw_importance": 0.013278984982131684,
+      "role": "ffn_down",
+      "tensor": "blk.8.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 5.132886431042807e-07
+    },
+    {
+      "block": 9,
+      "delta_bytes": 1671168,
+      "expected_gain": 0.6332280608990678,
+      "from_qtype": "iq3_s",
+      "importance": 0.5959793514344167,
+      "profiled": true,
+      "raw_importance": 0.0098026447809616,
+      "role": "ffn_down",
+      "tensor": "blk.9.ffn_down.weight",
+      "to_qtype": "q4_k",
+      "utility_per_byte": 3.7891346704763843e-07
+    }
+  ],
+  "fit_gguf_version": "0.3.1",
+  "imatrix": {
+    "arg": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated.imatrix.gguf",
+    "chunk_count": 512,
+    "chunk_size": 512,
+    "datasets": [
+      "J:\\Models\\APEX-imatrix-Small.txt"
+    ],
+    "entry_count": 294,
+    "path": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated.imatrix.gguf",
+    "sha256": "1b39482d6dfc1c0479573af7486ef962f022a2eba23ef0617103ed32afbd1992"
+  },
+  "lower_recipe": {
+    "reported_new_bytes": 1221161124,
+    "reported_orig_bytes": 5033856860,
+    "tensors": [
+      {
+        "dst_type": "q6_K",
+        "is_quantized": true,
+        "name": "output.weight",
+        "new_bytes": 219341128,
+        "ordinal": 1,
+        "orig_bytes": 534773760,
+        "shape": [
+          2048,
+          130560,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "output_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 2,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "token_embd.weight",
+        "new_bytes": 114892472,
+        "ordinal": 3,
+        "orig_bytes": 534773760,
+        "shape": [
+          2048,
+          130560,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.0.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 4,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.0.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 5,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.0.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 6,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.0.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 7,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.0.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 8,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.0.ffn_down.weight",
+        "new_bytes": 7077888,
+        "ordinal": 9,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.0.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 10,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.0.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 11,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.0.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 12,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.1.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 13,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.1.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 14,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.1.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 15,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.1.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 16,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.1.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 17,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.1.ffn_down.weight",
+        "new_bytes": 7077888,
+        "ordinal": 18,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.1.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 19,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.1.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 20,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.1.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 21,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.2.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 22,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.2.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 23,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.2.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 24,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.2.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 25,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.2.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 26,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.2.ffn_down.weight",
+        "new_bytes": 7077888,
+        "ordinal": 27,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.2.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 28,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.2.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 29,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.2.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 30,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.3.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 31,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.3.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 32,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.3.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 33,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.3.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 34,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.3.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 35,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.3.ffn_down.weight",
+        "new_bytes": 7077888,
+        "ordinal": 36,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.3.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 37,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.3.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 38,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.3.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 39,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.4.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 40,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.4.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 41,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.4.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 42,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.4.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 43,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.4.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 44,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.4.ffn_down.weight",
+        "new_bytes": 7077888,
+        "ordinal": 45,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.4.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 46,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.4.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 47,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.4.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 48,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.5.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 49,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.5.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 50,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.5.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 51,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.5.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 52,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.5.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 53,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.5.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 54,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.5.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 55,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.5.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 56,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.5.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 57,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.6.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 58,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.6.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 59,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.6.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 60,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.6.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 61,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.6.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 62,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.6.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 63,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.6.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 64,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.6.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 65,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.6.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 66,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.7.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 67,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.7.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 68,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.7.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 69,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.7.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 70,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.7.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 71,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.7.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 72,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.7.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 73,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.7.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 74,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.7.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 75,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.8.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 76,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.8.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 77,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.8.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 78,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.8.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 79,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.8.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 80,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.8.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 81,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.8.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 82,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.8.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 83,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.8.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 84,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.9.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 85,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.9.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 86,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.9.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 87,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.9.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 88,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.9.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 89,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.9.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 90,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.9.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 91,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.9.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 92,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.9.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 93,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.10.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 94,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.10.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 95,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.10.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 96,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.10.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 97,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.10.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 98,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.10.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 99,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.10.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 100,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.10.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 101,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.10.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 102,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.11.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 103,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.11.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 104,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.11.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 105,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.11.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 106,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.11.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 107,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.11.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 108,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.11.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 109,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.11.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 110,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.11.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 111,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.12.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 112,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.12.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 113,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.12.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 114,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.12.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 115,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.12.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 116,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.12.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 117,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.12.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 118,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.12.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 119,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.12.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 120,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.13.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 121,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.13.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 122,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.13.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 123,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.13.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 124,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.13.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 125,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.13.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 126,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.13.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 127,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.13.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 128,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.13.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 129,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.14.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 130,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.14.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 131,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.14.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 132,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.14.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 133,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.14.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 134,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.14.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 135,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.14.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 136,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.14.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 137,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.14.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 138,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.15.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 139,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.15.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 140,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.15.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 141,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.15.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 142,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.15.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 143,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.15.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 144,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.15.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 145,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.15.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 146,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.15.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 147,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.16.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 148,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.16.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 149,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.16.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 150,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.16.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 151,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.16.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 152,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.16.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 153,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.16.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 154,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.16.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 155,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.16.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 156,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.17.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 157,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.17.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 158,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.17.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 159,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.17.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 160,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.17.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 161,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.17.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 162,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.17.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 163,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.17.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 164,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.17.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 165,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.18.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 166,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.18.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 167,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.18.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 168,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.18.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 169,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.18.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 170,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.18.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 171,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.18.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 172,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.18.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 173,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.18.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 174,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.19.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 175,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.19.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 176,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.19.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 177,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.19.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 178,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.19.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 179,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.19.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 180,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.19.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 181,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.19.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 182,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.19.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 183,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.20.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 184,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.20.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 185,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.20.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 186,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.20.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 187,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.20.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 188,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.20.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 189,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.20.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 190,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.20.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 191,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.20.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 192,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.21.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 193,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.21.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 194,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.21.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 195,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.21.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 196,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.21.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 197,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.21.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 198,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.21.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 199,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.21.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 200,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.21.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 201,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.22.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 202,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.22.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 203,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.22.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 204,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.22.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 205,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.22.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 206,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.22.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 207,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.22.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 208,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.22.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 209,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.22.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 210,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.23.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 211,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.23.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 212,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.23.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 213,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.23.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 214,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.23.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 215,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.23.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 216,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.23.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 217,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.23.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 218,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.23.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 219,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.24.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 220,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.24.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 221,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.24.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 222,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.24.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 223,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.24.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 224,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.24.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 225,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.24.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 226,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.24.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 227,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.24.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 228,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.25.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 229,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.25.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 230,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.25.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 231,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.25.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 232,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.25.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 233,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.25.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 234,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.25.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 235,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.25.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 236,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.25.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 237,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.26.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 238,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.26.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 239,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.26.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 240,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.26.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 241,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.26.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 242,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.26.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 243,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.26.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 244,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.26.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 245,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.26.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 246,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.27.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 247,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.27.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 248,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.27.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 249,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.27.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 250,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.27.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 251,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.27.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 252,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.27.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 253,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.27.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 254,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.27.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 255,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.28.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 256,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.28.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 257,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.28.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 258,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.28.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 259,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.28.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 260,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.28.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 261,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.28.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 262,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.28.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 263,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.28.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 264,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.29.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 265,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.29.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 266,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.29.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 267,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.29.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 268,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.29.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 269,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.29.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 270,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.29.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 271,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.29.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 272,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.29.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 273,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.30.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 274,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.30.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 275,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.30.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 276,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.30.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 277,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.30.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 278,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.30.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 279,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.30.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 280,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.30.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 281,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.30.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 282,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.31.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 283,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.31.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 284,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.31.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 285,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.31.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 286,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.31.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 287,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.31.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 288,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.31.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 289,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.31.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 290,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.31.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 291,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.32.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 292,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.32.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 293,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.32.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 294,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.32.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 295,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.32.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 296,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.32.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 297,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.32.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 298,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.32.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 299,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.32.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 300,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.33.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 301,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.33.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 302,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.33.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 303,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.33.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 304,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.33.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 305,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.33.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 306,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.33.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 307,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.33.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 308,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.33.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 309,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.34.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 310,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.34.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 311,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.34.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 312,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.34.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 313,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.34.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 314,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.34.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 315,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.34.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 316,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.34.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 317,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.34.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 318,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.35.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 319,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.35.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 320,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.35.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 321,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.35.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 322,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.35.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 323,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.35.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 324,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.35.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 325,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.35.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 326,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.35.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 327,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.36.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 328,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.36.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 329,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.36.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 330,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.36.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 331,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.36.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 332,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.36.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 333,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.36.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 334,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.36.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 335,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.36.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 336,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.37.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 337,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.37.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 338,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.37.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 339,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.37.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 340,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.37.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 341,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.37.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 342,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.37.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 343,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.37.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 344,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.37.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 345,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.38.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 346,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.38.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 347,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.38.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 348,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.38.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 349,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.38.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 350,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.38.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 351,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.38.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 352,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.38.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 353,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.38.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 354,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.39.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 355,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.39.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 356,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.39.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 357,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.39.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 358,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.39.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 359,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.39.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 360,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.39.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 361,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.39.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 362,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.39.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 363,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.40.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 364,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.40.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 365,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.40.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 366,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.40.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 367,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.40.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 368,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.40.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 369,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.40.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 370,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.40.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 371,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.40.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 372,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.41.attn_k.weight",
+        "new_bytes": 220201,
+        "ordinal": 373,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.41.attn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 374,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.41.attn_output.weight",
+        "new_bytes": 2359296,
+        "ordinal": 375,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.41.attn_q.weight",
+        "new_bytes": 1803551,
+        "ordinal": 376,
+        "orig_bytes": 8388608,
+        "shape": [
+          2048,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "q4_K",
+        "is_quantized": true,
+        "name": "blk.41.attn_v.weight",
+        "new_bytes": 293601,
+        "ordinal": 377,
+        "orig_bytes": 1048576,
+        "shape": [
+          2048,
+          256,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.41.ffn_down.weight",
+        "new_bytes": 5410652,
+        "ordinal": 378,
+        "orig_bytes": 25165824,
+        "shape": [
+          6144,
+          2048,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.41.ffn_gate.weight",
+        "new_bytes": 5410652,
+        "ordinal": 379,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "f32",
+        "is_quantized": false,
+        "name": "blk.41.ffn_norm.weight",
+        "new_bytes": 8389,
+        "ordinal": 380,
+        "orig_bytes": 8389,
+        "shape": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "src_type": "f32",
+        "total_tensors": 381
+      },
+      {
+        "dst_type": "iq3_s",
+        "is_quantized": true,
+        "name": "blk.41.ffn_up.weight",
+        "new_bytes": 5410652,
+        "ordinal": 381,
+        "orig_bytes": 25165824,
+        "shape": [
+          2048,
+          6144,
+          1,
+          1
+        ],
+        "src_type": "bf16",
+        "total_tensors": 381
+      }
+    ],
+    "total_tensors": 381
+  },
+  "metadata": {
+    "file_type": 27,
+    "imatrix": {
+      "chunks_count": 512,
+      "dataset": "J:\\Models\\APEX-imatrix-Small.txt",
+      "entries_count": 294,
+      "file": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated.imatrix.gguf"
+    },
+    "quantization_version": 2
+  },
+  "net_preset_gap_bytes": 65110016,
+  "presets": {
+    "lower": {
+      "dry_run_log": "dry-run-iq3_m.log",
+      "file_type": 27,
+      "metadata_bytes": 5145696,
+      "name": "IQ3_M",
+      "predicted_size_bytes": 1226310752,
+      "qtype_counts": {
+        "f32": 85,
+        "iq3_s": 206,
+        "q4_k": 89,
+        "q6_k": 1
+      },
+      "tensor_padding_bytes": 0,
+      "tensor_payload_bytes": 1221165056
+    },
+    "upper": {
+      "dry_run_log": "dry-run-q3_k_m.log",
+      "file_type": 12,
+      "metadata_bytes": 5145696,
+      "name": "Q3_K_M",
+      "predicted_size_bytes": 1291420768,
+      "qtype_counts": {
+        "f32": 85,
+        "q3_k": 169,
+        "q4_k": 122,
+        "q5_k": 4,
+        "q6_k": 1
+      },
+      "tensor_padding_bytes": 0,
+      "tensor_payload_bytes": 1286275072
+    }
+  },
+  "rejected": [
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.0.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.0.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.0.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.0.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.1.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.1.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.1.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.1.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.10.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.10.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.10.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.10.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.11.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.11.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.11.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.11.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.12.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.12.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.12.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.12.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.13.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.13.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.13.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.13.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.14.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.14.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.14.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.14.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.15.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.15.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.15.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.15.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.16.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.16.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.16.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.16.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.17.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.17.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.17.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.17.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.18.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.18.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.18.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.18.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.19.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.19.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.19.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.19.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.2.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.2.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.2.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.2.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.20.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.20.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.20.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.20.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.21.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.21.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.21.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.21.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.22.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.22.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.22.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.22.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.23.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.23.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.23.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.23.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.24.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.24.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.24.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.24.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.25.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.25.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.25.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.25.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.26.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.26.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.26.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.26.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.27.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.27.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.27.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.27.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.28.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.28.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.28.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.28.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.29.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.29.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.29.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.29.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.3.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.3.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.3.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.3.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.30.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.30.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.30.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.30.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.31.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.31.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.31.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.31.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.32.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.32.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.32.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.32.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.33.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.33.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.33.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.33.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.34.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.34.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.34.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.34.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.35.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.35.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.35.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.35.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.36.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.36.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.36.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.36.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.37.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.37.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.37.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.37.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.38.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.38.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.38.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.38.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.39.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.39.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.39.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.39.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.4.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.4.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.4.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.4.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.40.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.40.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.40.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.40.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.41.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.41.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.41.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.41.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.5.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.5.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.5.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.5.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.6.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.6.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.6.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.6.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.7.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.7.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.7.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.7.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.8.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.8.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.8.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.8.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.9.attn_k.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.9.attn_q.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.9.ffn_gate.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "blk.9.ffn_up.weight",
+      "to_qtype": "q3_k"
+    },
+    {
+      "delta_bytes": 0,
+      "from_qtype": "iq3_s",
+      "reason": "not_a_strict_encoded_precision_promotion",
+      "tensor": "token_embd.weight",
+      "to_qtype": "q3_k"
+    }
+  ],
+  "rejected_count": 169,
+  "runtime": {
+    "dir": "F:\\llama.cpp\\llama.cpp-hub\\llamacpp\\llama-b10690-bin-win-cuda-13.3-x64",
+    "llama_quantize": "F:\\llama.cpp\\llama.cpp-hub\\llamacpp\\llama-b10690-bin-win-cuda-13.3-x64\\llama-quantize.exe"
+  },
+  "schema_version": 1,
+  "source": {
+    "path": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated-BF16.gguf",
+    "sha256": "f161afcf609fe0ab819a9ee7eea7bfa1d9f846e4cb3ab4a4e6b352aa5b1c6e12",
+    "size_bytes": 5039006528
+  }
+}

@@ -1,0 +1,38 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 1378067552,
+  "macro_kl": 0.0929082,
+  "same_top": 0.8627360000000001,
+  "passed": true,
+  "eval_index": 0,
+  "source": "observed"
+ },
+ "fresh_evals": 0,
+ "budget": 8,
+ "bracket_fail_bytes": 1364010080,
+ "bracket_pass_bytes": 1378067552,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {},
+ "artifact_analyses": {},
+ "guard_binding": {
+  "model_name": "minicpm5-2b-abliterated",
+  "source_sha256": "f161afcf609fe0ab819a9ee7eea7bfa1d9f846e4cb3ab4a4e6b352aa5b1c6e12"
+ },
+ "artifact": {
+  "path": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\fit\\fs\\balanced\\minicpm5-2b-abliterated-FIT-BALANCED-1.28GiB.gguf",
+  "size_bytes": 1378067552,
+  "g2_delta": 0,
+  "naming": "minicpm5-2b-abliterated-FIT-BALANCED-<size>-<primary-qtype>.gguf",
+  "search_tolerance_mib": 128,
+  "active_constraint": "kl",
+  "healthy_frontier": true,
+  "verified_metrics": {
+   "macro_kl": 0.0917992,
+   "same_top_pct": 86.4084
+  }
+ }
+}

@@ -48,7 +48,7 @@ from fit_gguf.optimizer import (
 
 ANALYSIS_SCHEMA_VERSION = 1
 PLAN_SCHEMA_VERSION = 1
-FIT_GGUF_VERSION = "0.3.2"
+FIT_GGUF_VERSION = "0.3.3"
 # P6 amendment 3: counter shifts move the oracle's effective recipe in
 # whole-tensor steps; 3 rounds were not always enough to absorb them.
 ORACLE_MAX_ITERATIONS = 8
@@ -187,24 +187,44 @@ def suggested_filename(model_name: str, target_bytes: int, dominant_qtype: str) 
 def primary_type_from_plan(record: Mapping[str, object]) -> str | None:
     """The artifact's PRIMARY TYPE, for the release file-name suffix.
 
-    A plan that selected no tensor-level override IS the window's lower preset
-    byte for byte, so the artifact is named for that preset (`Q6_K`, `Q4_K_M`,
-    …). Naming it for the element-weighted dominant type instead would
-    misdescribe the bytes it ships: the IQ3_M preset's dominant type is IQ3_S,
-    and Q4_K_M's is Q4_K.
+    The suffix must always be a **nameable GGUF preset** (``PRESET_FILE_TYPES``).
+    That is not a cosmetic constraint: a tool that reads a filename — the
+    Hugging Face model page's quantisation-variant panel among them — matches it
+    against the set of known preset names, and a file whose suffix is not one of
+    them is dropped from that listing entirely.
 
-    Any plan that did override tensors is a FIT recipe — no native preset
-    produces those bytes — and is named for its element-weighted dominant type
-    (`Q4_K`, `IQ4_XS`, …), which is exactly the type whose parameters dominate
-    the file. Element weighting (never tensor count, never target size) is the
-    rule `qtype_parameter_distribution` encodes.
+    Three cases, in order:
+
+    * **No tensor-level override.** The artifact IS the window's lower preset
+      byte for byte, so it is named for that preset (`Q6_K`, `IQ3_M`, …). Its
+      element-weighted dominant type would misdescribe it: the IQ3_M preset's
+      dominant type is IQ3_S.
+    * **Overridden, dominant type is a preset name.** A FIT recipe ships no
+      preset's bytes; it is named for its element-weighted dominant type
+      (`IQ4_XS`, `IQ3_S`, …), which is exactly the type whose parameters
+      dominate the file.
+    * **Overridden, dominant type is not a preset name.** `Q4_K`, `Q3_K` and
+      `Q5_K` are *tensor types*, not presets — llama.cpp only ships the `_S` /
+      `_M` / `_L` variants. Such a recipe is named for its base preset instead,
+      which is also what `general.file_type` in the artifact's own metadata
+      already claims (analysis.json records `PRESET_FILE_TYPES[lower_preset]`).
+
+    Element weighting (never tensor count, never target size) is the rule
+    `qtype_parameter_distribution` encodes; ``PRESET_FILE_TYPES`` is the
+    authoritative list of names this returns.
     """
+    preset = record.get("lower_preset")
+    preset_name = str(preset).upper() if preset else None
     if int(record.get("selected_count") or 0) == 0:
-        preset = record.get("lower_preset")
-        if preset:
-            return str(preset).upper()
+        return preset_name
     dominant = record.get("dominant_qtype")
-    return str(dominant).upper() if dominant else None
+    if not dominant:
+        return preset_name
+    dominant_name = str(dominant).upper()
+    if dominant_name in PRESET_FILE_TYPES:
+        return dominant_name
+    # unnameable tensor type (q3_k/q4_k/q5_k) — the base preset names it
+    return preset_name
 
 
 def run_dry_run(

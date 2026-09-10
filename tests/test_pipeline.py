@@ -423,18 +423,61 @@ def test_primary_type_names_the_dominant_type_of_a_fit_recipe():
         {"selected_count": 174, "lower_preset": "Q3_K_M", "dominant_qtype": "iq4_xs"}
     ) == "IQ4_XS"
     assert primary_type_from_plan(
+        {"selected_count": 94, "lower_preset": "Q3_K_M", "dominant_qtype": "iq3_s"}
+    ) == "IQ3_S"
+
+
+def test_primary_type_falls_back_when_the_dominant_type_is_not_a_preset_name():
+    """`Q4_K` is a tensor type, not a preset — llama.cpp ships only _S/_M/_L.
+
+    A file named `…-Q4_K.gguf` carries no recognisable quantisation token, so
+    Hugging Face's model page drops it from the variant panel. The recipe's base
+    preset names it instead, which is also what the artifact's own
+    `general.file_type` already says.
+    """
+    from fit_gguf.pipeline import PRESET_FILE_TYPES, primary_type_from_plan
+
+    # the trap, explicitly: these three are tensor types, not preset names
+    for tensor_type in ("q3_k", "q4_k", "q5_k"):
+        assert tensor_type.upper() not in PRESET_FILE_TYPES
+
+    assert primary_type_from_plan(
         {"selected_count": 67, "lower_preset": "Q4_K_M", "dominant_qtype": "q4_k"}
-    ) == "Q4_K"
+    ) == "Q4_K_M"
+    assert primary_type_from_plan(
+        {"selected_count": 94, "lower_preset": "Q3_K_M", "dominant_qtype": "q3_k"}
+    ) == "Q3_K_M"
+    assert primary_type_from_plan(
+        {"selected_count": 12, "lower_preset": "Q5_K_M", "dominant_qtype": "q5_k"}
+    ) == "Q5_K_M"
+
+
+def test_primary_type_is_always_a_nameable_preset():
+    """The invariant that keeps released names readable by outside tools."""
+    from fit_gguf.pipeline import PRESET_FILE_TYPES, primary_type_from_plan
+
+    cases = [
+        {"selected_count": 0, "lower_preset": "IQ3_M", "dominant_qtype": "iq3_s"},
+        {"selected_count": 67, "lower_preset": "Q4_K_M", "dominant_qtype": "q4_k"},
+        {"selected_count": 94, "lower_preset": "Q3_K_M", "dominant_qtype": "q3_k"},
+        {"selected_count": 174, "lower_preset": "Q3_K_M", "dominant_qtype": "iq4_xs"},
+        {"selected_count": 3, "lower_preset": "Q6_K", "dominant_qtype": "q6_k"},
+    ]
+    for record in cases:
+        assert primary_type_from_plan(record) in PRESET_FILE_TYPES
 
 
 def test_primary_type_falls_back_and_gives_up_cleanly():
     from fit_gguf.pipeline import primary_type_from_plan
 
-    # no lower preset recorded -> the dominant type is all we know
-    assert primary_type_from_plan({"selected_count": 0, "dominant_qtype": "q6_k"}) == "Q6_K"
-    # nothing to name it with
+    # nothing at all to name it with
     assert primary_type_from_plan({"selected_count": 0}) is None
     assert primary_type_from_plan({"selected_count": 12}) is None
+    # a zero-override plan with no recorded preset is NOT named for its dominant
+    # type: that guess is exactly the IQ3_M -> IQ3_S trap. Refuse instead.
+    assert primary_type_from_plan({"selected_count": 0, "dominant_qtype": "q6_k"}) is None
+    # an unnameable dominant type with no preset to fall back on is also None
+    assert primary_type_from_plan({"selected_count": 12, "dominant_qtype": "q4_k"}) is None
     # a malformed/absent count must not crash the naming step
     assert primary_type_from_plan({"selected_count": None, "lower_preset": "q8_0"}) == "Q8_0"
 
@@ -446,8 +489,8 @@ def test_artifact_filename_carries_tier_size_and_primary_type():
         "minicpm5-2b-abliterated", "balanced", 1_378_067_552, "IQ4_XS"
     ) == "minicpm5-2b-abliterated-FIT-BALANCED-1.28GiB-IQ4_XS.gguf"
     # the size is the delivered byte count, not the searched-for budget
-    assert artifact_filename("m", "quality", 1_566_057_568, "Q4_K") == (
-        "m-FIT-QUALITY-1.46GiB-Q4_K.gguf"
+    assert artifact_filename("m", "quality", 1_566_057_568, "Q4_K_M") == (
+        "m-FIT-QUALITY-1.46GiB-Q4_K_M.gguf"
     )
     assert artifact_filename("m", "mini", 1_226_310_752, "IQ3_M") == (
         "m-FIT-MINI-1.14GiB-IQ3_M.gguf"

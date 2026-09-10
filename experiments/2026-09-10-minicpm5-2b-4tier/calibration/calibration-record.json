@@ -1,0 +1,106 @@
+{
+ "schema": "fit.calibration_record.v1",
+ "contract_id": "fidelity-calibration-v1",
+ "calibration_contract_sha256": "455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47",
+ "model_id": "minicpm5-2b-abliterated",
+ "created": "2026-09-10",
+ "inputs": {
+  "source_weights_sha256": "f161afcf609fe0ab819a9ee7eea7bfa1d9f846e4cb3ab4a4e6b352aa5b1c6e12",
+  "imatrix_corpus_sha256": "df82db0baebe0694385a254461db16f4aab48582fbc74eb33ecf5506ba5f7002",
+  "imatrix_chunks": 500,
+  "evaluator_contract_sha256": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+  "runtime_dir": "F:\\llama.cpp\\llama.cpp-hub\\llamacpp\\llama-b10690-bin-win-cuda-13.3-x64"
+ },
+ "process": {
+  "imatrix_missing_matrices": [
+   "output.weight"
+  ],
+  "unresolved_tiers": [],
+  "curve_points": 22
+ },
+ "derivation": {
+  "quality": {
+   "tier": "quality",
+   "anchor": 0.05,
+   "window": [
+    0.0425,
+    0.0575
+   ],
+   "sample_count": 3,
+   "floor": 0.8952,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-quality-2",
+    "macro_kl": 0.0447992,
+    "macro_same_top": 0.902842,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "balanced": {
+   "tier": "balanced",
+   "anchor": 0.1,
+   "window": [
+    0.085,
+    0.115
+   ],
+   "sample_count": 3,
+   "floor": 0.8548,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-balanced-1",
+    "macro_kl": 0.0929082,
+    "macro_same_top": 0.8627360000000001,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "compact": {
+   "tier": "compact",
+   "anchor": 0.15,
+   "window": [
+    0.1275,
+    0.1725
+   ],
+   "sample_count": 3,
+   "floor": 0.8242,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-compact-1",
+    "macro_kl": 0.1400672,
+    "macro_same_top": 0.834674,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "mini": {
+   "tier": "mini",
+   "anchor": 0.2,
+   "window": [
+    0.17,
+    0.23
+   ],
+   "sample_count": 3,
+   "floor": 0.7955,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "IQ3_M",
+    "macro_kl": 0.1854724,
+    "macro_same_top": 0.811328,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  }
+ },
+ "artifacts": {
+  "guard_profile_sha256": "c489d9e8b890291d29a7a4f3b141fae47ebe7335f7c9c80a6f0477d7888660cc",
+  "reference_manifest_sha256": "71ee5b702ea8a1026e48c062fff5b61c602acfbbf65261e243ef98a09881ae20",
+  "curve_points_sha256": "6bfe1292b2095d0c2d2bdf1f69505e757eb0b7a1eb7f3bb1be9310186855e572"
+ },
+ "failures": [],
+ "overall_status": "validated"
+}

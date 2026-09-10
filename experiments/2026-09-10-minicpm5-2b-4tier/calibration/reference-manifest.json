@@ -1,0 +1,41 @@
+{
+ "manifest_schema": "fit.eval_reference_manifest.v1",
+ "evaluator_contract": "eval-v1",
+ "evaluator_contract_hash": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+ "source_bf16_gguf_sha256": "f161afcf609fe0ab819a9ee7eea7bfa1d9f846e4cb3ab4a4e6b352aa5b1c6e12",
+ "domains": {
+  "wiki_test": {
+   "corpus_sha256": "d400318e1ad6981e3fa332514ae5a59e98d888592428d152a0ffc3ceb135620e",
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "9d3a1d4d41041010351b0199ac5793ddd681aa57281f238787284c92c3cb2469"
+  },
+  "wiki_valid": {
+   "corpus_sha256": "9b455800b98525e0f6ec3ac18f4a6b789622f7d9ae381e5a174f5c3d42173402",
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "7afc4dddc48fe7eee6e5983039acd94079debb08e4cadaaf1cf3d5fffd633a8b"
+  },
+  "chinese": {
+   "corpus_sha256": "a7584dc67f2e3050d42326da91f2801bf29c381596eb1364896490c98bad56d5",
+   "raw_bytes": 65534,
+   "reference_kld_sha256": "ebdb8579ec6d4711ec63b783fb85848441214bd8c9c2cd605cf4c022ddf1ac7e"
+  },
+  "code": {
+   "corpus_sha256": "da9cae0047be52338c7710d7b6cc00354f05d2c8009b9bb3d7914f08d65a4084",
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "8ad884e87f5d9af1e323a292e1e059712ad4da3a2537a09f6d72027d6ad1e824"
+  },
+  "agent_chat": {
+   "corpus_sha256": "01c79b525330a642d89d0b8a00f0b42931ce0b94546c894047d8da041c86188b",
+   "raw_bytes": 65536,
+   "reference_kld_sha256": "2851ef07108b04dd9d4144834c1f0874b77eb18bf17e415bddac549051d7e22b"
+  }
+ },
+ "runtime_provenance": {
+  "runtime_dir": "F:\\llama.cpp\\llama.cpp-hub\\llamacpp\\llama-b10690-bin-win-cuda-13.3-x64",
+  "execution": {
+   "n_gpu_layers": 99,
+   "threads": 16,
+   "on_disk": false
+  }
+ }
+}

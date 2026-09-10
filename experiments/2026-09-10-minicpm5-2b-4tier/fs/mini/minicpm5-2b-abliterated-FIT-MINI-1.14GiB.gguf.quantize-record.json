@@ -1,0 +1,27 @@
+{
+  "analysis_imatrix_arg": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated.imatrix.gguf",
+  "analysis_path": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\fit\\fs\\mini\\analyses\\analysis-IQ3_M-Q3_K_M\\analysis.json",
+  "command": [
+    "F:\\llama.cpp\\llama.cpp-hub\\llamacpp\\llama-b10690-bin-win-cuda-13.3-x64\\llama-quantize.exe",
+    "--imatrix",
+    "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated.imatrix.gguf",
+    "--tensor-type-file",
+    "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\fit\\fs\\mini\\final-plan-tensor-types.txt",
+    "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated-BF16.gguf",
+    "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\fit\\fs\\mini\\minicpm5-2b-abliterated-FIT-MINI-1.14GiB.gguf",
+    "IQ3_M"
+  ],
+  "expect_bytes": null,
+  "imatrix_arg": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated.imatrix.gguf",
+  "output_path": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\fit\\fs\\mini\\minicpm5-2b-abliterated-FIT-MINI-1.14GiB.gguf",
+  "refinalized_expected_bytes": 1226310752,
+  "returncode": 0,
+  "schema_version": 1,
+  "sha256": "0b8744d026fb52f21f9953db12687c2b48698cae6369eaf761a72ec83dfe0959",
+  "size_bytes": 1226310752,
+  "size_matches_expectation": true,
+  "size_matches_refinalization": true,
+  "stderr_tail": "up.weight                 - [  2048,   6144,      1,      1], type =   bf16, converting to iq3_s .. size =    24.00 MiB ->     5.16 MiB\r\n[ 373/ 381] blk.41.attn_k.weight                 - [  2048,    256,      1,      1], type =   bf16, converting to iq3_s .. size =     1.00 MiB ->     0.21 MiB\r\n[ 374/ 381] blk.41.attn_norm.weight              - [  2048,      1,      1,      1], type =    f32, size =    0.008 MiB\r\n[ 375/ 381] blk.41.attn_output.weight            - [  2048,   2048,      1,      1], type =   bf16, converting to q4_K .. size =     8.00 MiB ->     2.25 MiB\r\n[ 376/ 381] blk.41.attn_q.weight                 - [  2048,   2048,      1,      1], type =   bf16, converting to iq3_s .. size =     8.00 MiB ->     1.72 MiB\r\n[ 377/ 381] blk.41.attn_v.weight                 - [  2048,    256,      1,      1], type =   bf16, converting to q4_K .. size =     1.00 MiB ->     0.28 MiB\r\n[ 378/ 381] blk.41.ffn_down.weight               - [  6144,   2048,      1,      1], type =   bf16, converting to iq3_s .. size =    24.00 MiB ->     5.16 MiB\r\n[ 379/ 381] blk.41.ffn_gate.weight               - [  2048,   6144,      1,      1], type =   bf16, converting to iq3_s .. size =    24.00 MiB ->     5.16 MiB\r\n[ 380/ 381] blk.41.ffn_norm.weight               - [  2048,      1,      1,      1], type =    f32, size =    0.008 MiB\r\n[ 381/ 381] blk.41.ffn_up.weight                 - [  2048,   6144,      1,      1], type =   bf16, converting to iq3_s .. size =    24.00 MiB ->     5.16 MiB\r\nllama_model_quantize_impl: model size  =  4800.66 MiB (16.00 BPW)\r\nllama_model_quantize_impl: quant size  =  1164.59 MiB (3.88 BPW)\r\nload_imatrix: imatrix datasets=['J:\\Models\\APEX-imatrix-Small.txt']\r\nload_imatrix: loaded 294 importance matrix entries from J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\MiniCPM5-2B-abliterated.imatrix.gguf computed on 512 chunks\r\nprepare_imatrix: have 294 importance matrix entries\r\n\r\nllama_quantize: quantize time = 25640.35 ms\r\nllama_quantize:    total time = 25640.35 ms\r\n",
+  "tensor_types_path": "J:\\Models\\MiniCPM5-2B-abliterated-GGUF\\fit\\fs\\mini\\final-plan-tensor-types.txt",
+  "tensor_types_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
