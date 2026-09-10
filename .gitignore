@@ -14,6 +14,11 @@
 *.log
 /experiments/**/artifacts/
 
+# Scratch produced by the CLI workflow documented in README ("work/analysis",
+# "work/MyModel-FIT-12G"); plans, dry-run logs and candidate GGUFs are all
+# regenerable from the source model and imatrix.
+/work/
+
 # Python and test caches
 .venv/
 __pycache__/

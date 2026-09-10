@@ -192,6 +192,24 @@ python -m pytest tests/
 
 Python 包唯一的运行时依赖是 PyYAML（用于解析 Guard Profile）；真实分析与量化使用所提供的 llama.cpp 二进制。
 
+### 平台支持
+
+Linux 与 Windows 均受支持。`--runtime` 指向存放 llama.cpp 二进制的目录——
+解压出的 release 归档，或你自己构建产物的 `bin/`——二进制的解析是平台感知的：
+
+- POSIX 上优先匹配无扩展名可执行文件，Windows 上优先匹配 `.exe`；但所有
+  已发布命名形式在每个平台上都会尝试，因此指向「另一平台」的运行时目录
+  不会静默解析成空。
+- Windows 上还会接受 `.cmd`/`.bat` 包装脚本（CreateProcess 可直接运行它们，
+  无需 shell），因此固定 CUDA 路径或附加环境变量的包装层可以直接作为
+  `--runtime` 传入。
+- `analysis.json` 记录的是**解析后的**二进制路径。重放早于平台感知解析的
+  旧 analysis 文件——例如在 Linux 上生成、在 Windows 上重放——会按记录的
+  目录重新解析，因此无需重新分析。
+
+运行完整测试套件需要 `pytest` 与 `setuptools`（二者已在 `.[test]` 中声明，
+因为可选的 wheel 冒烟测试使用 `--no-build-isolation` 构建）。
+
 ## CLI 工作流
 
 ### 1. 分析源模型与预设区间

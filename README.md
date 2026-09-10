@@ -223,6 +223,27 @@ python -m pytest tests/
 The Python package's only runtime dependency is PyYAML (Guard Profile
 parsing). Real analysis and quantization use the supplied llama.cpp binary.
 
+### Platform support
+
+Linux and Windows are both supported. `--runtime` points at a directory of
+llama.cpp binaries — an extracted release archive or your own build's `bin/` —
+and resolution is platform-aware:
+
+- The extensionless executable is preferred on POSIX and `.exe` on Windows, but
+  every shipped form is tried on every platform, so a runtime directory built
+  for the other OS does not silently resolve to nothing.
+- On Windows a `.cmd`/`.bat` wrapper is accepted as well (CreateProcess runs it
+  directly, no shell), so a shim that pins CUDA paths or extra environment
+  variables can be passed as `--runtime` as-is.
+- `analysis.json` records the **resolved** binary path. Replaying an analysis
+  written before platform-aware resolution — for example one produced on Linux
+  and replayed on Windows — re-resolves from the recorded directory, so no
+  re-analysis is needed.
+
+The full test suite needs `pytest` and `setuptools` (both are declared in
+`.[test]`, because the opt-in wheel smoke test builds with
+`--no-build-isolation`).
+
 ## CLI workflow
 
 ### 1. Analyze a source/preset interval

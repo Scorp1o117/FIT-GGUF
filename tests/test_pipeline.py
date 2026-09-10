@@ -7,6 +7,8 @@ import struct
 
 import pytest
 
+import stub_runtime
+
 from fit_gguf.models import DryRunResult, DryRunTensorAssignment
 from fit_gguf.imatrix import ImatrixProfile, ImatrixTensorProfile
 from fit_gguf.pipeline import (
@@ -133,27 +135,8 @@ def _dry_run_log(preset: str) -> str:
 
 
 def _write_stub_runtime(directory) -> None:
-    script = directory / "llama-quantize"
-    script.write_text(
-        "#!/usr/bin/env bash\n"
-        'echo "stub: $*" >> "$STUB_CALL_LOG"\n'
-        'if [[ "$1" == "--dry-run" ]]; then\n'
-        '  preset="${!#}"\n'
-        '  if [[ -n "$STUB_ORACLE_LOG" && "$*" == *"--tensor-type-file"* ]]; then\n'
-        '    cat "$STUB_ORACLE_LOG"\n'
-        '  else\n'
-        '    cat "$STUB_DIR/${preset,,}.dryrun.log"\n'
-        '  fi\n'
-        "  exit 0\n"
-        "fi\n"
-        "for ((i=1; i<=$#; i++)); do\n"
-        '  if [[ "${!i}" == IQ3_M ]]; then out="${@:i-1:1}"; fi\n'
-        "done\n"
-        'truncate -s "$STUB_OUT_BYTES" "$out"\n'
-        'echo "stub quantized $out"\n',
-        encoding="utf-8",
-    )
-    script.chmod(0o755)
+    """Install the fake llama-quantize (``.cmd`` on Windows, ``sh`` elsewhere)."""
+    stub_runtime.write_fake_binary(directory, "llama-quantize", "quantize")
     (directory / "iq3_m.dryrun.log").write_text(_dry_run_log("IQ3_M"), encoding="utf-8")
     (directory / "iq4_xs.dryrun.log").write_text(_dry_run_log("IQ4_XS"), encoding="utf-8")
 

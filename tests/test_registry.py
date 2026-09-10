@@ -516,10 +516,12 @@ def test_clean_wheel_registry_verify():
         wheel = next(wheel_dir.glob("*.whl"))
         env_dir = Path(td) / "venv"
         venv.create(env_dir, with_pip=True, system_site_packages=True)
-        pip = env_dir / "bin" / "pip"
+        # POSIX venvs keep the interpreters in bin/, Windows in Scripts/.
+        bindir = env_dir / ("Scripts" if os.name == "nt" else "bin")
+        pip = bindir / ("pip.exe" if os.name == "nt" else "pip")
         subprocess.run([str(pip), "install", "--no-deps", str(wheel)],
                        check=True, capture_output=True)
-        py = env_dir / "bin" / "python"
+        py = bindir / ("python.exe" if os.name == "nt" else "python")
         result = subprocess.run(
             [str(py), "-c",
              "import sys; sys.path = [p for p in sys.path if 'src' not in p];"

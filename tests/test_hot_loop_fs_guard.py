@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import tempfile
 
 import pytest
 
@@ -64,11 +65,19 @@ def test_guard_override_is_honoured(unsafe_fs, monkeypatch, tmp_path):
 
 
 def test_mount_fs_type_resolves_real_mounts():
-    """Not host-specific: /dev/shm is a tmpfs on any Linux box; skip if absent."""
-    shm = Path("/dev/shm")
-    if not shm.is_dir():
-        pytest.skip("/dev/shm not present")
-    assert calibrate.mount_fs_type(shm) == "tmpfs"
+    """A ``/proc/mounts`` box resolves real mounts; anywhere else reports unknown.
+
+    The guard exists for the Linux ``ntfs3`` driver specifically, so a platform
+    without ``/proc/mounts`` (Windows NTFS is a different code path that has no
+    such write bug) must return None instead of guessing a filesystem type.
+    """
+    target = Path(tempfile.gettempdir())
+    if Path("/proc/mounts").is_file():
+        if Path("/dev/shm").is_dir():
+            assert calibrate.mount_fs_type(Path("/dev/shm")) == "tmpfs"
+        assert calibrate.mount_fs_type(target) is not None
+    else:
+        assert calibrate.mount_fs_type(target) is None
 
 
 def test_run_calibrate_refuses_before_touching_anything(unsafe_fs, tmp_path):

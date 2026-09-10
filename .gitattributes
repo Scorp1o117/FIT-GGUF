@@ -1,0 +1,17 @@
+# FIT-GGUF pins SHA-256 over the exact bytes of checked-in files: Fidelity
+# Registry guard profiles, reference manifests, calibration records, evaluator
+# contracts and the eval-v1 corpus slices. Git for Windows defaults to
+# `core.autocrlf=true`, which rewrites LF to CRLF on checkout and makes every
+# one of those digests fail on an otherwise clean clone (`fit registry verify`
+# reports `guard_profile sha256 mismatch`).
+#
+# Disable end-of-line translation for the whole repository so a checkout
+# reproduces the committed bytes verbatim on every platform. Do not narrow this
+# to specific paths: any text file whose bytes are hashed would be a silent
+# integrity hole.
+#
+# Consequence to keep in mind: with translation off, a Windows `.cmd`/`.bat`
+# script committed with LF stays LF on checkout, and cmd.exe mis-parses
+# line continuations in LF-only batch files. Write such scripts with explicit
+# CRLF and commit those bytes.
+* -text

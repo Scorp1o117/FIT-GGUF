@@ -13,6 +13,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+import stub_runtime
+
 from fit_gguf.eval import contract_digest
 from fit_gguf.eval.provenance import (
     EvalProvenanceError,
@@ -386,9 +388,8 @@ def test_fresh_probe_with_pinned_guard_and_verified_provenance(tmp_path, monkeyp
     rt = tmp_path / "rt"
     rt.mkdir()
     kl_log = "====== KL divergence statistics ======\nMean KLD: 0.090000 ± 0.010000\nSame top p: 92.0000 ± 0.1000 %\n"
-    fake = rt / "llama-perplexity"
-    fake.write_text("#!/bin/sh\ncat <<'KLEOF'\n" + kl_log + "KLEOF\n")
-    fake.chmod(0o755)
+    stub_runtime.write_fake_binary(rt, "llama-perplexity", "perplexity")
+    monkeypatch.setenv("STUB_KL_LOG", kl_log)
 
     # fake planner: deterministic delivered size == target; writes the
     # tensor-types file the (fake) quantizer consumes

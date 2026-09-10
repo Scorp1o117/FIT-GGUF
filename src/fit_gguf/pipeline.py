@@ -30,7 +30,11 @@ from fit_gguf.gguf import (
     read_gguf_layout,
 )
 from fit_gguf.imatrix import ImatrixProfile, load_imatrix_profile, write_profile_json
-from fit_gguf.llama_integration import write_tensor_type_file
+from fit_gguf.llama_integration import (
+    binary_not_found_message,
+    resolve_runtime_binary,
+    write_tensor_type_file,
+)
 from fit_gguf.models import DryRunResult, DryRunTensorAssignment
 from fit_gguf.optimizer import (
     OptimizationError,
@@ -43,7 +47,7 @@ from fit_gguf.optimizer import (
 
 ANALYSIS_SCHEMA_VERSION = 1
 PLAN_SCHEMA_VERSION = 1
-FIT_GGUF_VERSION = "0.3.0"
+FIT_GGUF_VERSION = "0.3.1"
 # P6 amendment 3: counter shifts move the oracle's effective recipe in
 # whole-tensor steps; 3 rounds were not always enough to absorb them.
 ORACLE_MAX_ITERATIONS = 8
@@ -195,9 +199,9 @@ def run_dry_run(
     category rules (P4 amendment 1), so this oracle re-dry-run is the faithful
     base for size prediction of planned recipes.
     """
-    binary = Path(runtime_dir) / "llama-quantize"
+    binary = resolve_runtime_binary(runtime_dir, "llama-quantize")
     if not binary.is_file():
-        raise PipelineError(f"llama-quantize not found at {binary}")
+        raise PipelineError(binary_not_found_message(runtime_dir, "llama-quantize"))
     command = [str(binary), "--dry-run", "--imatrix", imatrix_arg]
     if tensor_types is not None:
         command += ["--tensor-type-file", str(tensor_types)]
@@ -396,7 +400,7 @@ def analyze(
         },
         "runtime": {
             "dir": str(runtime_dir),
-            "llama_quantize": str(Path(runtime_dir) / "llama-quantize"),
+            "llama_quantize": str(resolve_runtime_binary(runtime_dir, "llama-quantize")),
         },
         "presets": {
             "lower": {
@@ -623,7 +627,11 @@ def plan(
     # steps, so convergence can need more rounds than the original cap of 3
     # (P6 amendment 3: raised to 8 after FIT-9G on IQ2_XXS->Q2_K_S oscillated
     # at ~1-tensor granularity).
-    runtime_binary = str(payload["runtime"]["llama_quantize"])
+    # The recorded binary path may predate platform-aware resolution (an
+    # analysis.json written on Linux replayed on Windows, or one written before
+    # the fix), so re-resolve from its directory rather than trusting the
+    # stored name.
+    runtime_dir = Path(str(payload["runtime"]["llama_quantize"])).parent
     source_path = str(payload["source"]["path"])
     imatrix_arg = str(payload["imatrix"]["arg"])
     effective_target = target
@@ -633,7 +641,7 @@ def plan(
         write_fit_recipe(optimization, recipe_path, lower_preset=lower_preset, upper_preset=upper_preset)
         write_tensor_type_file(optimization, types_path)
         effective_recipe = run_dry_run(
-            Path(runtime_binary).parent, source_path, imatrix_arg, lower_preset,
+            runtime_dir, source_path, imatrix_arg, lower_preset,
             prefix.with_name(prefix.name + "-oracle-dry-run.log"),
             tensor_types=types_path,
         )
@@ -759,9 +767,10 @@ def quantize(
     dynamic file string comes from the actual invocation.
     """
     payload = load_analysis(analysis_path)
-    binary = Path(payload["runtime"]["llama_quantize"])  # type: ignore[index]
+    runtime_dir = Path(str(payload["runtime"]["llama_quantize"])).parent
+    binary = resolve_runtime_binary(runtime_dir, "llama-quantize")
     if not binary.is_file():
-        raise PipelineError(f"llama-quantize not found at {binary}")
+        raise PipelineError(binary_not_found_message(runtime_dir, "llama-quantize"))
     source = payload["source"]["path"]  # type: ignore[index]
     lower_preset = payload["presets"]["lower"]["name"]  # type: ignore[index]
     analysis_imatrix_arg = str(payload["imatrix"]["arg"])  # type: ignore[index]

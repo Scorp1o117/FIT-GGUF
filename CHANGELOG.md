@@ -4,6 +4,67 @@ All notable changes to FIT-GGUF. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.1] — 2026-09-10
+
+Windows support, and a checkout that reproduces the bytes it pins.
+
+### Fixed
+
+- **The product CLI runs on Windows.** Every llama.cpp binary was resolved as
+  ``runtime_dir / "llama-quantize"`` (and `llama-imatrix` / `llama-perplexity`),
+  an extensionless name that only exists in POSIX builds, so a correct Windows
+  runtime directory failed with `llama-quantize not found at …` before any work
+  started. Eight call sites are now platform-aware via
+  `llama_integration.resolve_runtime_binary()`: `.exe` is preferred on Windows
+  and the extensionless name on POSIX, while every shipped form is tried on
+  every platform. `.cmd`/`.bat` shims are accepted on Windows too, because
+  CreateProcess launches those directly. The recorded `analysis.json` runtime
+  path is now the *resolved* one, and `quantize` re-resolves from the recorded
+  directory, so an analysis written before this change (a Linux-produced
+  analysis replayed on Windows, say) still replays without re-analysis.
+- **A fresh clone verifies its own digests.** The Fidelity Registry pins SHA-256
+  over the exact bytes of checked-in files, but the repository had no
+  `.gitattributes` and Git for Windows defaults to `core.autocrlf=true`, so a
+  checkout rewrote LF to CRLF and `fit registry verify` failed every entry with
+  `guard_profile sha256 mismatch` — 3 tests' worth of false alarm on an
+  unmodified clone. A repository-wide `* -text` now disables end-of-line
+  translation; the fix is deliberately not narrowed to specific paths, since any
+  hashed text file would otherwise be a silent integrity hole.
+- **`fit calibrate`'s default scratch no longer resolves inside the source
+  drive on Windows.** `Path("/dev/shm")` is a real tmpfs on Linux but silently
+  becomes `\dev\shm` on the current drive on Windows.
+  `calibrate.default_scratch_root()` prefers `FIT_CALIBRATE_TMP`, then `/dev/shm`
+  when it exists, then the platform temp directory.
+- `_runtime_env()` sets `PATH` for the runtime directory on Windows, matching
+  what `LD_LIBRARY_PATH` does on POSIX, so a runtime's own shared libraries
+  resolve the same way on both platforms.
+
+### Changed
+
+- **The test suite is portable.** The fake llama.cpp runtime was a `bash` script
+  and `chmod 0o755` only applies on POSIX, so 7 tests died with
+  `OSError: [WinError 193]` on Windows. `tests/stub_runtime.py` now writes a
+  `.cmd` launcher on Windows and an `sh` script elsewhere, both exec'ing one
+  Python implementation, so the end-to-end tests still exercise a real
+  subprocess on both platforms. The stub also emits its output as explicit UTF-8
+  bytes: the fake KL log contains `±`, and a redirected child on a non-UTF-8
+  Windows code page (cp936, cp932) would otherwise encode it locally while the
+  parent decodes as UTF-8. Also fixed: the wheel smoke test assumed a venv's
+  `bin/` (`Scripts/` on Windows), and `test_mount_fs_type_resolves_real_mounts`
+  no longer requires `/dev/shm`.
+- `setuptools` joined the `test` extra: the opt-in wheel smoke test builds with
+  `--no-build-isolation`, so its build backend must be importable from the test
+  environment.
+
+### Notes
+
+- 216 tests pass, 0 skipped on Windows (216 collected). The 7 tests that used to
+  require POSIX now pass on both platforms, and `tests/test_runtime_binary.py`
+  pins the candidate order for both platforms via the `_is_windows` probe.
+- Windows NTFS is unaffected by the `ntfs3` hot-loop guard: that bug is in the
+  Linux driver, and `mount_fs_type()` correctly reports unknown without
+  `/proc/mounts`.
+
 ## [0.3.0] — 2026-09-10
 
 Onboard a new model with one command, and make the trust root inspectable.

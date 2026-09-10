@@ -16,7 +16,7 @@ Execution Profile 回答"**在哪跑、怎么跑**"；eval-v1 与 fidelity-calib
 |---|---|---|
 | `--n-gpu-layers` | calibrate / fidelity-search / RunnerConfig | 99 |
 | `--threads` | 同上 | 16 |
-| `--workdir` | calibrate（scratch） | tmpfs `/dev/shm/cal-<model>` |
+| `--workdir` | calibrate（scratch） | `FIT_CALIBRATE_TMP` → tmpfs `/dev/shm/cal-<model>` → 平台临时目录 |
 | `--on-disk` | calibrate（禁 tmpfs，scratch 落 out_dir/work） | off |
 
 `fit calibrate` 默认一次 session 内参照与候选用同一 execution profile（保守默认，GPT 裁定）；official 参照 bundle 跨机器可用（provenance recorded + semantics verified）。
@@ -51,6 +51,9 @@ panic 还会冲掉该卷上的未落盘写入（曾丢失 git index 与分支引
 
 - 热循环写入目标（子进程日志、参照 logits、候选工件）**必须是 tmpfs**。
   `--workdir` 默认已满足；不要把 `--on-disk` 指向 `ntfs3`。
+  默认 scratch 由 `calibrate.default_scratch_root()` 解析：`FIT_CALIBRATE_TMP`
+  优先，其次 `/dev/shm`（存在时），最后落到平台临时目录 —— Windows 上没有
+  `/dev/shm`，字面路径会静默变成当前盘符下的 `\dev\shm`。
 - 从 bundle **读取**参照不受影响；从 tmpfs 向 bundle 的**批量拷贝**
   （`cp` / `shutil.copyfile`）也不受影响 —— 只有「子进程 fd 直写」会触发。
 - `assert_hot_loop_fs_safe()` 会对此 fail-closed 拒绝；`FIT_ALLOW_UNSAFE_FS=1`
@@ -62,3 +65,7 @@ panic 还会冲掉该卷上的未落盘写入（曾丢失 git index 与分支引
 **为什么 `pipeline.py` 不受影响**：`fit analyze/plan/quantize/fidelity-search` 用
 `subprocess.run(capture_output=True)` 捕获后在**本进程内**一次性写出日志，子进程
 从不持有文件描述符。两个模块若将来统一实现，应统一到 capture 形态，而不是反过来。
+
+**平台范围**：本节约束针对 Linux 的 `ntfs3` 驱动；Windows 的 NTFS 是另一套内核
+代码路径，没有该写入 bug。`mount_fs_type()` 在没有 `/proc/mounts` 的平台返回
+`None`（未知），因此该 guard 在 Windows 上不会误报。

@@ -19,6 +19,7 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -30,6 +31,7 @@ from fit_gguf.calibration import CalibrationError
 from fit_gguf.eval.contract import DOMAINS
 from fit_gguf.eval.provenance import sha256_file
 from fit_gguf.eval.results import parse_llama_kl_log
+from fit_gguf.llama_integration import resolve_runtime_binary
 from fit_gguf.registry import (
     REGISTRY_SCHEMA,
     canonical_json_bytes,
@@ -78,8 +80,16 @@ class CalibrateConfig:
 
 
 def _runtime_env(runtime_dir: Path) -> dict:
+    """Environment for a runtime binary, with its directory on the loader path.
+
+    POSIX loaders search ``LD_LIBRARY_PATH``; Windows resolves DLLs next to the
+    executable and then along ``PATH``, which is the equivalent knob there.
+    """
     env = dict(os.environ)
-    env["LD_LIBRARY_PATH"] = str(runtime_dir) + os.pathsep + env.get("LD_LIBRARY_PATH", "")
+    if os.name == "nt":
+        env["PATH"] = str(runtime_dir) + os.pathsep + env.get("PATH", "")
+    else:
+        env["LD_LIBRARY_PATH"] = str(runtime_dir) + os.pathsep + env.get("LD_LIBRARY_PATH", "")
     return env
 
 
@@ -137,6 +147,23 @@ def mount_fs_type(path: Path) -> str | None:
             if best is None or depth > best[0]:
                 best = (depth, parts[2])
     return best[1] if best else None
+
+
+def default_scratch_root() -> Path:
+    """Default scratch volume for the hot loop.
+
+    Prefers ``FIT_CALIBRATE_TMP``, then the Linux tmpfs at ``/dev/shm`` (the
+    guard's recommended target), and finally the platform temp directory: a
+    literal ``/dev/shm`` does not exist on Windows, where ``Path("/dev/shm")``
+    would silently resolve to a ``\\dev\\shm`` folder on the current drive.
+    """
+    override = os.environ.get("FIT_CALIBRATE_TMP")
+    if override:
+        return Path(override)
+    shm = Path("/dev/shm")
+    if shm.is_dir():
+        return shm
+    return Path(tempfile.gettempdir())
 
 
 def assert_hot_loop_fs_safe(paths: dict[str, Path]) -> None:
@@ -209,7 +236,7 @@ def eval_artifact(
         parsed = None
         for attempt in (1, 2, 3):
             cmd = [
-                str(cfg.runtime_dir / "llama-perplexity"),
+                str(resolve_runtime_binary(cfg.runtime_dir, "llama-perplexity")),
                 "-m", str(artifact), "-f", str(slice_file),
                 "-ngl", str(cfg.n_gpu_layers), "-t", str(cfg.threads),
                 "-c", "512", "-b", "512",
@@ -255,7 +282,7 @@ def stage_generate_imatrix(cfg: CalibrateConfig, env: dict) -> Path:
     cfg.log("generating imatrix (corpus, contract default chunks)")
     rc = _run(
         cfg.runtime_dir,
-        [str(cfg.runtime_dir / "llama-imatrix"), "-m", str(cfg.source),
+        [str(resolve_runtime_binary(cfg.runtime_dir, "llama-imatrix")), "-m", str(cfg.source),
          "-f", str(cfg.imatrix_corpus), "-c", "512", "-ngl", str(cfg.n_gpu_layers),
          "--chunks", str(cfg.chunks), "-o", str(imx)],
         cfg.log_dir / "imatrix.log",
@@ -302,7 +329,7 @@ def stage_references(cfg: CalibrateConfig, env: dict, refs_dir: Path) -> dict:
             out.unlink(missing_ok=True)
             rc = _run(
                 cfg.runtime_dir,
-                [str(cfg.runtime_dir / "llama-perplexity"), "-m", str(cfg.source),
+                [str(resolve_runtime_binary(cfg.runtime_dir, "llama-perplexity")), "-m", str(cfg.source),
                  "-f", str(slice_file), "-ngl", str(cfg.n_gpu_layers),
                  "-t", str(cfg.threads), "-c", "512", "-b", "512",
                  "--kl-divergence-base", str(out)],
@@ -356,7 +383,7 @@ def stage_ladder(cfg: CalibrateConfig, env: dict, imx: Path, refs_dir: Path,
         artifact = work / f"ladder-{preset}.gguf"
         rc = _run(
             cfg.runtime_dir,
-            [str(cfg.runtime_dir / "llama-quantize"), "--imatrix", str(imx),
+            [str(resolve_runtime_binary(cfg.runtime_dir, "llama-quantize")), "--imatrix", str(imx),
              str(cfg.source), str(artifact), preset],
             cfg.log_dir / f"quantize-{preset}.log",
             env,
@@ -732,7 +759,7 @@ def run_calibrate(cfg: CalibrateConfig) -> dict:
     if cfg.on_disk:
         work = work or cfg.out_dir / "work"
     else:
-        work = work or Path(os.environ.get("FIT_CALIBRATE_TMP", "/dev/shm")) / f"cal-{cfg.model_id}"
+        work = work or default_scratch_root() / f"cal-{cfg.model_id}"
     work.mkdir(parents=True, exist_ok=True)
     cfg.workdir = work
 

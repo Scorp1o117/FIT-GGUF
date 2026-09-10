@@ -32,6 +32,7 @@ from fit_gguf.eval.provenance import EvalProvenance
 from fit_gguf.eval.results import parse_llama_kl_log
 from fit_gguf.fidelity import KL_ANCHORS, GuardProfileError, resolve_guard_profile
 from fit_gguf.fidelity_search import EvalOutcome, Seed, TierContract, fidelity_search
+from fit_gguf.llama_integration import resolve_runtime_binary
 from fit_gguf.pipeline import plan as pipeline_plan
 from fit_gguf.pipeline import quantize as pipeline_quantize
 
@@ -362,7 +363,7 @@ class SearchExecutor:
             for attempt in (1, 2, 3):
                 result = subprocess.run(  # noqa: S603 — fixed argv, no shell
                     [
-                        str(self.config.runtime / "llama-perplexity"),
+                        str(resolve_runtime_binary(self.config.runtime, "llama-perplexity")),
                         "-m", str(artifact),
                         "-f", str(slice_file),
                         "-ngl", str(self.config.n_gpu_layers),
