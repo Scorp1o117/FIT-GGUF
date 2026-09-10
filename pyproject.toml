@@ -33,4 +33,4 @@ pythonpath = ["src"]
 addopts = "-p no:cacheprovider"
 
 [tool.setuptools.package-data]
-fit_gguf = ["registry/**/*.json", "profiles/guard/*.yaml"]
+fit_gguf = ["registry/**/*.json", "profiles/guard/*.yaml", "contracts/*.json"]
