@@ -506,21 +506,38 @@ def test_clean_wheel_registry_verify():
     import tempfile
     import venv
 
+    # `pip wheel --no-build-isolation` shells out to the build frontend and
+    # backend without isolating them, so both must be importable here. Check
+    # first: the build runs with capture_output, and a missing pip otherwise
+    # surfaces as a bare "returned non-zero exit status 1" with no clue why.
+    probe = subprocess.run(
+        [sys.executable, "-c", "import pip, setuptools"],
+        capture_output=True, text=True,
+    )
+    assert probe.returncode == 0, (
+        "the wheel smoke test needs pip and setuptools in the test environment "
+        f"(install '.[test]'); got: {probe.stderr.strip()}"
+    )
+
     with tempfile.TemporaryDirectory() as td:
         wheel_dir = Path(td) / "wheel"
-        subprocess.run(
+        built = subprocess.run(
             [sys.executable, "-m", "pip", "wheel", ".", "--no-deps",
              "--no-build-isolation", "-w", str(wheel_dir)],
-            cwd=REPO, check=True, capture_output=True,
+            cwd=REPO, capture_output=True, text=True,
         )
+        assert built.returncode == 0, built.stderr
         wheel = next(wheel_dir.glob("*.whl"))
         env_dir = Path(td) / "venv"
         venv.create(env_dir, with_pip=True, system_site_packages=True)
         # POSIX venvs keep the interpreters in bin/, Windows in Scripts/.
         bindir = env_dir / ("Scripts" if os.name == "nt" else "bin")
         pip = bindir / ("pip.exe" if os.name == "nt" else "pip")
-        subprocess.run([str(pip), "install", "--no-deps", str(wheel)],
-                       check=True, capture_output=True)
+        installed = subprocess.run(
+            [str(pip), "install", "--no-deps", str(wheel)],
+            capture_output=True, text=True,
+        )
+        assert installed.returncode == 0, installed.stderr
         py = bindir / ("python.exe" if os.name == "nt" else "python")
         result = subprocess.run(
             [str(py), "-c",

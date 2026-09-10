@@ -25,9 +25,12 @@ fit = "fit_gguf.cli:main"
 test = [
     "pytest>=8.0",
     # test_clean_wheel_registry_verify builds a wheel with
-    # --no-build-isolation, so the build backend must be importable from the
-    # test environment rather than a per-build isolated one.
+    # --no-build-isolation, so the build frontend (pip) and the build backend
+    # (setuptools) must both be importable from the test environment rather than
+    # a per-build isolated one. A stdlib `python -m venv` ships pip; `uv venv`
+    # does not, so declaring it keeps every documented setup path equivalent.
     "setuptools>=61.0",
+    "pip>=23.0",
 ]
 
 [tool.pytest.ini_options]
