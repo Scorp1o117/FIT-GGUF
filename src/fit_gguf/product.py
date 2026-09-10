@@ -392,8 +392,27 @@ def _manifest_has(manifest_path: Path, name: str) -> bool:
 
 
 def _best_analysis(best_size: int, windows) -> Path:
-    """Window whose range contains the best verified size (for re-quantize)."""
-    for window in windows:
-        if window.lower_size <= best_size <= window.upper_size:
+    """Window whose range contains the best verified size (for re-quantize).
+
+    Planning is **upgrade-only from the window's lower preset**, so a size that
+    sits exactly on a shared preset boundary is reproducible on one side and not
+    necessarily on the other:
+
+    * as the *lower* bound the recipe is "this preset, no upgrades" — exact by
+      construction;
+    * as the *upper* bound it would need every upgrade in the window's gap to
+      fit, and the tail of a gap typically has no candidate that fits without
+      overshooting. Observed on MiniCPM5-2B MINI, whose answer is the native
+      IQ3_M preset: the lower window's plan could only reach 7,077,888 bytes
+      short of it, and the search failed with "exact size is not deliverable".
+
+    Two adjacent windows share that boundary, so prefer the reproducible side
+    rather than failing on the unreproducible one.
+    """
+    containing = [w for w in windows if w.lower_size <= best_size <= w.upper_size]
+    if not containing:
+        raise ProductError(f"best size {best_size:,} outside every window")
+    for window in containing:
+        if window.lower_size == best_size:
             return window.analysis_path
-    raise ProductError(f"best size {best_size:,} outside every window")
+    return containing[0].analysis_path

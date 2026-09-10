@@ -1,9 +1,11 @@
 """Tests for Fidelity Search v1 (synthetic curves, no I/O)."""
 
 import json
+from pathlib import Path
 
 import pytest
 
+from fit_gguf.fidelity_runner import Window
 from fit_gguf.fidelity_search import (
     EvalOutcome,
     FidelitySearchError,
@@ -265,3 +267,47 @@ def test_config_validation():
         fidelity_search(BALANCED, _curve(12.8), min_size=int(14 * G), max_size=int(14 * G))
     with pytest.raises(FidelitySearchError):
         fidelity_search(BALANCED, _curve(12.8), min_size=int(11 * G), max_size=int(15 * G), budget=0)
+
+
+# ------------------------------------- reproducing a preset-at-boundary answer
+
+A, B, C, D = 1_148_699_744, 1_226_310_752, 1_291_420_768, 1_423_508_576
+
+
+def _windows():
+    """Three adjacent windows; B is shared by the first two."""
+    return [
+        Window(Path("upper-side"), "IQ3_XS", "IQ3_M", A, B),
+        Window(Path("lower-side"), "IQ3_M", "Q3_K_M", B, C),
+        Window(Path("far"), "Q3_K_M", "IQ4_XS", C, D),
+    ]
+
+
+def test_best_analysis_prefers_the_reproducible_side_of_a_shared_boundary():
+    """A preset sitting on a window boundary must be reproduced from the side
+    where it is the LOWER bound.
+
+    Planning is upgrade-only, so the boundary preset is "select nothing" from
+    the window above it, but from the window below it is "select every upgrade
+    in the gap" — and the tail of a gap typically has no candidate that fits.
+    MiniCPM5-2B MINI hit exactly this: its answer is the native IQ3_M preset and
+    the lower window could only reach 7,077,888 bytes short of it, so the
+    search died with "exact size is not deliverable".
+    """
+    from fit_gguf.product import _best_analysis
+
+    assert _best_analysis(B, _windows()) == Path("lower-side")
+
+
+def test_best_analysis_picks_the_only_containing_window_for_an_interior_size():
+    from fit_gguf.product import _best_analysis
+
+    assert _best_analysis(B + 1_000_000, _windows()) == Path("lower-side")
+    assert _best_analysis(C + 1_000_000, _windows()) == Path("far")
+
+
+def test_best_analysis_still_refuses_a_size_outside_every_window():
+    from fit_gguf.product import ProductError, _best_analysis
+
+    with pytest.raises(ProductError, match="outside every window"):
+        _best_analysis(A - 1, _windows())
