@@ -43,8 +43,29 @@ Onboard a new model with one command, and make the trust root inspectable.
 
 ### Fixed
 
+- **`fit calibrate` no longer panics the host on `ntfs3`.** `_run` handed the
+  subprocess's stdout/stderr file descriptor straight to llama.cpp; with the log
+  file on an `ntfs3` mount, llama.cpp's unbuffered stderr becomes thousands of
+  short, unaligned, page-spanning buffered writes, which trip
+  `kernel BUG at fs/iomap/buffered-io.c:1061` in `iomap_write_end` and take the
+  machine down (three kdump captures: 2026-09-06 ×2, 2026-09-10; the writing
+  process was `llama-quantize` or `llama-perplexity` every time). Subprocess logs
+  and reference logits are now staged on the scratch volume and bulk-copied into
+  the bundle afterwards, and `assert_hot_loop_fs_safe()` refuses a hot-loop
+  destination on `ntfs3` unless `FIT_ALLOW_UNSAFE_FS=1` is set. `fit analyze`,
+  `fit plan`, `fit quantize` and `fit fidelity-search` were never affected —
+  `pipeline.py` captures subprocess output with `capture_output=True` and writes
+  the log itself.
 - `fit plan` resolves the default Guard registry from inside the package instead
   of assuming a repository-relative `profiles/guard` path.
+- The calibration contract now ships in the wheel. `default_contract_path()`
+  resolves to `<package>/contracts/fidelity-calibration-v1.json`, but
+  `package-data` declared only `registry/` and `profiles/guard/`, so an installed
+  package failed at `fit calibrate` and `fit registry validate`. `tests/test_packaging.py`
+  now expands the declared `package-data` globs and fails if any runtime-loaded
+  asset is not shipped — this is the second release in a row to hit a
+  "present in the repo, missing from the wheel" defect (v0.2 shipped without the
+  Guard Profiles), and the first case where a test guards the class.
 
 ### Notes
 
@@ -52,7 +73,7 @@ Onboard a new model with one command, and make the trust root inspectable.
   filled reports `INSUFFICIENT_WINDOW` and stays `candidate`; floors are never
   borrowed across models, the sample minimum is never relaxed, and search
   observations are never back-filled into the floor set.
-- 189 tests pass, 1 skipped.
+- 201 tests pass, 1 skipped.
 
 ## [0.2.1] — 2026-09-06
 
