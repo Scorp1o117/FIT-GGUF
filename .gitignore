@@ -10,6 +10,7 @@
 *.gguf
 *.safetensors
 *.bin
+*.kld
 *.log
 /experiments/**/artifacts/
 
@@ -38,15 +39,14 @@ __pycache__/
 /FIT-GGUF — Autonomous Project Master Spec.md
 /docs/asset-inventory.md
 /promo-video/
-/profiles/*
-!/profiles/guard/
 /V0.2_PROGRESS.md
 build/
 *.egg-info/
-# generated reference/corpus artifacts and model binaries stay local
-experiments/**/refs-*/
-experiments/**/*.gguf
-# generated reference/corpus artifacts and model binaries stay local
+
+# Local-only refine profiles (guard profiles ship inside the package now)
+/profiles/
+
+# Generated reference/corpus artifacts and model binaries stay local
 experiments/**/refs-*/
 experiments/**/refs/
 experiments/**/*.gguf
