@@ -20,6 +20,7 @@
    "evidence": "5/5 regenerated .kld byte-identical to P4 legacy (sha256 match per domain)",
    "manifest": "reference-manifest-orcarouter.json",
    "manifest_sha256_prefix": "631fc09ff9b19bee",
+   "manifest_pin_note": "v0.2 BOOTSTRAP RECORD ONLY — not enforced. A freeze states HOW TO MEASURE and must cover every model, so pinning one literal manifest file here would make the product path per-model. Per-model manifest trust is the Fidelity Registry's job, keyed by source_weights_sha256. What IS enforced for any model: the frozen contract digest, the manifest's evaluator_contract_hash against it, the manifest's source_bf16_gguf_sha256 against the weights being quantized, and every per-domain reference/corpus SHA. This document is never rewritten per model.",
    "verdict": "PASS",
    "repin_note": "2026-09-04 Codex audit: prefix updated 59bf2b031f7b2a69 -> 631fc09ff9b19bee; the manifest was re-pinned to the rc2 contract digest and bound to the source weights digest. Domain pins unchanged. The rc2 CONTRACT itself is untouched (final_contract_digest unchanged)."
   }

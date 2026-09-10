@@ -183,6 +183,14 @@ It emits a **Calibration Bundle**: `calibration-record.json`,
 `profile-report.md`, a candidate `registry-entry.json`, `SHA256SUMS`, and the
 bundled `references/`.
 
+**Nothing here is per-model.** The eval-v1 freeze states *how to measure* and is
+one document for every model; the model's own `reference-manifest.json` sits
+beside its `references/` and is what `fit fidelity-search` picks up. Point the
+search at a bundle and it resolves the manifest, verifies it against the frozen
+contract digest, the weights being quantized and every per-domain
+reference/corpus SHA-256, and fails closed on any mismatch — no new freeze
+document, no hand-edited manifest path, no bypass.
+
 **Fail-closed, not best-effort.** The calibration line reports what it actually
 measured: a tier whose window cannot be filled reports `INSUFFICIENT_WINDOW`
 and the guard stays `candidate`; floors are never borrowed from another model,

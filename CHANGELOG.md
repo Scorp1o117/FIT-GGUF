@@ -4,6 +4,48 @@ All notable changes to FIT-GGUF. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+One freeze, every model.
+
+### Changed
+
+- **The eval-v1 freeze is model-independent again.** A freeze states *how to
+  measure*, so it must cover any model, but `verify_eval_v1_provenance` also
+  enforced `freeze_conditions.reference_regeneration.manifest_sha256_prefix` —
+  a pin on the literal bytes of *one* reference manifest. That made a freeze
+  valid for exactly one model and forced per-model surgery on a release
+  document: onboarding a second model meant hand-building a new freeze whose
+  prefix matched its manifest, or bypassing provenance entirely — which is what
+  the Spark-X2.5 onboarding had to do, recorded there as an
+  `M2-style model calibration`.
+
+  The prefix is now read as a historical v0.2 bootstrap record and **not
+  enforced**. The bindings that actually constrain a manifest are unchanged and
+  still fail closed: the frozen contract digest, the manifest's
+  `evaluator_contract_hash` against it, the manifest's
+  `source_bf16_gguf_sha256` against the weights being quantized, and every
+  per-domain reference/corpus SHA-256. Per-model trust is the Fidelity
+  Registry's job — it already pins each released model's manifest by **full**
+  SHA-256, keyed by `source_weights_sha256`, which is a strictly stronger pin
+  than a 16-hex prefix and does not need to live in a frozen document.
+
+- **Reference manifests are discovered per model.**
+  `discover_reference_manifest()` looks for the manifest beside the references
+  it describes — `references/reference-manifest.json`, then
+  `reference-manifest.json` one level up, which is the layout `fit calibrate`
+  writes for every model. The v0.2 freeze-adjacent `reference-manifest-*.json`
+  glob survives as a last-resort fallback, and now reports ambiguity instead of
+  silently picking one. `fit fidelity-search` therefore needs no per-model
+  arguments beyond the model's own inputs.
+
+### Notes
+
+- 219 tests pass, 1 skipped. New coverage pins the generalization: one freeze
+  accepts a second model's manifest while still refusing foreign weights, and
+  manifest discovery prefers the model bundle, falls back to the bootstrap
+  layout, and errors on absence or ambiguity.
+
 ## [0.3.1] — 2026-09-10
 
 Windows support, and a checkout that reproduces the bytes it pins.

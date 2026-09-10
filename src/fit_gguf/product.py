@@ -27,6 +27,7 @@ from pathlib import Path
 
 from fit_gguf.eval.provenance import (
     EvalProvenanceError,
+    discover_reference_manifest,
     sha256_file,
     verify_eval_v1_provenance,
 )
@@ -197,17 +198,11 @@ def fidelity_search_product(
             "eval-v1 FREEZE.json (canonical: experiments/2026-09-02-eval-v1/FREEZE.json)"
         )
     if reference_manifest_path is None:
-        candidates = sorted(
-            (Path(freeze_path).parent).glob("reference-manifest-*.json")
-        )
-        if len(candidates) == 1:
-            reference_manifest_path = candidates[0]
-        else:
-            raise EvalProvenanceError(
-                "reference_manifest_path is required (no unique "
-                "reference-manifest-*.json found next to the freeze file); pass "
-                "the manifest matching the model's bf16 references"
-            )
+        # The manifest belongs to the model, not to the freeze: one freeze
+        # covers every model, and each model's bundle carries its own manifest
+        # beside its references (the `fit calibrate` layout). Only fall back to
+        # the freeze directory for the v0.2 bootstrap layout.
+        reference_manifest_path = discover_reference_manifest(refs_dir, freeze_path)
     provenance = verify_eval_v1_provenance(
         refs_dir, eval_data_dir, freeze_path, reference_manifest_path
     )

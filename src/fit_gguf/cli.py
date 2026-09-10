@@ -246,7 +246,9 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Reference manifest JSON pinning the bf16 .kld and corpus SHA-256s "
-            "(default: the unique reference-manifest-*.json next to --freeze)"
+            "(default: the model's own reference-manifest.json beside its "
+            "references, i.e. the fit calibrate bundle layout; the v0.2 "
+            "freeze-adjacent reference-manifest-*.json is a last-resort fallback)"
         ),
     )
     return parser

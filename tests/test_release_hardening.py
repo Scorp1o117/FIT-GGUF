@@ -18,6 +18,7 @@ import stub_runtime
 from fit_gguf.eval import contract_digest
 from fit_gguf.eval.provenance import (
     EvalProvenanceError,
+    discover_reference_manifest,
     sha256_file,
     verify_eval_v1_provenance,
 )
@@ -30,7 +31,10 @@ def _write_synth_inputs(tmp_path):
     """Build a minimal-but-valid frozen closure: freeze + manifest + files.
 
     The manifest is bound to the freeze the way the real artifact chain is:
-    contract hash pin + freeze-recorded manifest sha prefix + source pin.
+    contract hash pin + source weights pin + per-domain content hashes. The
+    freeze also carries the v0.2 bootstrap ``manifest_sha256_prefix``, kept
+    here deliberately: it must be *ignored*, which is what lets one freeze
+    cover every model.
     """
     refs = tmp_path / "refs"
     refs.mkdir()
@@ -345,13 +349,86 @@ def test_provenance_rejects_manifest_pinned_to_other_contract(tmp_path):
         verify_eval_v1_provenance(refs, data, freeze, manifest)
 
 
-def test_provenance_rejects_manifest_unbound_to_freeze(tmp_path):
+def test_one_freeze_covers_every_model(tmp_path):
+    """A freeze states HOW TO MEASURE, so it must not gate a second model.
+
+    v0.2 pinned the orcarouter manifest's sha prefix inside the freeze, which
+    made one freeze valid for exactly one model and forced per-model
+    customization of a release document. That pin is now a historical record:
+    verification rests on the bindings that actually matter (contract digest,
+    source weights, per-domain content hashes), and a released model gets its
+    manifest pinned by full SHA-256 in the Fidelity Registry instead.
+    """
     freeze, manifest, refs, data = _write_synth_inputs(tmp_path)
+    prefix = json.loads(freeze.read_text())[
+        "freeze_conditions"]["reference_regeneration"]["manifest_sha256_prefix"]
+
+    # a second model: its own manifest file, its own weights, same contract
+    other = tmp_path / "other-manifest.json"
     payload = json.loads(manifest.read_text())
-    payload["repin_note"] = "post-freeze edit"
-    manifest.write_text(json.dumps(payload, indent=1), encoding="utf-8")
-    with pytest.raises(EvalProvenanceError, match="not bound to this freeze"):
-        verify_eval_v1_provenance(refs, data, freeze, manifest)
+    payload["source_bf16_gguf_sha256"] = "b" * 64
+    other.write_text(json.dumps(payload, indent=1), encoding="utf-8")
+    assert not sha256_file(other).startswith(prefix), "fixture must differ from the pin"
+
+    report = verify_eval_v1_provenance(refs, data, freeze, other, source_sha256="b" * 64)
+    assert report.source_bf16_gguf_sha256 == "b" * 64
+    assert report.reference_manifest_file_sha256 == sha256_file(other)
+
+    # the content bindings are what still fail closed
+    with pytest.raises(EvalProvenanceError, match="different weights"):
+        verify_eval_v1_provenance(refs, data, freeze, other, source_sha256="c" * 64)
+
+
+def test_discover_reference_manifest_prefers_the_model_bundle(tmp_path):
+    """The manifest is per-model data, so it is found beside its references."""
+    bundle = tmp_path / "bundle"
+    refs = bundle / "references"
+    refs.mkdir(parents=True)
+    model_manifest = bundle / "reference-manifest.json"
+    model_manifest.write_text("{}\n", encoding="utf-8")
+
+    freeze_dir = tmp_path / "freeze"
+    freeze_dir.mkdir()
+    (freeze_dir / "reference-manifest-decoy.json").write_text("{}\n", encoding="utf-8")
+    freeze = freeze_dir / "FREEZE.json"
+    freeze.write_text("{}\n", encoding="utf-8")
+
+    assert discover_reference_manifest(refs, freeze) == model_manifest
+
+
+def test_discover_reference_manifest_falls_back_to_the_freeze_dir(tmp_path):
+    """The v0.2 bootstrap layout still resolves, but only last and unambiguously."""
+    freeze_dir = tmp_path / "freeze"
+    freeze_dir.mkdir()
+    legacy = freeze_dir / "reference-manifest-only.json"
+    legacy.write_text("{}\n", encoding="utf-8")
+    freeze = freeze_dir / "FREEZE.json"
+    freeze.write_text("{}\n", encoding="utf-8")
+    refs = tmp_path / "refs"
+    refs.mkdir()
+
+    assert discover_reference_manifest(refs, freeze) == legacy
+
+
+def test_discover_reference_manifest_errors_when_absent(tmp_path):
+    refs = tmp_path / "refs"
+    refs.mkdir()
+    with pytest.raises(EvalProvenanceError, match="no reference manifest found"):
+        discover_reference_manifest(refs)
+
+
+def test_discover_reference_manifest_refuses_ambiguity(tmp_path):
+    freeze_dir = tmp_path / "freeze"
+    freeze_dir.mkdir()
+    for name in ("reference-manifest-a.json", "reference-manifest-b.json"):
+        (freeze_dir / name).write_text("{}\n", encoding="utf-8")
+    freeze = freeze_dir / "FREEZE.json"
+    freeze.write_text("{}\n", encoding="utf-8")
+    refs = tmp_path / "refs"
+    refs.mkdir()
+
+    with pytest.raises(EvalProvenanceError, match="2 reference manifests"):
+        discover_reference_manifest(refs, freeze)
 
 
 def test_provenance_rejects_foreign_weights(tmp_path):

@@ -68,6 +68,44 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
+def discover_reference_manifest(
+    refs_dir: str | Path,
+    freeze_path: str | Path | None = None,
+) -> Path:
+    """Locate the reference manifest that belongs to these references.
+
+    The manifest is per-model data, so it is looked up next to the references
+    it describes before anything else — ``fit calibrate`` writes
+    ``reference-manifest.json`` into the calibration bundle beside
+    ``references/``, which is the generic layout every model gets.
+
+    The freeze-adjacent ``reference-manifest-*.json`` glob is kept last as a
+    fallback for the v0.2 bootstrap layout, where exactly one model's manifest
+    sat beside the freeze document. It only resolves when it is unambiguous.
+    """
+    refs = Path(refs_dir)
+    for candidate in (refs / "reference-manifest.json",
+                      refs.parent / "reference-manifest.json"):
+        if candidate.is_file():
+            return candidate
+    if freeze_path is not None:
+        siblings = sorted(Path(freeze_path).parent.glob("reference-manifest-*.json"))
+        if len(siblings) == 1:
+            return siblings[0]
+        if len(siblings) > 1:
+            raise EvalProvenanceError(
+                f"{Path(freeze_path).parent}: {len(siblings)} reference manifests "
+                "found — pass --reference-manifest explicitly, or put the model's "
+                "manifest beside its references (the fit calibrate layout)"
+            )
+    raise EvalProvenanceError(
+        f"no reference manifest found for {refs}: expected "
+        f"{refs / 'reference-manifest.json'} or "
+        f"{refs.parent / 'reference-manifest.json'} — pass --reference-manifest "
+        "to name one explicitly"
+    )
+
+
 def verify_eval_v1_provenance(
     refs_dir: str | Path,
     eval_data_dir: str | Path,
@@ -82,12 +120,19 @@ def verify_eval_v1_provenance(
     * live contract digest == freeze ``final_contract_digest``;
     * manifest ``evaluator_contract_hash`` == the same frozen digest (a
       manifest pinned to an older contract revision is rejected);
-    * the manifest file itself matches the SHA-256 prefix recorded in the
-      freeze document;
     * the manifest pins ``source_bf16_gguf_sha256`` (refs must be bound to
       the generating weights), and a caller-supplied weights digest must
       match it;
     * per-domain reference ``.kld`` and corpus slice SHAs match the pins.
+
+    A freeze is a statement about HOW TO MEASURE, so it is model-independent
+    and one document covers every model. Model-specific trust — which
+    reference bundle is the real one for a given set of weights — is the
+    Fidelity Registry's job (``registry.py``), keyed by
+    ``source_weights_sha256``. The legacy
+    ``freeze_conditions.reference_regeneration.manifest_sha256_prefix`` is
+    read as a historical record and deliberately not enforced, because
+    honouring it would make one freeze valid for exactly one model.
 
     Raises :class:`EvalProvenanceError` on any mismatch; returns the verified
     binding for embedding in manifests and release records.
@@ -131,16 +176,16 @@ def verify_eval_v1_provenance(
             f"frozen contract {frozen_digest} — re-pin the manifest"
         )
     manifest_sha = sha256_file(manifest_file)
-    recorded_prefix = (
-        (freeze.get("freeze_conditions", {}).get("reference_regeneration", {}) or {})
-        .get("manifest_sha256_prefix")
-    )
-    if recorded_prefix and not manifest_sha.startswith(str(recorded_prefix)):
-        raise EvalProvenanceError(
-            f"{manifest_file}: sha256 {manifest_sha[:16]}… does not match the "
-            f"freeze-recorded prefix {recorded_prefix} — the manifest is not "
-            "bound to this freeze"
-        )
+    # A freeze MAY carry `manifest_sha256_prefix` from the v0.2 bootstrap, when
+    # the reference manifest was hand-pinned alongside the contract. It is NOT
+    # enforced: one freeze covering every model is the whole point of this
+    # module being generic, and pinning one literal manifest file per model is
+    # exactly the per-model customization that pin would force. Per-model
+    # manifest trust lives in the Fidelity Registry, keyed by
+    # source_weights_sha256 (see registry.py); the bindings that actually
+    # matter are verified below and cannot be satisfied by a foreign manifest:
+    # the contract digest, the source weights digest, and every per-domain
+    # reference/corpus hash.
     source_pin = manifest.get("source_bf16_gguf_sha256")
     if not source_pin or len(str(source_pin)) != 64:
         raise EvalProvenanceError(
