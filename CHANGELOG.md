@@ -100,7 +100,7 @@ Onboard a new model with one command, and make the trust root inspectable.
   filled reports `INSUFFICIENT_WINDOW` and stays `candidate`; floors are never
   borrowed across models, the sample minimum is never relaxed, and search
   observations are never back-filled into the floor set.
-- 201 tests pass, 1 skipped.
+- 203 tests pass, 1 skipped (204 collected).
 
 ## [0.2.1] — 2026-09-06
 
