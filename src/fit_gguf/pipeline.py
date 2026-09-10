@@ -677,8 +677,9 @@ def plan(
         # covering this model; unvalidated models are refused, never silently
         # defaulted (planner-verdict-m3.md §5).
         from fit_gguf.fidelity import require_guard_profile
+        from fit_gguf.registry import default_guard_registry
 
-        registry = guard_registry or Path("profiles/guard")
+        registry = guard_registry or default_guard_registry()
         profile = require_guard_profile(
             resolved_model_name, fidelity_tier, registry, source_sha256
         )

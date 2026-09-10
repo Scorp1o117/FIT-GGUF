@@ -1,0 +1,5 @@
+{
+ "schema": "fit.reference_locations.v1",
+ "note": "non-trust transport locator layer; updating or mirroring this file never changes entry trust identity",
+ "locations": []
+}

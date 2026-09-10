@@ -32,7 +32,7 @@ RT = REPO / "tools" / "llama-b10666-rocm"
 IMX = REPO / "imatrix_unsloth.gguf"
 REFS = REPO / "experiments" / "2026-09-02-eval-v1" / "refs-orcarouter"
 EVAL_DATA = REPO / "eval-data"
-GUARD_REGISTRY = REPO / "profiles" / "guard"
+GUARD_REGISTRY = REPO / "src" / "fit_gguf" / "profiles" / "guard"
 REFINE_PROFILE = REPO / "profiles" / "refine-profile-qwen-hybrid-band-v1.json"
 
 ANALYSES = [

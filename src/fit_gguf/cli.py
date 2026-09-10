@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
+import json
 import sys
 
 from fit_gguf.pipeline import (
@@ -87,7 +89,7 @@ def _build_parser() -> argparse.ArgumentParser:
     plan_parser.add_argument(
         "--guard-registry",
         default=None,
-        help="Guard Profile registry directory (default: profiles/guard)",
+        help="Guard Profile registry directory (default: packaged fit_gguf/profiles/guard)",
     )
     plan_parser.add_argument(
         "--out-prefix", required=True, help="Prefix for -plan.json/-recipe.json/-tensor-types.txt"
@@ -108,6 +110,40 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Actual imatrix path string llama-quantize receives (default: analysis arg)",
     )
 
+    cal_parser = subparsers.add_parser(
+        "calibrate",
+        help="fit calibrate: produce a Calibration Bundle (guard profile + records) "
+        "per the frozen fidelity-calibration-v1 contract",
+    )
+    cal_parser.add_argument("--source", required=True, help="BF16 source GGUF")
+    cal_parser.add_argument("--imatrix-corpus", required=True, help="Calibration corpus text")
+    cal_parser.add_argument("--runtime", required=True, help="llama.cpp runtime dir (llama-quantize/imatrix/perplexity)")
+    cal_parser.add_argument("--eval-data", required=True, help="Directory with the five frozen eval slices")
+    cal_parser.add_argument("--out-dir", required=True, help="Calibration Bundle output directory")
+    cal_parser.add_argument("--model-id", required=True, help="Exact-model identifier for the guard/registry entry")
+    cal_parser.add_argument("--imatrix", default=None, help="Reuse an existing imatrix GGUF instead of generating")
+    cal_parser.add_argument("--chunks", type=int, default=500)
+    cal_parser.add_argument("--extra-presets", default="", help="Comma-separated extra ladder presets")
+    cal_parser.add_argument("--probe-budget", type=int, default=4, help="Gap probes per tier (contract max 4)")
+    cal_parser.add_argument("--n-gpu-layers", type=int, default=99)
+    cal_parser.add_argument("--threads", type=int, default=16)
+    cal_parser.add_argument("--workdir", default=None, help="Scratch dir (default tmpfs; A2 execution profile)")
+    cal_parser.add_argument("--on-disk", action="store_true", help="Keep scratch next to the bundle instead of tmpfs (A2)")
+    cal_parser.add_argument("--contract", default=None, help="Calibration contract JSON (default: packaged fidelity-calibration-v1)")
+    cal_parser.add_argument("--replay-existing", default=None, help="Zero-eval mode: re-derive from a recorded curve-points/summary JSON")
+    cal_parser.add_argument("--replay-manifest", default=None, help="Artifact manifest (name/size/sha) for replay dedup keys")
+    registry_parser = subparsers.add_parser(
+        "registry",
+        help="Fidelity Registry v1: list/show/verify/validate (read-only product CLI; "
+        "official registry changes are a maintainer/release workflow)",
+    )
+    registry_sub = registry_parser.add_subparsers(dest="registry_command", required=True)
+    registry_sub.add_parser("list", help="List registry entries (including candidates)")
+    show = registry_sub.add_parser("show", help="Show one entry by source SHA or model id")
+    show.add_argument("target", help="64-hex source weights SHA or model id")
+    registry_sub.add_parser("verify", help="Full structural + hash + cross-object verification")
+    val = registry_sub.add_parser("validate", help="Validate a Calibration Bundle (read-only)")
+    val.add_argument("bundle", help="Calibration Bundle directory")
     fs_parser = subparsers.add_parser(
         "fidelity-search",
         help=(
@@ -168,6 +204,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--threads", type=int, default=16, help="Evaluator threads (default 16)"
     )
     fs_parser.add_argument(
+        "--n-gpu-layers", type=int, default=99,
+        help="A2 execution profile: layers offloaded to GPU during evaluation"
+    )
+    fs_parser.add_argument(
         "--seed-prefix",
         default=None,
         help="Manifest/log name prefix for prior points (default: <model-name>-)",
@@ -201,6 +241,85 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _run(args: argparse.Namespace) -> int:
+    if args.command == "calibrate":
+        from fit_gguf.calibrate import CalibrateConfig, run_calibrate
+
+        cfg = CalibrateConfig(
+            source=Path(args.source),
+            imatrix_corpus=Path(args.imatrix_corpus),
+            runtime_dir=Path(args.runtime),
+            eval_data_dir=Path(args.eval_data),
+            out_dir=Path(args.out_dir),
+            model_id=args.model_id,
+            imatrix_path=Path(args.imatrix) if args.imatrix else None,
+            chunks=args.chunks,
+            n_gpu_layers=args.n_gpu_layers,
+            threads=args.threads,
+            workdir=Path(args.workdir) if args.workdir else None,
+            on_disk=args.on_disk,
+            extra_presets=[x.strip() for x in args.extra_presets.split(",") if x.strip()],
+            probe_budget=args.probe_budget,
+            contract_path=Path(args.contract) if args.contract else None,
+            log_dir=Path(args.out_dir) / "logs",
+        )
+        if args.replay_existing:
+            if not args.replay_manifest:
+                print("fit: error: --replay-existing needs --replay-manifest", file=sys.stderr)
+                return 2
+            cfg.replay_existing = args.replay_existing
+            cfg.replay_manifest = args.replay_manifest
+            result = run_calibrate(cfg)
+            report = result["report"]
+            print(f"replay overall={report['overall_status']} failures={report['open_failures']}")
+            for tier, tr in report["tiers"].items():
+                print(f"  {tier:<9} n={tr['sample_count']} floor={tr['floor']} "
+                      f"method={tr['floor_method']} witness={'Y' if tr['witness'] else 'N'} "
+                      f"-> {tr['validation_status']}"
+                      + (f" [{tr['failure']}]" if tr.get("failure") else ""))
+            return 0 if not report["open_failures"] else 3
+        result = run_calibrate(cfg)
+        report = result["report"]
+        print(f"calibration complete: overall={report['overall_status']} "
+              f"failures={report['open_failures'] or 'none'}")
+        print(f"bundle: {result.get('bundle', args.out_dir)}")
+        return 0 if report["overall_status"] == "validated" else 3
+
+    if args.command == "registry":
+        from fit_gguf import registry as reg
+
+        if args.registry_command == "list":
+            index = reg.load_index(reg.find_package_dir(None))
+            for row in index["entries"]:
+                print(f"{row['source_weights_sha256']}  {row['status']:<10} {row['model_id']}")
+            print(f"{len(index['entries'])} entries — "
+                  "verify = integrity only, NOT official-authenticity attestation")
+            return 0
+        if args.registry_command == "show":
+            index = reg.load_index(reg.find_package_dir(None))
+            target = args.target.lower()
+            rows = [r for r in index["entries"] if r["source_weights_sha256"] == target
+                    or r["model_id"] == args.target]
+            if not rows:
+                print(f"fit: error: no registry entry matches {args.target!r}", file=sys.stderr)
+                return 2
+            for row in rows:
+                entry = reg.load_entry(reg.find_package_dir(None), row["source_weights_sha256"], index)
+                print(json.dumps(entry, indent=1, ensure_ascii=False, sort_keys=True))
+            if len(rows) > 1:
+                print(f"{len(rows)} candidates — refine by source SHA (model_id is not a unique key)")
+            return 0
+        if args.registry_command == "verify":
+            report = reg.verify_registry(reg.find_package_dir(None))
+            for row in report["entries_verified"]:
+                print(f"OK  {row['source_weights_sha256']}  {row['model_id']}  floors={row['floors']}")
+            print(report["note"])
+            return 0
+        if args.registry_command == "validate":
+            report = reg.validate_bundle(args.bundle)
+            print(f"bundle admissible: {report['model_id']} ({report['status']})")
+            print(report["note"])
+            return 0
+
     if args.command == "analyze":
         analysis_path = analyze(
             args.source,
@@ -295,6 +414,7 @@ def _run(args: argparse.Namespace) -> int:
             tolerance_mib=args.tolerance_mib,
             output=args.output,
             threads=args.threads,
+            n_gpu_layers=args.n_gpu_layers,
             imatrix_arg=args.imatrix,
             hash_sources=not args.skip_hash,
             seed_prefix=args.seed_prefix,
@@ -349,10 +469,12 @@ def main(argv: list[str] | None = None) -> int:
     from fit_gguf.eval.provenance import EvalProvenanceError
     from fit_gguf.fidelity import GuardProfileError
     from fit_gguf.product import ProductError
+    from fit_gguf.registry import RegistryError
+    from fit_gguf.calibration import CalibrationError
 
     try:
         return _run(args)
-    except (PipelineError, GuardProfileError, ProductError, EvalProvenanceError) as error:
+    except (PipelineError, GuardProfileError, ProductError, EvalProvenanceError, RegistryError, CalibrationError) as error:
         print(f"fit: error: {error}", file=sys.stderr)
         return 2
 

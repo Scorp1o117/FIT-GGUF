@@ -68,6 +68,10 @@ class RunnerConfig:
     guard_registry: Path | None
     refine_profile: Path | None
     threads: int = 16
+    # A2 Execution Profile: GPU offload is an execution parameter, not an
+    # evaluator-semantics one (planner verdict p1-era; provenance RECORDED,
+    # semantics REQUIRED, equivalence VERIFIED)
+    n_gpu_layers: int = 99
     # release-gate hardening: when require_eval_provenance is set the executor
     # refuses to run a single evaluation unless the frozen eval-v1 closure
     # (contract digest + reference .kld SHAs + corpus SHAs) was verified and
@@ -348,7 +352,7 @@ class SearchExecutor:
                         str(self.config.runtime / "llama-perplexity"),
                         "-m", str(artifact),
                         "-f", str(slice_file),
-                        "-ngl", "99",
+                        "-ngl", str(self.config.n_gpu_layers),
                         "-t", str(self.config.threads),
                         "-c", "512", "-b", "512",
                         "--kl-divergence",

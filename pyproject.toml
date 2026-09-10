@@ -31,3 +31,6 @@ testpaths = ["tests"]
 norecursedirs = ["third_party", "test-Models", ".git"]
 pythonpath = ["src"]
 addopts = "-p no:cacheprovider"
+
+[tool.setuptools.package-data]
+fit_gguf = ["registry/**/*.json", "profiles/guard/*.yaml"]

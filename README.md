@@ -200,7 +200,7 @@ fit fidelity-search \
   --runtime /path/to/llama.cpp/bin \
   --refs-dir refs/bf16 \
   --eval-data-dir eval-slices \
-  --guard-registry profiles/guard \
+  --guard-registry src/fit_gguf/profiles/guard \
   --tier compact \
   --preset-ladder IQ2_XXS,IQ2_M,IQ3_XXS,IQ3_XS,IQ3_S,IQ3_M,IQ4_XS \
   --manifest work/manifest.txt \
