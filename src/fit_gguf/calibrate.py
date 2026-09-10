@@ -108,6 +108,88 @@ def ref_ok(path: Path) -> bool:
         return False
 
 
+# ------------------------------------------------- hot-loop filesystem guard
+
+# Filesystems whose buffered-write path is known to panic this kernel when fed
+# the write pattern llama.cpp produces.
+UNSAFE_HOT_LOOP_FSTYPES = frozenset({"ntfs3"})
+
+
+def mount_fs_type(path: Path) -> str | None:
+    """Filesystem type of the mount containing ``path`` (longest-prefix match)."""
+    target = Path(path)
+    try:
+        target = target.resolve() if target.exists() else Path(os.path.abspath(target))
+    except OSError:
+        target = Path(os.path.abspath(target))
+    best: tuple[int, str] | None = None
+    try:
+        mounts = Path("/proc/mounts").read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    for line in mounts.splitlines():
+        parts = line.split()
+        if len(parts) < 3:
+            continue
+        mount_point = Path(parts[1].replace("\\040", " "))
+        if mount_point == target or mount_point in target.parents:
+            depth = len(mount_point.parts)
+            if best is None or depth > best[0]:
+                best = (depth, parts[2])
+    return best[1] if best else None
+
+
+def assert_hot_loop_fs_safe(paths: dict[str, Path]) -> None:
+    """Refuse to run the hot loop on a filesystem with a known write-path panic.
+
+    ``_run`` redirects the llama.cpp subprocess's stderr straight into a log
+    file. llama.cpp logs to stderr unbuffered, so that produces short, unaligned,
+    page-spanning buffered writes — and on ntfs3 those trip
+    ``kernel BUG at fs/iomap/buffered-io.c:1061`` in ``iomap_write_end``, taking
+    the whole machine down (observed 2026-09-06 ×2 and 2026-09-10, every time
+    with ``llama-quantize`` or ``llama-perplexity`` as the writing process).
+
+    Bulk copies issued by ``cp``/``shutil`` to the same volume are unaffected,
+    so the hot loop stages into the scratch volume and publishes afterwards.
+    Set ``FIT_ALLOW_UNSAFE_FS=1`` to override (at your own risk).
+    """
+    if os.environ.get("FIT_ALLOW_UNSAFE_FS") == "1":
+        return
+    unsafe = {
+        name: f"{path} ({mount_fs_type(path)})"
+        for name, path in paths.items()
+        if mount_fs_type(path) in UNSAFE_HOT_LOOP_FSTYPES
+    }
+    if unsafe:
+        raise CalibrationError(
+            "HOT_LOOP_FS_UNSAFE: refusing to point subprocess logs/references at "
+            f"a filesystem with a known write-path kernel BUG: {unsafe}. "
+            "Use a tmpfs scratch (default /dev/shm, or --workdir /dev/shm/...), "
+            "or set FIT_ALLOW_UNSAFE_FS=1 to override."
+        )
+
+
+def publish_tree(src_dir: Path, dst_dir: Path, pattern: str) -> list[str]:
+    """Bulk-copy ``src_dir``/``pattern`` into ``dst_dir`` (safe on ntfs3).
+
+    Only files that are missing or differ in size are copied, so a resumed run
+    does not re-copy an already-published tree. Returns published file names.
+    """
+    if not src_dir.is_dir():
+        return []
+    dst_dir.mkdir(parents=True, exist_ok=True)
+    published: list[str] = []
+    for src in sorted(src_dir.glob(pattern)):
+        if not src.is_file():
+            continue
+        dst = dst_dir / src.name
+        if dst.exists() and dst.stat().st_size == src.stat().st_size:
+            continue
+        shutil.copyfile(src, dst)
+        published.append(src.name)
+    return published
+
+
 # -------------------------------------------------------------- observations
 
 
@@ -630,7 +712,6 @@ def replay_existing(cfg: CalibrateConfig, observations_path: Path,
 
 def run_calibrate(cfg: CalibrateConfig) -> dict:
     cfg.out_dir.mkdir(parents=True, exist_ok=True)
-    cfg.log_dir.mkdir(parents=True, exist_ok=True)
     env = _runtime_env(cfg.runtime_dir)
 
     if cfg.replay_existing is not None:
@@ -655,12 +736,31 @@ def run_calibrate(cfg: CalibrateConfig) -> dict:
     work.mkdir(parents=True, exist_ok=True)
     cfg.workdir = work
 
+    # The hot loop emits two things the subprocesses write themselves: their own
+    # log output (llama.cpp logs to stderr unbuffered → short unaligned writes)
+    # and, on a fresh model, the reference logits. Both stay on the scratch
+    # volume and are published into the bundle once the run is done — see
+    # assert_hot_loop_fs_safe for the panic this avoids.
+    if cfg.log_dir is None:
+        cfg.log_dir = work / "logs"
+    cfg.log_dir.mkdir(parents=True, exist_ok=True)
+    scratch_refs = work / "references"
+    published_refs = cfg.out_dir / "references"
+    assert_hot_loop_fs_safe({"logs": cfg.log_dir, "references": scratch_refs})
+
+    # Reading an already-published bundle is safe, so reuse verified references
+    # from a previous run instead of regenerating them.
+    if published_refs.is_dir():
+        for ref in sorted(published_refs.glob("bf16-*.kld")):
+            if ref_ok(ref):
+                publish_tree(published_refs, scratch_refs, ref.name)
+
     source_sha = sha256_file(cfg.source)
     cfg.log(f"source {cfg.source.name} sha={source_sha[:16]}…")
 
     imx = stage_generate_imatrix(cfg, env)
     missing = stage_imatrix_coverage(cfg, imx)
-    refs_dir = cfg.out_dir / "references"
+    refs_dir = scratch_refs
     domains = stage_references(cfg, env, refs_dir)
     observations = stage_ladder(cfg, env, imx, refs_dir, missing)
     new_obs, unresolved = stage_gap_probes(
@@ -678,6 +778,12 @@ def run_calibrate(cfg: CalibrateConfig) -> dict:
             evaluation["tiers"][tier]["validation_status"] = "candidate"
         evaluation["open_failures"] = sorted(set(evaluation["open_failures"]) | {"INSUFFICIENT_WINDOW"})
         evaluation["overall_status"] = "candidate"
+
+    # Publish scratch → bundle. These are bulk copies from this process, which
+    # do not reproduce the subprocess write pattern the guard above rejects.
+    publish_tree(refs_dir, published_refs, "bf16-*.kld")
+    if cfg.log_dir.resolve() != (cfg.out_dir / "logs").resolve():
+        publish_tree(cfg.log_dir, cfg.out_dir / "logs", "*.log")
 
     imx_copy = cfg.out_dir / "calibration-imatrix.gguf"
     if not (imx_copy.exists() and imx_copy.samefile(imx)):

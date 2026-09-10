@@ -128,6 +128,13 @@ def _build_parser() -> argparse.ArgumentParser:
     cal_parser.add_argument("--n-gpu-layers", type=int, default=99)
     cal_parser.add_argument("--threads", type=int, default=16)
     cal_parser.add_argument("--workdir", default=None, help="Scratch dir (default tmpfs; A2 execution profile)")
+    cal_parser.add_argument(
+        "--log-dir", default=None,
+        help="Subprocess log directory. Default: inside the scratch volume, then "
+             "published into <out-dir>/logs at the end. Do not point this at an "
+             "ntfs3 mount: llama.cpp's unbuffered stderr redirected onto ntfs3 "
+             "panics this kernel (see calibrate.assert_hot_loop_fs_safe).",
+    )
     cal_parser.add_argument("--on-disk", action="store_true", help="Keep scratch next to the bundle instead of tmpfs (A2)")
     cal_parser.add_argument("--contract", default=None, help="Calibration contract JSON (default: packaged fidelity-calibration-v1)")
     cal_parser.add_argument("--replay-existing", default=None, help="Zero-eval mode: re-derive from a recorded curve-points/summary JSON")
@@ -260,7 +267,7 @@ def _run(args: argparse.Namespace) -> int:
             extra_presets=[x.strip() for x in args.extra_presets.split(",") if x.strip()],
             probe_budget=args.probe_budget,
             contract_path=Path(args.contract) if args.contract else None,
-            log_dir=Path(args.out_dir) / "logs",
+            log_dir=Path(args.log_dir) if args.log_dir else None,
         )
         if args.replay_existing:
             if not args.replay_manifest:
