@@ -24,9 +24,14 @@ Onboard a new model with one command, and make the trust root inspectable.
   calibration contract: window rule, n ≥ 3 sample minimum, artifact-SHA dedup
   key, P5 floor derivation with decimal truncation, promotion rule and
   failure-state enumeration.
-- **Fidelity Registry v1** trust root under `src/fit_gguf/registry/`, seeded with
-  two entries: `orcarouter-Qwen3.8-27B-Uncensored` and
-  `spark-x25-4b-abliterated`.
+- **Fidelity Registry v1** trust root under `src/fit_gguf/registry/`, with three
+  entries: `orcarouter-Qwen3.8-27B-Uncensored`, `spark-x25-4b-abliterated` and —
+  onboarded end-to-end by a single `fit calibrate` command as the v0.3
+  acceptance run — `Qwen3-4B` (source `f3e9d463…`, ~38 min, 12-preset ladder,
+  gap probes within the 4-per-tier budget, `overall=validated`). That run also
+  confirms the H-M3-02 capacity expectation directionally: at equal KL, top-1
+  agreement sits below the 27B sibling in all four tiers
+  (quality −3.56 pt, balanced −3.06 pt, compact −4.24 pt, mini −1.43 pt).
 - **A2 execution profile** — `--n-gpu-layers`, `--threads`, `--workdir` and
   `--on-disk` across `calibrate` and the search executor; documented in
   `docs/execution-profile.md`.

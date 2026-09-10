@@ -1,0 +1,104 @@
+{
+ "schema": "fit.calibration_record.v1",
+ "contract_id": "fidelity-calibration-v1",
+ "calibration_contract_sha256": "455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47",
+ "model_id": "Qwen3-4B",
+ "created": "2026-09-10",
+ "inputs": {
+  "source_weights_sha256": "f3e9d4638e15b58e7cccda5ae8cc93c5eca1bd2c6105192adf7f04967d39f4bb",
+  "imatrix_corpus_sha256": "df82db0baebe0694385a254461db16f4aab48582fbc74eb33ecf5506ba5f7002",
+  "imatrix_chunks": 500,
+  "evaluator_contract_sha256": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+  "runtime_dir": "/run/media/s117/OS/FIT-GGUF/tools/llama-b10666-rocm"
+ },
+ "process": {
+  "imatrix_missing_matrices": [],
+  "unresolved_tiers": [],
+  "curve_points": 23
+ },
+ "derivation": {
+  "quality": {
+   "tier": "quality",
+   "anchor": 0.05,
+   "window": [
+    0.0425,
+    0.0575
+   ],
+   "sample_count": 3,
+   "floor": 0.9119,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "IQ4_XS",
+    "macro_kl": 0.044191400000000006,
+    "macro_same_top": 0.9227759999999999,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "balanced": {
+   "tier": "balanced",
+   "anchor": 0.1,
+   "window": [
+    0.085,
+    0.115
+   ],
+   "sample_count": 3,
+   "floor": 0.8812,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-balanced-1",
+    "macro_kl": 0.0954722,
+    "macro_same_top": 0.885268,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "compact": {
+   "tier": "compact",
+   "anchor": 0.15,
+   "window": [
+    0.1275,
+    0.1725
+   ],
+   "sample_count": 4,
+   "floor": 0.847,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-compact-1",
+    "macro_kl": 0.1459422,
+    "macro_same_top": 0.8608239999999999,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "mini": {
+   "tier": "mini",
+   "anchor": 0.2,
+   "window": [
+    0.17,
+    0.23
+   ],
+   "sample_count": 3,
+   "floor": 0.836,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-mini-1",
+    "macro_kl": 0.1715438,
+    "macro_same_top": 0.84666,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  }
+ },
+ "artifacts": {
+  "guard_profile_sha256": "eecc89ae8ecb0d495f8f94693e76572fd0b865de753a15f30d71ce0795d77686",
+  "reference_manifest_sha256": "e65d8a5401460fc59e444a4bc3f8c53e9bd1e2658f0a71b72206c64a97715bac",
+  "curve_points_sha256": "9002e08cde9049ccdc6eeca818d883b44bc3226bcffd5e6b99000c9bf1f12f9b"
+ },
+ "failures": [],
+ "overall_status": "validated"
+}

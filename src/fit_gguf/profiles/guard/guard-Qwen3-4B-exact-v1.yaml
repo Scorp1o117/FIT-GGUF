@@ -1,0 +1,65 @@
+calibration_contract: fidelity-calibration-v1
+calibration_contract_sha256: 455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47
+evaluator_contract: eval-v1
+generalization_scope: exact_model_only
+guard_profile_id: guard-Qwen3-4B-exact-v1
+guard_profile_version: 1
+scope:
+  identifier: Qwen3-4B
+  type: exact_model
+source_sha256: f3e9d4638e15b58e7cccda5ae8cc93c5eca1bd2c6105192adf7f04967d39f4bb
+status: validated
+tiers:
+  quality:
+    kl_anchor: 0.05
+    same_top_floor: 0.9119
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: IQ4_XS
+      macro_kl: 0.044191400000000006
+      macro_same_top: 0.9227759999999999
+      pass: true
+    validation_status: validated
+  balanced:
+    kl_anchor: 0.1
+    same_top_floor: 0.8812
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: probe-balanced-1
+      macro_kl: 0.0954722
+      macro_same_top: 0.885268
+      pass: true
+    validation_status: validated
+  compact:
+    kl_anchor: 0.15
+    same_top_floor: 0.847
+    floor_method: empirical_p5
+    sample_count: 4
+    witness:
+      point_id: probe-compact-1
+      macro_kl: 0.1459422
+      macro_same_top: 0.8608239999999999
+      pass: true
+    validation_status: validated
+  mini:
+    kl_anchor: 0.2
+    same_top_floor: 0.836
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: probe-mini-1
+      macro_kl: 0.1715438
+      macro_same_top: 0.84666
+      pass: true
+    validation_status: validated
+validation_basis: fidelity-calibration-v1
+confidence:
+  note: fidelity-calibration-v1 onboarding; floor_method/sample_count per tier
+  window_n:
+    quality: 3
+    balanced: 3
+    compact: 4
+    mini: 3
+profile_hash: 0e11bd6ecbd928bbd8ffce75f61b44ac4d9e9dedcc23d8fee52276a2eaad1890

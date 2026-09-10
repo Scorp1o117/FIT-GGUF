@@ -452,11 +452,24 @@ def _cli(capsys, *argv):
     return code, out
 
 
-def test_cli_list_shows_candidates_and_entries(capsys, tmp_path):
+def test_cli_list_shows_candidates_and_entries(capsys):
+    """The list must agree with the index — not with a frozen entry count.
+
+    Onboarding a model is a release workflow, so pinning "2 entries" here would
+    mean every future onboarding breaks this test. Assert the invariants that
+    matter instead: every index entry is listed, and the count matches.
+    """
     code, out = _cli(capsys, "registry", "list")
     assert code == 0
+
+    index = reg.load_index(reg.find_package_dir(None))
+    expected = {row["model_id"] for row in index["entries"]}
+    assert {"spark-x25-4b-abliterated", "orcarouter-Qwen3.8-27B-Uncensored"} <= expected
     assert "spark-x25-4b-abliterated" in out
-    assert "2 entries" in out
+    assert "orcarouter-Qwen3.8-27B-Uncensored" in out
+    assert f"{len(index['entries'])} entries" in out
+    for row in index["entries"]:
+        assert row["source_weights_sha256"] in out
 
 
 def test_cli_show_by_model_id(capsys):
