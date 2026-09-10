@@ -240,9 +240,16 @@ and resolution is platform-aware:
   and replayed on Windows — re-resolves from the recorded directory, so no
   re-analysis is needed.
 
-The full test suite needs `pytest` and `setuptools` (both are declared in
-`.[test]`, because the opt-in wheel smoke test builds with
-`--no-build-isolation`).
+The full test suite needs `pytest`, `setuptools` and `pip` (all three are
+declared in `.[test]`, because the opt-in wheel smoke test builds with
+`--no-build-isolation` — without isolation the build frontend and backend must
+both be importable from the test environment). A stdlib `python -m venv` ships
+pip; `uv venv` does not, so `uv pip install -e '.[test]'` installs it.
+
+Two tests in `test_gguf_traits_source.py` re-parse a pinned llama.cpp checkout at
+`third_party/llama.cpp/` and skip when it is absent. That path is gitignored, so
+a bare clone reports 214 passed / 2 skipped; a full development checkout reports
+216 passed.
 
 ## CLI workflow
 

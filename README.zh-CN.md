@@ -207,8 +207,14 @@ Linux 与 Windows 均受支持。`--runtime` 指向存放 llama.cpp 二进制的
   旧 analysis 文件——例如在 Linux 上生成、在 Windows 上重放——会按记录的
   目录重新解析，因此无需重新分析。
 
-运行完整测试套件需要 `pytest` 与 `setuptools`（二者已在 `.[test]` 中声明，
-因为可选的 wheel 冒烟测试使用 `--no-build-isolation` 构建）。
+运行完整测试套件需要 `pytest`、`setuptools` 与 `pip`（三者均已在 `.[test]` 中
+声明，因为可选的 wheel 冒烟测试使用 `--no-build-isolation` 构建——不隔离时，
+构建前端与后端都必须在测试环境里可导入）。stdlib 的 `python -m venv` 自带
+pip，`uv venv` 不带，因此 `uv pip install -e '.[test]'` 会把 pip 装上。
+
+`test_gguf_traits_source.py` 中有两个用例会重新解析 `third_party/llama.cpp/`
+下的钉定 llama.cpp 检出，缺失时跳过。该路径在 .gitignore 中，因此裸克隆报告
+214 passed / 2 skipped，完整的开发检出报告 216 passed。
 
 ## CLI 工作流
 

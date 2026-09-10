@@ -52,15 +52,22 @@ Windows support, and a checkout that reproduces the bytes it pins.
   parent decodes as UTF-8. Also fixed: the wheel smoke test assumed a venv's
   `bin/` (`Scripts/` on Windows), and `test_mount_fs_type_resolves_real_mounts`
   no longer requires `/dev/shm`.
-- `setuptools` joined the `test` extra: the opt-in wheel smoke test builds with
-  `--no-build-isolation`, so its build backend must be importable from the test
-  environment.
+- `setuptools` and `pip` joined the `test` extra: the opt-in wheel smoke test
+  builds with `--no-build-isolation`, so both the build backend and the build
+  frontend must be importable from the test environment. A stdlib
+  `python -m venv` ships pip, `uv venv` does not, so declaring it keeps both
+  documented setup paths equivalent. That test also no longer swallows its
+  subprocess stderr behind `check=True`: a missing dependency used to surface as
+  a bare `returned non-zero exit status 1`.
 
 ### Notes
 
-- 216 tests pass, 0 skipped on Windows (216 collected). The 7 tests that used to
-  require POSIX now pass on both platforms, and `tests/test_runtime_binary.py`
-  pins the candidate order for both platforms via the `_is_windows` probe.
+- 216 tests pass, 0 skipped in a full development checkout on Windows (216
+  collected). A bare clone reports 214 passed / 2 skipped: the two
+  `test_gguf_traits_source.py` cases re-parse a pinned llama.cpp checkout at the
+  gitignored `third_party/llama.cpp/`. The 7 tests that used to require POSIX now
+  pass on both platforms, and `tests/test_runtime_binary.py` pins the candidate
+  order for both platforms via the `_is_windows` probe.
 - Windows NTFS is unaffected by the `ntfs3` hot-loop guard: that bug is in the
   Linux driver, and `mount_fs_type()` correctly reports unknown without
   `/proc/mounts`.
