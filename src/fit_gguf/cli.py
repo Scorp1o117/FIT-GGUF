@@ -167,11 +167,16 @@ def _build_parser() -> argparse.ArgumentParser:
     fs_parser.add_argument("--refs-dir", required=True, help="Directory of bf16-<domain>.kld references")
     fs_parser.add_argument("--eval-data-dir", required=True, help="Directory of kl-eval domain slices")
     fs_parser.add_argument(
-        "--guard-registry", required=True, help="Guard Profile registry directory"
+        "--tier", required=True, choices=("quality", "balanced", "compact", "mini"),
+        help="Fidelity tier to satisfy (KL-only hard gate since v0.3)",
     )
     fs_parser.add_argument(
-        "--tier", required=True, choices=("quality", "balanced", "compact", "mini"),
-        help="Fidelity tier to satisfy",
+        "--guard-registry", default=None,
+        help="Optional Guard Profile registry. No longer required to name a tier: "
+             "the gate is the global KL anchor. When a validated profile covers "
+             "these exact weights, its Same-top floor is attached to the report "
+             "as an informational reference only. Default: packaged "
+             "fit_gguf/profiles/guard.",
     )
     fs_parser.add_argument(
         "--preset-ladder",

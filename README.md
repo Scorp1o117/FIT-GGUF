@@ -66,21 +66,27 @@ Additional release charts:
 
 ## v0.2: Fidelity tiers
 
-v0.2 adds **fidelity tiers** on top of exact-size planning. A tier is a dual
-hard gate:
+v0.2 adds **fidelity tiers** on top of exact-size planning.
 
-**PASS = macro KL ≤ tier limit ∧ Same-top ≥ validated model-specific Guard.**
+**PASS = macro KL ≤ tier limit.** Tier limits come from a frozen Global KL Core:
+`Quality` ≤ 0.05, `Balanced` ≤ 0.10, `Compact` ≤ 0.15, `Mini` ≤ 0.20, measured
+under the frozen eval-v1 protocol.
 
-- Tier KL limits come from a frozen Global KL Core: `Quality` ≤ 0.05,
-  `Balanced` ≤ 0.10, `Compact` ≤ 0.15, `Mini` ≤ 0.20, measured under the
-  frozen eval-v1 protocol.
-- The Same-top floor is resolved from a **Guard Profile** validated for the
-  exact model. With no validated profile, the CLI refuses to emit an official
-  tier instead of borrowing a floor from another model.
-
-`fit fidelity-search` then walks the healthy preset frontier (poison presets
+`fit fidelity-search` walks the healthy preset frontier (poison presets
 excluded), brackets the crossing, and returns the **minimum verified PASS** —
 not an extrapolation.
+
+> **Changed in v0.3 — the gate is KL only.** Through v0.2 a tier was a dual gate:
+> `macro KL ≤ tier limit` **and** `Same-top ≥` a model-specific floor from a
+> validated Guard Profile, with unvalidated models refused outright. A per-model
+> floor makes one tier name mean different things on different models, so v0.3
+> made the gate single-axis. Same-top agreement is still measured, reported and
+> archived on every point — and still shown against the model's calibrated floor
+> when one exists, as `same_top_reference` — but it never decides a verdict.
+> See [v0.3](#v03-calibration-and-the-registry).
+>
+> The tier table and its PASS/FAIL labels below are **v0.2 results under the v0.2
+> dual gate**: historical release records, not the current definition.
 
 ### Minimum Verified Size @ Fixed Fidelity
 
@@ -134,6 +140,25 @@ Release Gates                  6 / 6 PASS
 
 ## v0.3: Calibration and the Registry
 
+### The tier gate is one fixed number per tier
+
+| Tier | Hard gate (frozen eval-v1) |
+| --- | --- |
+| `Quality` | macro KL ≤ **0.05** |
+| `Balanced` | macro KL ≤ **0.10** |
+| `Compact` | macro KL ≤ **0.15** |
+| `Mini` | macro KL ≤ **0.20** |
+
+The anchors are global constants. Naming a tier is therefore a **fixed,
+model-independent, checkable target** — the same promise on every model, with
+no calibration prerequisite and no per-model threshold that quietly moves.
+
+Same-top agreement is measured and archived on every point, and shown against
+the model's calibrated floor when the registry has one (`same_top_reference`).
+It is **reference, not gate**: it never changes a verdict.
+
+### One command to onboard a model
+
 v0.2 could enforce a tier, but only once a model's Same-top floor existed.
 v0.3 turns that step into a product: a new model is onboarded by **one
 command**, with no model-specific scripting and no manual intervention.
@@ -158,13 +183,19 @@ It emits a **Calibration Bundle**: `calibration-record.json`,
 `profile-report.md`, a candidate `registry-entry.json`, `SHA256SUMS`, and the
 bundled `references/`.
 
-**Fail-closed, not best-effort.** A tier whose window cannot be filled reports
-`INSUFFICIENT_WINDOW` and stays `candidate`; floors are never borrowed from
-another model, the sample minimum is never relaxed, and search points are never
-back-filled into the floor set. `fit plan` refuses an unvalidated model rather
-than defaulting to a plausible-looking floor.
+**Fail-closed, not best-effort.** The calibration line reports what it actually
+measured: a tier whose window cannot be filled reports `INSUFFICIENT_WINDOW`
+and the guard stays `candidate`; floors are never borrowed from another model,
+the sample minimum is never relaxed, and search points are never back-filled
+into the floor set. A candidate guard is still a complete, auditable record —
+it simply is not a validated one.
 
-`fit registry` makes that trust root inspectable:
+Because the tier gate is KL-only, a `candidate` guard no longer blocks the
+product: `fit plan --fidelity-tier compact` works on a model with no registry
+entry at all, against the fixed global anchor. Calibrating is how you get the
+*reference* Same-top number and a registry entry, not a licence to name a tier.
+
+`fit registry` makes that record inspectable:
 
 ```bash
 fit registry list                    # entries + status
@@ -173,7 +204,9 @@ fit registry validate out/MyModel    # validate a Calibration Bundle
 ```
 
 Entries are keyed by **exact source-weights SHA-256**, not by model name: a
-Guard only claims to apply to the bytes it was calibrated on.
+Guard only claims to apply to the bytes it was calibrated on. The product path
+enforces the same binding unconditionally — quantizing weights that differ from
+the ones the references came from is refused rather than measured.
 
 ## Install
 

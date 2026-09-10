@@ -43,24 +43,45 @@ class FidelitySearchError(ValueError):
 
 @dataclass(frozen=True, slots=True)
 class TierContract:
-    """Dual hard gate for one fidelity tier."""
+    """One fidelity tier's hard gate.
+
+    **The gate is KL-only (v0.3).** A tier is satisfied when
+    ``macro KL <= kl_anchor`` under the frozen eval-v1 protocol. KL anchors are
+    global constants, so a tier is one fixed, comparable, model-independent
+    target — the whole point of naming a tier at all.
+
+    Same-top agreement is still measured, reported and archived on every point,
+    but it never changes a verdict: a per-model Same-top floor makes the same
+    tier name mean different things on different models.
+
+    ``same_top_reference`` carries an optional reference value for *reporting*
+    (typically the model's own calibrated floor from ``fit calibrate``), so a
+    report can show "top-1 91.34% vs this model's calibrated floor 93.16%"
+    without that comparison being a gate.
+    """
 
     tier: str
     kl_anchor: float
-    same_top_floor: float
+    same_top_reference: float | None = None
 
-    def passes(self, macro_kl: float, same_top: float) -> bool:
-        return macro_kl <= self.kl_anchor and same_top >= self.same_top_floor
+    def passes(self, macro_kl: float, same_top: float | None = None) -> bool:
+        """KL-only hard gate. ``same_top`` is accepted for call-site symmetry
+        and recording; it never affects the verdict."""
+        return macro_kl <= self.kl_anchor
 
-    def margins(self, macro_kl: float, same_top: float) -> tuple[float, float]:
-        """Normalized (M_kl, M_top); the smaller value is the active constraint."""
+    def margins(
+        self, macro_kl: float, same_top: float | None = None
+    ) -> tuple[float, float | None]:
+        """(M_kl, M_top_ref): M_kl is the binding margin; M_top_ref is
+        informational and ``None`` when no reference value is known."""
         m_kl = (self.kl_anchor - macro_kl) / self.kl_anchor
-        m_top = (same_top - self.same_top_floor) / (1.0 - self.same_top_floor)
-        return m_kl, m_top
+        if same_top is None or self.same_top_reference is None:
+            return m_kl, None
+        return m_kl, (same_top - self.same_top_reference) / (1.0 - self.same_top_reference)
 
-    def active_constraint(self, macro_kl: float, same_top: float) -> str:
-        m_kl, m_top = self.margins(macro_kl, same_top)
-        return "kl" if m_kl <= m_top else "same_top"
+    def active_constraint(self, macro_kl: float, same_top: float | None = None) -> str:
+        """Always ``"kl"``: the gate has a single axis since v0.3."""
+        return "kl"
 
 
 @dataclass(frozen=True, slots=True)

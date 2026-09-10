@@ -54,17 +54,25 @@ FIT-GGUF v0.1 有两条刻意分开的结论：
 
 ## v0.2：保真档位
 
-v0.2 在精确体积规划之上加入**保真档位（fidelity tiers）**。每个档位是一个双硬门：
+v0.2 在精确体积规划之上加入**保真档位（fidelity tiers）**。
 
-**PASS = macro KL ≤ 档位上限 ∧ Same-top ≥ 该模型已验证的 Guard 下限。**
+**PASS = macro KL ≤ 档位上限。** 档位上限来自冻结的 Global KL Core：
+`Quality` ≤ 0.05、`Balanced` ≤ 0.10、`Compact` ≤ 0.15、`Mini` ≤ 0.20，
+全部在冻结的 eval-v1 协议下测量。
 
-- 档位 KL 上限来自冻结的 Global KL Core：`Quality` ≤ 0.05、`Balanced` ≤ 0.10、
-  `Compact` ≤ 0.15、`Mini` ≤ 0.20，全部在冻结的 eval-v1 协议下测量。
-- Same-top 下限从**针对该确切模型验证过的 Guard Profile** 解析。没有已验证的
-  profile 时，CLI 直接拒绝出正式档位，而不是借用其他模型的下限。
-
-随后 `fit fidelity-search` 沿健康预设前沿搜索（毒预设自动排除）、夹住穿越点，
+`fit fidelity-search` 沿健康预设前沿搜索（毒预设自动排除）、夹住穿越点，
 返回**最小已验证 PASS**——不是外推值。
+
+> **v0.3 变更——门槛现在只看 KL。** v0.2 时期档位是双硬门：
+> `macro KL ≤ 档位上限` **且** `Same-top ≥ 该模型已验证 Guard 下限`，未验证的模型
+> 直接拒绝出档。但「按模型变的下限」会让同一个档位名在不同模型上含义不同，
+> 所以 v0.3 把门槛收敛为单轴。Same-top 一致率仍会在每个点上测量、上报并归档，
+> 当 registry 里有该模型的校准下限时也会以 `same_top_reference` 并列展示——
+> 但它是**参考，不是门槛**，永不改变判定。
+> 见 [v0.3：校准与注册表](#v03校准与注册表)。
+>
+> 下表的档位数据与 PASS/FAIL 标号是 **v0.2 在双门下测得的结果**，
+> 属历史发布记录，不是当前定义。
 
 ### Minimum Verified Size @ Fixed Fidelity（定保真最小已验证体积）
 
@@ -113,6 +121,23 @@ Release Gates                  6 / 6 PASS
 
 ## v0.3：校准与注册表
 
+### 档位门槛是每档一个固定数字
+
+| 档位 | 硬门槛（冻结 eval-v1） |
+| --- | --- |
+| `Quality` | macro KL ≤ **0.05** |
+| `Balanced` | macro KL ≤ **0.10** |
+| `Compact` | macro KL ≤ **0.15** |
+| `Mini` | macro KL ≤ **0.20** |
+
+锚点是全局常量，因此「命名一个档位」等于给出一个**固定、与模型无关、可验证的目标**
+——在任何模型上都是同一个承诺，不需要先校准，也没有会悄悄移动的按模型阈值。
+
+Same-top 一致率仍在每个点上测量并归档，当 registry 里有该模型的校准下限时以
+`same_top_reference` 并列展示。它是**参考，不是门槛**，永不改变判定。
+
+### 一条命令完成模型 onboarding
+
 v0.2 能执行档位门禁，但前提是该模型的 Same-top 地板已经存在。v0.3 把这一步变成产品：
 一个新模型用**单条命令**完成 onboarding，无需模型专用脚本、无需手工干预。
 
@@ -134,11 +159,16 @@ fit calibrate \
 `curve-points.jsonl`、`guard-profile.yaml`、`profile-report.md`、候选态
 `registry-entry.json`、`SHA256SUMS`，以及随包的 `references/`。
 
-**失败即拒绝，不做尽力而为。** 窗口填不满的档位报 `INSUFFICIENT_WINDOW` 并保持
-`candidate`；地板绝不从别的模型借用，样本下限绝不放松，Search 观测点绝不回填进地板集。
-`fit plan` 对未 validated 的模型直接拒绝，而不是默认一个看起来合理的地板。
+**失败即拒绝，不做尽力而为。** 校准线只如实上报它测到的东西：窗口填不满的档位报
+`INSUFFICIENT_WINDOW`，其 guard 保持 `candidate`；地板绝不从别的模型借用，样本下限绝不
+放松，Search 观测点绝不回填进地板集。candidate guard 依然是一份完整、可审计的记录——
+它只是没被验证而已。
 
-`fit registry` 让这个信任根可被检视：
+由于档位门槛只看 KL，candidate guard 不再阻塞产品：即便模型在 registry 里毫无记录，
+`fit plan --fidelity-tier compact` 也能对固定全局锚点正常工作。校准的意义在于拿到
+**参考用的** Same-top 数值与一条 registry 条目，而不是「获得命名档位的许可」。
+
+`fit registry` 让这份记录可被检视：
 
 ```bash
 fit registry list                    # 条目 + 状态
@@ -147,6 +177,7 @@ fit registry validate out/MyModel    # 校验一个 Calibration Bundle
 ```
 
 条目以**源权重精确 SHA-256** 为键，而不是模型名：一个 Guard 只声称适用于它被校准的那些字节。
+产品路径会**无条件**校验同一绑定——拿与被校准权重不符的模型去量化时直接拒绝，而不是照测。
 
 ## 安装
 

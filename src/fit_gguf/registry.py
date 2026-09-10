@@ -394,17 +394,30 @@ def resolve_source(
 def resolve_tier_contract(
     source_sha256: str, tier: str, package_dir: str | Path | None = None
 ):
-    """Registry-channel equivalent of ``fidelity_runner.resolve_contract``."""
+    """Registry-channel equivalent of ``fidelity_runner.resolve_contract``.
+
+    KL-only gate (v0.3): a model the registry does not know still gets a usable
+    tier contract, because the hard gate is the global KL anchor rather than a
+    per-model floor. When the registry does hold a validated entry for these
+    exact weights, its calibrated Same-top floor is attached as an informational
+    reference for reporting.
+    """
     from fit_gguf.fidelity_search import TierContract
 
     tier_key = tier.strip().lower()
     if tier_key not in KL_ANCHORS:
         raise GuardProfileError(f"unknown fidelity tier: {tier!r}")
-    resolved = resolve_source(source_sha256, package_dir)
+    reference: float | None = None
+    try:
+        resolved = resolve_source(source_sha256, package_dir)
+    except (GuardProfileError, RegistryError):
+        resolved = None
+    if resolved is not None:
+        reference = resolved.floor_for(tier_key)
     return TierContract(
         tier=tier_key,
         kl_anchor=KL_ANCHORS[tier_key],
-        same_top_floor=resolved.floor_for(tier_key),
+        same_top_reference=reference,
     )
 
 

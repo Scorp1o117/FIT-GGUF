@@ -303,6 +303,37 @@ def test_product_requires_freeze_path(tmp_path):
     assert "freeze_path" in str(excinfo.value)
 
 
+def test_product_refuses_source_weights_that_do_not_match_the_references(tmp_path):
+    """Contract v2: the source<->reference binding is unconditional.
+
+    Under Contract v1 this check only ran when a Guard pinned the weights. A
+    tier no longer requires a Guard, so the binding now stands on its own:
+    quantizing weights A against references built from weights B yields
+    meaningless KL numbers and must never be silently accepted.
+    """
+    from fit_gguf.product import fidelity_search_product
+
+    freeze, manifest, refs, data = _write_synth_inputs(tmp_path)
+    source = tmp_path / "other-BF16.gguf"
+    source.write_bytes(b"not the weights these references came from")
+
+    with pytest.raises(EvalProvenanceError, match="disagree on the BF16 weights"):
+        fidelity_search_product(
+            source=str(source),
+            imatrix="i.gguf",
+            runtime="rt",
+            refs_dir=refs,
+            eval_data_dir=data,
+            tier="compact",
+            out_dir=str(tmp_path / "out"),
+            work_dir=str(tmp_path / "work"),
+            manifest_path=str(tmp_path / "m.txt"),
+            logs_dir=str(tmp_path / "logs"),
+            freeze_path=str(freeze),
+            reference_manifest_path=str(manifest),
+        )
+
+
 def test_provenance_rejects_manifest_pinned_to_other_contract(tmp_path):
     freeze, manifest, refs, data = _write_synth_inputs(tmp_path)
     payload = json.loads(manifest.read_text())
@@ -404,7 +435,7 @@ def test_fresh_probe_with_pinned_guard_and_verified_provenance(tmp_path, monkeyp
         lower_preset="IQ3_XS", upper_preset="IQ3_S",
         lower_size=11 * 1024**3, upper_size=int(11.6 * 1024**3),
     )]
-    contract = TierContract(tier="balanced", kl_anchor=0.10, same_top_floor=0.9118)
+    contract = TierContract(tier="balanced", kl_anchor=0.10, same_top_reference=0.9118)
     summary = runner_module.run_tier_search(
         contract, config, windows, seeds=(),
         min_size=windows[0].lower_size, max_size=windows[0].upper_size,

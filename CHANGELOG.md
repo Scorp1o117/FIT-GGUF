@@ -35,6 +35,28 @@ Onboard a new model with one command, and make the trust root inspectable.
 
 ### Changed
 
+- **The fidelity tier gate is now KL only (Fidelity Contract v2).**
+  `PASS = macro KL ≤ tier anchor`; the anchors stay the frozen global constants
+  (`Quality` 0.05 / `Balanced` 0.10 / `Compact` 0.15 / `Mini` 0.20), so a tier is
+  one fixed, comparable, model-independent target. Same-top agreement is still
+  measured, reported and archived on every point — and still shown against the
+  model's calibrated floor when the registry has one, now named
+  `same_top_reference` — but it never changes a verdict. Consequences:
+  - Naming a tier no longer requires a validated Guard Profile, so
+    `fit plan --fidelity-tier X` and `fit fidelity-search --tier X` work on a
+    model with no registry entry at all. `--guard-registry` is optional and, when
+    a profile does cover the exact weights, supplies the informational reference.
+  - On the two calibrated models the change is narrow: it moves the answer in
+    **1 of 4 tiers**. Spark-X2.5-4B `Quality` becomes 2.85 GiB instead of
+    3.15 GiB (−9.5%) with top-1 agreement 91.34% instead of 93.50% (−2.16 pt);
+    `Balanced`, `Compact` and `Mini` are unchanged.
+  - v0.2 tier results and their PASS/FAIL labels were produced under the v0.2
+    dual gate and remain as historical release records.
+  - Because the gate no longer rides on a Guard that pins weights, the
+    source-GGUF ↔ reference-manifest binding in the product path is now checked
+    **unconditionally**: quantizing weights that differ from the ones the
+    references were built from fails closed instead of silently producing
+    meaningless KL numbers.
 - Guard Profiles moved from the repo-level `profiles/guard/` into the package
   (`src/fit_gguf/profiles/guard/`) and are declared as package data, so a built
   wheel ships them. The v0.2 wheel shipped without them.

@@ -1,9 +1,20 @@
-"""Guard Profile artifacts for the Fidelity Contract v1 Same-top policy.
+"""Guard Profile artifacts: the model-calibrated Same-top reference layer.
 
-Contract v1 (planner-verdict-m3.md): the global KL Core is universal, but the
-Same-top threshold is resolved by a validated Guard Profile scoped to an exact
-model, a family, or an architecture. A model without a validated profile must
-not emit official Fidelity tiers — it requires onboarding calibration.
+Fidelity Contract v2 (v0.3, owner ruling): the **hard gate for a tier is KL
+only** — ``macro KL <= KL_ANCHORS[tier]`` under the frozen eval-v1 protocol, one
+global target that means the same thing on every model. Same-top agreement is
+measured and archived, but it is **reference, not gate**.
+
+This module keeps the Guard Profile artifacts and their resolution because they
+are still the honest per-model Same-top record produced by ``fit calibrate``:
+reports attach the calibrated floor as ``same_top_reference`` so a reader can see
+"top-1 91.34% vs this model's calibrated floor 93.16%" without that comparison
+deciding anything.
+
+Contract v1 behaviour (a validated profile being *mandatory* before a tier could
+be named, with unvalidated models refused) was retired in v0.3: it made one tier
+name mean different things on different models. ``require_guard_profile`` is kept
+for callers that explicitly want the old fail-closed check.
 """
 
 from __future__ import annotations

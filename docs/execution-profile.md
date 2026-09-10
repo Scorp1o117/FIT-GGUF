@@ -28,3 +28,37 @@ llama.cpp 全链 mmap 流式：BF16 超过 RAM/VRAM 时用 `--on-disk` + 调低 
 ## 4. 失败语义
 
 执行层失败（OOM/设备缺失/scratch 不足）→ `INPUT_DRIFT` 之外的执行态错误，fail-closed，禁止降级语义参数重试。
+
+## 5. 宿主文件系统约束（硬性红线）
+
+`calibrate._run` 把子进程的 stdout/stderr **文件描述符直接交给 llama.cpp**。llama.cpp
+的日志走**无缓冲 stderr**，fd 直写会在目标文件上产生大量**短、非对齐、跨页**的缓冲写。
+
+目标落在 `ntfs3` 上时，这会踩中内核 BUG 并**整机 panic**：
+
+```
+kernel BUG at fs/iomap/buffered-io.c:1061!
+RIP: iomap_write_end+0x1e0/0x1f0
+  iomap_write_iter → iomap_file_buffered_write
+  ntfs_file_write_iter [ntfs3] → vfs_write → ksys_write
+```
+
+实测三次（2026-09-06 ×2、2026-09-10 ×1），写入进程分别是 `llama-quantize` 与
+`llama-perplexity`；kdump 转储在 `/var/crash/<YYYYMMDDHHMM>/dmesg.*`。
+panic 还会冲掉该卷上的未落盘写入（曾丢失 git index 与分支引用）。
+
+**规则：**
+
+- 热循环写入目标（子进程日志、参照 logits、候选工件）**必须是 tmpfs**。
+  `--workdir` 默认已满足；不要把 `--on-disk` 指向 `ntfs3`。
+- 从 bundle **读取**参照不受影响；从 tmpfs 向 bundle 的**批量拷贝**
+  （`cp` / `shutil.copyfile`）也不受影响 —— 只有「子进程 fd 直写」会触发。
+- `assert_hot_loop_fs_safe()` 会对此 fail-closed 拒绝；`FIT_ALLOW_UNSAFE_FS=1`
+  可显式覆盖，仅在完全知情时使用。
+- 大模型建议连**源权重**也放 tmpfs（`--source /dev/shm/...`）：否则每个档位的
+  quantize 都要从慢卷重读一次完整源权重。bundle 只记录源权重 SHA-256，不记路径，
+  因此这样做不影响记录的可信度。
+
+**为什么 `pipeline.py` 不受影响**：`fit analyze/plan/quantize/fidelity-search` 用
+`subprocess.run(capture_output=True)` 捕获后在**本进程内**一次性写出日志，子进程
+从不持有文件描述符。两个模块若将来统一实现，应统一到 capture 形态，而不是反过来。

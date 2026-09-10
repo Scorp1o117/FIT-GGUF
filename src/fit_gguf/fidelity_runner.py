@@ -30,7 +30,7 @@ from pathlib import Path
 from fit_gguf.eval.contract import DOMAINS
 from fit_gguf.eval.provenance import EvalProvenance
 from fit_gguf.eval.results import parse_llama_kl_log
-from fit_gguf.fidelity import KL_ANCHORS, require_guard_profile
+from fit_gguf.fidelity import KL_ANCHORS, GuardProfileError, resolve_guard_profile
 from fit_gguf.fidelity_search import EvalOutcome, Seed, TierContract, fidelity_search
 from fit_gguf.pipeline import plan as pipeline_plan
 from fit_gguf.pipeline import quantize as pipeline_quantize
@@ -85,21 +85,34 @@ class RunnerConfig:
 def resolve_contract(
     model_name: str,
     tier: str,
-    guard_registry: str | Path,
+    guard_registry: str | Path | None = None,
     source_sha256: str | None = None,
 ) -> TierContract:
-    """Dual hard gate: frozen KL Core anchor + validated Guard Profile floor.
+    """KL-only tier contract, plus an informational Same-top reference.
 
-    Raises GuardProfileError (the CLI hard refusal) for unvalidated models.
-    Profiles that pin ``source_sha256`` match only the same weights digest —
-    callers that omit it are treated as unvalidated for such profiles.
+    Since v0.3 a tier does **not** require a validated Guard Profile: the hard
+    gate is the global KL anchor, so the same tier name means the same target on
+    every model. When a validated profile does cover these exact weights, its
+    Same-top floor is attached as ``same_top_reference`` for reporting only — it
+    never changes a verdict.
+
+    Profiles that pin ``source_sha256`` are matched only against the same weights
+    digest; a same-named model with different weights just has no reference.
     """
     tier_key = tier.strip().lower()
-    profile = require_guard_profile(model_name, tier_key, guard_registry, source_sha256)
+    if tier_key not in KL_ANCHORS:
+        raise GuardProfileError(
+            f"unknown fidelity tier: {tier!r} (expected {sorted(KL_ANCHORS)})"
+        )
+    reference: float | None = None
+    if guard_registry is not None:
+        profile = resolve_guard_profile(model_name, guard_registry, source_sha256)
+        if profile is not None:
+            reference = profile.floor_for(tier_key)
     return TierContract(
         tier=tier_key,
         kl_anchor=KL_ANCHORS[tier_key],
-        same_top_floor=profile.floor_for(tier_key),
+        same_top_reference=reference,
     )
 
 

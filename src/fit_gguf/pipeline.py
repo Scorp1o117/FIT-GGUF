@@ -673,22 +673,28 @@ def plan(
     resolved_model_name = model_name or default_model_name(str(payload["source"]["path"]))
     fidelity_note = None
     if fidelity_tier is not None:
-        # Fidelity Contract v1: a named tier requires a validated Guard Profile
-        # covering this model; unvalidated models are refused, never silently
-        # defaulted (planner-verdict-m3.md §5).
-        from fit_gguf.fidelity import require_guard_profile
+        # Fidelity Contract v2 (v0.3): a named tier is a KL-only hard gate — one
+        # global, model-independent target, so no Guard Profile is required to
+        # name a tier and unvalidated models are no longer refused. When a
+        # validated profile does cover these exact weights, its calibrated
+        # Same-top floor rides along as an informational reference only.
+        from fit_gguf.fidelity import KL_ANCHORS, resolve_guard_profile
         from fit_gguf.registry import default_guard_registry
 
+        tier_key = fidelity_tier.strip().lower()
+        if tier_key not in KL_ANCHORS:
+            raise PipelineError(
+                f"unknown fidelity tier: {fidelity_tier!r} "
+                f"(expected {sorted(KL_ANCHORS)})"
+            )
         registry = guard_registry or default_guard_registry()
-        profile = require_guard_profile(
-            resolved_model_name, fidelity_tier, registry, source_sha256
-        )
+        profile = resolve_guard_profile(resolved_model_name, registry, source_sha256)
         fidelity_note = {
-            "tier": fidelity_tier.strip().lower(),
-            "guard_profile_id": profile.profile_id,
-            "source_sha256": profile.source_sha256,
-            "same_top_floor": profile.floor_for(fidelity_tier.strip().lower()),
-            "kl_anchor": profile.kl_anchors[fidelity_tier.strip().lower()],
+            "tier": tier_key,
+            "kl_anchor": KL_ANCHORS[tier_key],
+            "same_top_reference": profile.floor_for(tier_key) if profile else None,
+            "guard_profile_id": profile.profile_id if profile else None,
+            "source_sha256": profile.source_sha256 if profile else None,
         }
     suggested = (
         suggested_filename(resolved_model_name, target, dominant) if dominant else None

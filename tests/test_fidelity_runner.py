@@ -16,7 +16,7 @@ from fit_gguf.fidelity_search import TierContract
 
 G = 1024**3
 
-CONTRACT = TierContract(tier="balanced", kl_anchor=0.10, same_top_floor=0.9118)
+CONTRACT = TierContract(tier="balanced", kl_anchor=0.10, same_top_reference=0.9118)
 
 _KL_HEADER = "====== KL divergence statistics ======"
 

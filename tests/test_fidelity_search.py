@@ -12,15 +12,16 @@ from fit_gguf.fidelity_search import (
     fidelity_search,
 )
 
-BALANCED = TierContract(tier="balanced", kl_anchor=0.10, same_top_floor=0.9118)
+BALANCED = TierContract(tier="balanced", kl_anchor=0.10, same_top_reference=0.9118)
 
 
-def _curve(crossing: float, slope: float = 0.02, top_floor=BALANCED.same_top_floor):
+def _curve(crossing: float, slope: float = 0.02, top_floor=BALANCED.same_top_reference):
     """Deterministic monotone executor: KL crosses `crossing` (GiB units).
 
     KL(size_gib) = slope * (crossing - size_gib) + kl_anchor/2 above the
     crossing (passing region) — i.e. KL decreases as size grows; same-top is
-    always comfortably above the floor so KL is the binding constraint.
+    always comfortably above the reference, so KL is the only thing that can
+    decide the verdict.
     """
 
     def evaluate(size_bytes: int) -> EvalOutcome:
@@ -147,7 +148,7 @@ def test_all_pass_within_range_reports_floor_note():
 
 def test_no_pass_anywhere():
     result = fidelity_search(
-        TierContract(tier="quality", kl_anchor=0.05, same_top_floor=0.9475),
+        TierContract(tier="quality", kl_anchor=0.05, same_top_reference=0.9475),
         _curve(14.0),
         seeds=(),
         min_size=int(12 * G),
@@ -210,11 +211,32 @@ def test_failed_eval_counts_budget_but_not_bracket():
     assert all(point.passed for point in result.points)
 
 
-def test_same_top_binding_constraint_reported():
-    contract = TierContract(tier="compact", kl_anchor=0.15, same_top_floor=0.8894)
-    m_kl, m_top = contract.margins(macro_kl=0.1465, same_top=0.8905)
-    assert contract.active_constraint(0.1465, 0.8905) == "same_top"
-    assert m_top < m_kl
+def test_gate_is_kl_only_and_same_top_is_reference_only():
+    """v0.3 Contract v2: Same-top never changes a verdict.
+
+    Uses the real Compact case from the v0.2 release: KL 0.1465 passes the 0.15
+    anchor while Same-top 0.8905 sits just above the model's calibrated 0.8894
+    floor. Under Contract v1 that was a Same-top binding constraint; under v2 the
+    KL anchor is the only gate, so ``active_constraint`` is always ``"kl"``.
+    """
+    contract = TierContract(tier="compact", kl_anchor=0.15, same_top_reference=0.8894)
+
+    # KL passes -> verdict is PASS regardless of Same-top.
+    assert contract.passes(macro_kl=0.1465, same_top=0.8905) is True
+    assert contract.passes(macro_kl=0.1465, same_top=0.50) is True
+    # Only the KL anchor can fail it.
+    assert contract.passes(macro_kl=0.1501, same_top=0.99) is False
+
+    assert contract.active_constraint(0.1465, 0.8905) == "kl"
+
+    # The calibrated floor is still reported as an informational margin.
+    m_kl, m_top_ref = contract.margins(macro_kl=0.1465, same_top=0.8905)
+    assert m_top_ref is not None and m_top_ref < m_kl
+
+    # With no reference value the informational margin is simply unavailable.
+    no_ref = TierContract(tier="mini", kl_anchor=0.20)
+    assert no_ref.margins(0.10, 0.90) == (pytest.approx(0.5), None)
+    assert no_ref.passes(0.10, 0.10) is True
 
 
 def test_audit_log_written():

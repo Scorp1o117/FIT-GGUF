@@ -204,7 +204,11 @@ def test_real_registry_verifies_and_resolves_spark():
 
 def test_real_dual_channel_contract_equality():
     """A3 acceptance: registry channel and legacy guard channel must produce
-    identical TierContract fields for orcarouter and spark, all four tiers."""
+    identical TierContract fields for orcarouter and spark, all four tiers.
+
+    Since Contract v2 the gate is KL-only; ``same_top_reference`` is the
+    informational field both channels must still agree on.
+    """
     for sha, name in ((SPARK_SHA, "spark-x25-4b-abliterated"),
                       (ORCA_SHA, "orcarouter-Qwen3.8-27B-Uncensored")):
         for tier in TIERS:
@@ -212,7 +216,20 @@ def test_real_dual_channel_contract_equality():
             via_legacy = resolve_contract(name, tier, reg.default_guard_registry(), sha)
             assert via_registry.kl_anchor == via_legacy.kl_anchor
             assert via_registry.tier == via_legacy.tier
-            assert via_registry.same_top_floor == via_legacy.same_top_floor
+            assert via_registry.same_top_reference == via_legacy.same_top_reference
+            assert via_registry.same_top_reference is not None
+
+
+def test_unregistered_source_still_gets_a_usable_tier_contract():
+    """v0.3: naming a tier no longer requires a validated Guard Profile.
+
+    The hard gate is the global KL anchor, so an unknown model gets a real
+    contract — just with no Same-top reference to report against.
+    """
+    contract = reg.resolve_tier_contract("f" * 64, "balanced")
+    assert contract.tier == "balanced"
+    assert contract.kl_anchor == 0.10
+    assert contract.same_top_reference is None
 
 
 def test_unknown_source_is_refused():

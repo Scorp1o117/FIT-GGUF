@@ -30,7 +30,6 @@ from fit_gguf.eval.provenance import (
     sha256_file,
     verify_eval_v1_provenance,
 )
-from fit_gguf.fidelity import GuardProfileError
 from fit_gguf.fidelity_runner import (
 
     DOMAINS,
@@ -158,7 +157,7 @@ def fidelity_search_product(
     runtime: str,
     refs_dir: str | Path,
     eval_data_dir: str | Path,
-    guard_registry: str | Path,
+    guard_registry: str | Path | None = None,
     tier: str,
     out_dir: str | Path,
     work_dir: str | Path,
@@ -213,21 +212,20 @@ def fidelity_search_product(
         refs_dir, eval_data_dir, freeze_path, reference_manifest_path
     )
 
-    try:
-        contract = resolve_contract(model_name, tier_key, guard_registry)
-        source_sha256 = None
-    except GuardProfileError:
-        # the registry pins weights for this model — bind the guard to the
-        # actual source GGUF before refusing (Codex audit: name-only binding
-        # would let a same-named different-weights GGUF inherit floors)
-        source_sha256 = sha256_file(source)
-        contract = resolve_contract(model_name, tier_key, guard_registry, source_sha256)
-    if source_sha256 is not None and provenance.source_bf16_gguf_sha256 != source_sha256:
+    # The references were generated from specific BF16 weights. Quantizing
+    # different weights against them yields meaningless KL numbers, so this
+    # binding is checked unconditionally — since Contract v2 it can no longer
+    # ride along on "a Guard pins the weights", because a tier no longer
+    # requires a Guard at all.
+    source_sha256 = sha256_file(source)
+    if provenance.source_bf16_gguf_sha256 != source_sha256:
         raise EvalProvenanceError(
-            "guard weights binding disagrees with the reference manifest: "
-            f"{source_sha256} != {provenance.source_bf16_gguf_sha256} — the "
-            "validated floors and the references belong to different weights"
+            "the source GGUF and the reference manifest disagree on the BF16 "
+            f"weights: {source_sha256} != {provenance.source_bf16_gguf_sha256} — "
+            "the references (and any calibrated Same-top floor) belong to "
+            "different weights"
         )
+    contract = resolve_contract(model_name, tier_key, guard_registry, source_sha256)
 
     if analysis_dirs:
         analysis_paths = [Path(p) for p in analysis_dirs]
@@ -270,7 +268,7 @@ def fidelity_search_product(
         work_dir=Path(work_dir),
         out_dir=Path(out_dir),
         model_name=model_name,
-        guard_registry=Path(guard_registry),
+        guard_registry=Path(guard_registry) if guard_registry else None,
         refine_profile=refine_profile,
         threads=threads,
         n_gpu_layers=n_gpu_layers,
