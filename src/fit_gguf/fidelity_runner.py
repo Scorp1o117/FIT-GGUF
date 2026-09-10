@@ -286,6 +286,7 @@ class SearchExecutor:
         self._delivered: dict[int, EvalOutcome] = {}  # delivered size -> outcome
         self._recipe_by_size: dict[int, Path] = {}  # delivered size -> tensor-types file
         self._analysis_by_size: dict[int, Path] = {}  # delivered size -> analysis dir
+        self._plan_by_size: dict[int, Path] = {}  # delivered size -> plan record
         self._known_sizes: set[int] = set(known_sizes)
         # probes outside (max_known_fail, min_known_pass) can never tighten the
         # bracket — the bump loop skips them to conserve eval budget
@@ -444,6 +445,9 @@ class SearchExecutor:
         self._delivered[actual] = outcome
         self._recipe_by_size[actual] = self.config.out_dir / f"{tag}-plan-tensor-types.txt"
         self._analysis_by_size[actual] = window.analysis_path
+        # the plan record carries this deliverable's naming evidence
+        # (lower_preset / selected_count / dominant_qtype)
+        self._plan_by_size[actual] = plan_prefix.with_name(plan_prefix.name + "-plan.json")
         if self._provenance_path is not None:
             _record_provenance_impl(
                 self._provenance_path, tag, window, actual,
@@ -607,6 +611,9 @@ def run_tier_search(
     }
     summary["artifact_analyses"] = {
         str(size): str(path) for size, path in sorted(executor._analysis_by_size.items())
+    }
+    summary["artifact_plans"] = {
+        str(size): str(path) for size, path in sorted(executor._plan_by_size.items())
     }
     summary_path = config.out_dir / f"fidelity-search-{contract.tier}-summary.json"
     summary_path.write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")

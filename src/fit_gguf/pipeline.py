@@ -7,6 +7,7 @@ GGUF and the pinned quantize.cpp behavior, so the same code runs on new models.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import asdict, replace
 from fractions import Fraction
 import hashlib
@@ -47,7 +48,7 @@ from fit_gguf.optimizer import (
 
 ANALYSIS_SCHEMA_VERSION = 1
 PLAN_SCHEMA_VERSION = 1
-FIT_GGUF_VERSION = "0.3.1"
+FIT_GGUF_VERSION = "0.3.2"
 # P6 amendment 3: counter shifts move the oracle's effective recipe in
 # whole-tensor steps; 3 rounds were not always enough to absorb them.
 ORACLE_MAX_ITERATIONS = 8
@@ -181,6 +182,29 @@ def suggested_filename(model_name: str, target_bytes: int, dominant_qtype: str) 
     else:
         label = f"{int(gib + 0.5) if gib >= 0.5 else 1}G"
     return f"{model_name}-FIT-{label}-{dominant_qtype.upper()}.gguf"
+
+
+def primary_type_from_plan(record: Mapping[str, object]) -> str | None:
+    """The artifact's PRIMARY TYPE, for the release file-name suffix.
+
+    A plan that selected no tensor-level override IS the window's lower preset
+    byte for byte, so the artifact is named for that preset (`Q6_K`, `Q4_K_M`,
+    …). Naming it for the element-weighted dominant type instead would
+    misdescribe the bytes it ships: the IQ3_M preset's dominant type is IQ3_S,
+    and Q4_K_M's is Q4_K.
+
+    Any plan that did override tensors is a FIT recipe — no native preset
+    produces those bytes — and is named for its element-weighted dominant type
+    (`Q4_K`, `IQ4_XS`, …), which is exactly the type whose parameters dominate
+    the file. Element weighting (never tensor count, never target size) is the
+    rule `qtype_parameter_distribution` encodes.
+    """
+    if int(record.get("selected_count") or 0) == 0:
+        preset = record.get("lower_preset")
+        if preset:
+            return str(preset).upper()
+    dominant = record.get("dominant_qtype")
+    return str(dominant).upper() if dominant else None
 
 
 def run_dry_run(

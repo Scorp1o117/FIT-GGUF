@@ -210,7 +210,11 @@ def _build_parser() -> argparse.ArgumentParser:
     fs_parser.add_argument("--manifest", required=True, help="Artifact manifest (appended)")
     fs_parser.add_argument("--logs-dir", required=True, help="Eval log directory (seeds are read from here)")
     fs_parser.add_argument(
-        "--output", default=None, help="Final artifact path (default: <model>-FIT-<TIER>-<size>GiB.gguf)"
+        "--output",
+        default=None,
+        help="Final artifact path (default: <model>-FIT-<TIER>-<size>GiB-<type>.gguf, "
+        "where <type> is the window's lower preset when the recipe overrides no "
+        "tensors, and the element-weighted dominant type of the FIT recipe otherwise)",
     )
     fs_parser.add_argument(
         "--threads", type=int, default=16, help="Evaluator threads (default 16)"

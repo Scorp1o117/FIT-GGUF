@@ -44,6 +44,7 @@ from fit_gguf.fidelity_runner import (
 )
 from fit_gguf.pipeline import PipelineError, analyze as pipeline_analyze
 from fit_gguf.pipeline import plan as pipeline_plan
+from fit_gguf.pipeline import primary_type_from_plan
 from fit_gguf.pipeline import quantize as pipeline_quantize
 
 BUDGETS = {"normal": 8, "precise": 16}
@@ -104,18 +105,24 @@ def _plan_exact_size(
     refine_profile: str | None,
     out_prefix: Path,
     max_steps: int = 40,
-) -> Path:
+) -> tuple[Path, dict]:
     """Find a byte target whose plan delivers exactly ``target_size``.
 
     plan() is a monotone piecewise-constant step function of the requested
     target (predicted <= requested, bounded by the full upper recipe), so a
     previously delivered size is reproducible by bisecting targets between
     the size itself and the window top until the step boundary is found.
+
+    Returns the plan prefix together with the accepted plan record: the
+    record is the naming evidence for the deliverable (lower preset,
+    override count, element-weighted dominant type).
     """
     low = target_size  # invariant: f(low) < target_size (plan undershoots at its own size)
     high = max(upper_bound, target_size + 1)  # invariant: f(high) >= target_size
+    last: dict | None = None
 
     def _try_plan(target: int) -> int | None:
+        nonlocal last
         try:
             record = pipeline_plan(
                 analysis_path,
@@ -127,6 +134,7 @@ def _plan_exact_size(
             )
         except PipelineError:  # target outside this window's plan range
             return None
+        last = record
         return int(record["predicted_size_bytes"])
 
     for _ in range(max_steps):
@@ -138,17 +146,60 @@ def _plan_exact_size(
             high = mid
             continue
         if predicted == target_size:
-            return out_prefix
+            return out_prefix, last  # type: ignore[return-value]
         if predicted < target_size:
             low = mid
         else:
             high = mid
     predicted = _try_plan(high)
     if predicted == target_size:
-        return out_prefix
+        return out_prefix, last  # type: ignore[return-value]
     raise ProductError(
         f"exact size {target_size:,} is not deliverable by this window's candidate ladder"
     )
+
+
+def artifact_filename(
+    model_name: str, tier: str, size_bytes: int, primary_type: str
+) -> str:
+    """Release file name: ``<model>-FIT-<TIER>-<size>GiB-<type>.gguf``.
+
+    The suffix always names what the file primarily is — see
+    ``primary_type_from_plan`` for how that is decided. The size renders with
+    two decimals from the delivered byte count, so the name states the size the
+    file actually occupies rather than the budget that was searched for.
+    """
+    return (
+        f"{model_name}-FIT-{tier.upper()}-{size_bytes / 1024**3:.2f}GiB-"
+        f"{primary_type}.gguf"
+    )
+
+
+def _plan_record_for(tensor_types: Path, result: dict, best_size: int) -> dict | None:
+    """Locate the plan record that produced a search-built deliverable.
+
+    Summaries written by this version name it directly (``artifact_plans``).
+    Earlier summaries are recovered from the tensor-types file name, which is
+    reliable because the search always writes ``{tag}-plan-plan.json`` beside
+    ``{tag}-plan-tensor-types.txt``.
+    """
+    candidates: list[Path] = []
+    named = (result.get("artifact_plans") or {}).get(str(best_size))
+    if named:
+        candidates.append(Path(named))
+    stem = "-plan-tensor-types.txt"
+    if tensor_types.name.endswith(stem):
+        candidates.append(
+            tensor_types.with_name(tensor_types.name[: -len(stem)] + "-plan-plan.json")
+        )
+    for candidate in candidates:
+        if not candidate.is_file():
+            continue
+        try:
+            return json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+    return None
 
 
 def fidelity_search_product(
@@ -308,17 +359,21 @@ def fidelity_search_product(
     recipe = (result.get("artifact_recipes") or {}).get(str(best_size))
     analysis_dir = Path((result.get("artifact_analyses") or {}).get(str(best_size))
                         or _best_analysis(best_size, windows))
+    plan_record: dict | None = None
     if recipe:
-        # the search itself produced this artifact's recipe — reuse verbatim
+        # the search itself produced this artifact's recipe — reuse verbatim.
+        # Its plan record sits beside that tensor-types file and is where the
+        # naming evidence lives.
         final_prefix = None
         tensor_types = Path(recipe)
+        plan_record = _plan_record_for(tensor_types, result, best_size)
     else:
         # seed-born answer: reproduce the recipe by bisecting plan targets
         window_upper = next(
             (w.upper_size for w in windows if Path(w.analysis_path) == analysis_dir),
             max(w.upper_size for w in healthy),
         )
-        final_prefix = _plan_exact_size(
+        final_prefix, plan_record = _plan_exact_size(
             analysis_dir / "analysis.json",
             best_size,
             window_upper,
@@ -327,9 +382,19 @@ def fidelity_search_product(
             out_prefix=Path(out_dir) / "final-plan",
         )
         tensor_types = Path(f"{final_prefix}-tensor-types.txt")
+    primary_type = primary_type_from_plan(plan_record) if plan_record else None
+    if primary_type is None:
+        # A deliverable whose primary type cannot be established would have to
+        # ship under a name that does not describe it. Refuse instead.
+        raise ProductError(
+            "cannot determine the primary type for "
+            f"{model_name}-FIT-{tier_key.upper()} at {best_size:,} bytes — "
+            "the plan record that carries lower_preset/selected_count/"
+            "dominant_qtype was not found"
+        )
     output_path = Path(output) if output else (
         Path(out_dir)
-        / f"{model_name}-FIT-{tier_key.upper()}-{best_size / 1024**3:.2f}GiB.gguf"
+        / artifact_filename(model_name, tier_key, best_size, primary_type)
     )
     record = pipeline_quantize(
         analysis_dir / "analysis.json",
@@ -374,7 +439,15 @@ def fidelity_search_product(
         "path": str(record["output_path"]),
         "size_bytes": int(record["size_bytes"]),
         "g2_delta": int(record["size_bytes"]) - int(record["refinalized_expected_bytes"]),
-        "naming": f"{model_name}-FIT-{tier_key.upper()}-<size>-<primary-qtype>.gguf",
+        "primary_type": primary_type,
+        "primary_type_source": (
+            "native preset (no tensor-level override)"
+            if int((plan_record or {}).get("selected_count") or 0) == 0
+            else "element-weighted dominant type of the FIT recipe"
+        ),
+        "naming": artifact_filename(
+            model_name, tier_key, best_size, "<primary-type>"
+        ),
         "search_tolerance_mib": tolerance_mib,
         "active_constraint": summary["active_constraint"],
         "healthy_frontier": True,

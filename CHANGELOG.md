@@ -4,9 +4,10 @@ All notable changes to FIT-GGUF. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.3.2] — 2026-09-10
 
-One freeze, every model; and no silent CPU evaluation.
+One freeze, every model; no silent CPU evaluation; and a release name that
+says what the file is.
 
 ### Fixed
 
@@ -28,6 +29,37 @@ One freeze, every model; and no silent CPU evaluation.
   Both evaluation hot loops (`calibrate._run`, `fidelity_runner._eval_domains`)
   now spawn `llama-perplexity` with that environment instead of inheriting one
   that may or may not be configured correctly.
+
+- **Delivered tiers carry their primary type in the file name.** The product
+  path emitted `<model>-FIT-<TIER>-<size>GiB.gguf` and dropped the type, even
+  though the record written beside it advertised `…-<size>-<primary-qtype>`:
+  the name and the promise disagreed. Tiers now ship as
+  `<model>-FIT-<TIER>-<size>GiB-<type>.gguf`. `<type>` is the window's **lower
+  preset** (`Q4_K_M`, `Q6_K`, …) when the recipe overrides no tensors, because
+  those bytes *are* that preset, and the element-weighted **dominant type**
+  (`Q4_K`, `IQ4_XS`, …) when it does, because then no native preset produces
+  those bytes. Naming the zero-override case for its dominant type would
+  misdescribe the file it ships — the IQ3_M preset's dominant type is IQ3_S.
+
+  `pipeline.primary_type_from_plan()` owns the rule; the search records each
+  deliverable's plan under `artifact_plans`, and summaries written before that
+  field existed are recovered from the plan record the search already writes
+  beside the tensor-types file. A deliverable whose primary type cannot be
+  established now fails instead of shipping under a name that does not describe
+  it.
+
+- **A preset that lands on a window boundary is reproduced from the side that
+  can reach it.** When a tier's answer is a native preset whose size is exactly
+  a boundary shared by two adjacent windows, `_best_analysis` took the first
+  window containing it — the one where that size is the **upper** bound.
+  Planning is upgrade-only from the window's lower preset, so the same preset is
+  exactly reproducible as a lower bound (recipe = that preset, zero upgrades)
+  but as an upper bound needs every upgrade in the window gap to fit, and the
+  tail of a gap usually admits none: the MINI tier failed with `exact size
+  1,226,310,752 is not deliverable by this window's candidate ladder` — 7,077,888
+  bytes short. `_best_analysis` now prefers the window whose **lower** bound
+  equals the answer. Interior points have exactly one containing window, so
+  their behaviour is unchanged.
 
 ### Changed
 
@@ -82,12 +114,16 @@ One freeze, every model; and no silent CPU evaluation.
 
 ### Notes
 
-- 221 tests pass, 1 skipped. New coverage pins the generalization: one freeze
+- 233 tests pass, 1 skipped. New coverage pins the generalization: one freeze
   accepts a second model's manifest while still refusing foreign weights,
   manifest discovery prefers the model bundle / falls back to the bootstrap
   layout / errors on absence or ambiguity, and a calibration bundle's own
   manifest + sidecar round-trip back through `load_seeds` into admissible seeds
-  (poison preset excluded, wrong reference manifest rejected).
+  (poison preset excluded, wrong reference manifest rejected). Naming is pinned
+  on both sides of the rule — a zero-override plan names its preset, an
+  overridden plan names its dominant type — together with the delivered-name
+  format and the plan-record lookup, including summaries written before
+  `artifact_plans` existed.
 
 ## [0.3.1] — 2026-09-10
 

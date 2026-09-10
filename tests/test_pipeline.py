@@ -399,6 +399,79 @@ def test_suggested_filename_rules():
     assert suggested_filename("M", 100, "q2_k") == "M-FIT-1G-Q2_K.gguf"
 
 
+def test_primary_type_names_the_native_preset_when_nothing_was_overridden():
+    """A zero-override plan IS the lower preset, so it is named for that preset.
+
+    The IQ3_M preset's element-weighted dominant type is IQ3_S; shipping those
+    bytes as `IQ3_S` would describe a recipe the file does not use.
+    """
+    from fit_gguf.pipeline import primary_type_from_plan
+
+    assert primary_type_from_plan(
+        {"selected_count": 0, "lower_preset": "IQ3_M", "dominant_qtype": "iq3_s"}
+    ) == "IQ3_M"
+    assert primary_type_from_plan(
+        {"selected_count": 0, "lower_preset": "Q4_K_M", "dominant_qtype": "q4_k"}
+    ) == "Q4_K_M"
+
+
+def test_primary_type_names_the_dominant_type_of_a_fit_recipe():
+    """Any overridden plan is a FIT recipe — no native preset ships those bytes."""
+    from fit_gguf.pipeline import primary_type_from_plan
+
+    assert primary_type_from_plan(
+        {"selected_count": 174, "lower_preset": "Q3_K_M", "dominant_qtype": "iq4_xs"}
+    ) == "IQ4_XS"
+    assert primary_type_from_plan(
+        {"selected_count": 67, "lower_preset": "Q4_K_M", "dominant_qtype": "q4_k"}
+    ) == "Q4_K"
+
+
+def test_primary_type_falls_back_and_gives_up_cleanly():
+    from fit_gguf.pipeline import primary_type_from_plan
+
+    # no lower preset recorded -> the dominant type is all we know
+    assert primary_type_from_plan({"selected_count": 0, "dominant_qtype": "q6_k"}) == "Q6_K"
+    # nothing to name it with
+    assert primary_type_from_plan({"selected_count": 0}) is None
+    assert primary_type_from_plan({"selected_count": 12}) is None
+    # a malformed/absent count must not crash the naming step
+    assert primary_type_from_plan({"selected_count": None, "lower_preset": "q8_0"}) == "Q8_0"
+
+
+def test_artifact_filename_carries_tier_size_and_primary_type():
+    from fit_gguf.product import artifact_filename
+
+    assert artifact_filename(
+        "minicpm5-2b-abliterated", "balanced", 1_378_067_552, "IQ4_XS"
+    ) == "minicpm5-2b-abliterated-FIT-BALANCED-1.28GiB-IQ4_XS.gguf"
+    # the size is the delivered byte count, not the searched-for budget
+    assert artifact_filename("m", "quality", 1_566_057_568, "Q4_K") == (
+        "m-FIT-QUALITY-1.46GiB-Q4_K.gguf"
+    )
+    assert artifact_filename("m", "mini", 1_226_310_752, "IQ3_M") == (
+        "m-FIT-MINI-1.14GiB-IQ3_M.gguf"
+    )
+
+
+def test_plan_record_lookup_prefers_the_named_field(tmp_path):
+    from fit_gguf.product import _plan_record_for
+
+    named = tmp_path / "named-plan.json"
+    named.write_text('{"selected_count": 3, "dominant_qtype": "q4_k"}', encoding="utf-8")
+    sibling = tmp_path / "tag-plan-plan.json"
+    sibling.write_text('{"selected_count": 0, "lower_preset": "IQ3_M"}', encoding="utf-8")
+    tensor_types = tmp_path / "tag-plan-tensor-types.txt"
+    tensor_types.write_text("^x$=q4_k\n", encoding="utf-8")
+
+    result = {"artifact_plans": {"100": str(named)}}
+    assert _plan_record_for(tensor_types, result, 100)["selected_count"] == 3
+    # older summaries carry no artifact_plans -> recovered from the sibling name
+    assert _plan_record_for(tensor_types, {}, 100)["lower_preset"] == "IQ3_M"
+    # neither present -> no naming evidence, and the caller must refuse
+    assert _plan_record_for(tmp_path / "other-tensor-types.txt", {}, 100) is None
+
+
 def test_default_model_name_strips_bf16_marker():
     from fit_gguf.pipeline import default_model_name
 
