@@ -111,6 +111,43 @@ R6 Reproducibility             PASS
 Release Gates                  6 / 6 PASS
 ```
 
+## v0.3：校准与注册表
+
+v0.2 能执行档位门禁，但前提是该模型的 Same-top 地板已经存在。v0.3 把这一步变成产品：
+一个新模型用**单条命令**完成 onboarding，无需模型专用脚本、无需手工干预。
+
+```bash
+fit calibrate \
+  --source model-BF16.gguf \
+  --imatrix-corpus corpus.txt \
+  --runtime /path/to/llama.cpp/bin \
+  --eval-data eval-slices \
+  --out-dir out/MyModel \
+  --model-id MyModel
+```
+
+`fit calibrate` 钉定输入，生成或复用 imatrix，构建五域对齐的 BF16 参照，遍历标准预设梯，
+每档最多消耗 **4 个空洞探针**，并在档位窗口 `W(K) = [0.85K, 1.15K]` 内推导地板
+（Quality .05 / Balanced .10 / Compact .15 / Mini .20）。
+
+它产出 **Calibration Bundle**：`calibration-record.json`、`reference-manifest.json`、
+`curve-points.jsonl`、`guard-profile.yaml`、`profile-report.md`、候选态
+`registry-entry.json`、`SHA256SUMS`，以及随包的 `references/`。
+
+**失败即拒绝，不做尽力而为。** 窗口填不满的档位报 `INSUFFICIENT_WINDOW` 并保持
+`candidate`；地板绝不从别的模型借用，样本下限绝不放松，Search 观测点绝不回填进地板集。
+`fit plan` 对未 validated 的模型直接拒绝，而不是默认一个看起来合理的地板。
+
+`fit registry` 让这个信任根可被检视：
+
+```bash
+fit registry list                    # 条目 + 状态
+fit registry verify                  # 结构 + 哈希 + 跨对象完整校验
+fit registry validate out/MyModel    # 校验一个 Calibration Bundle
+```
+
+条目以**源权重精确 SHA-256** 为键，而不是模型名：一个 Guard 只声称适用于它被校准的那些字节。
+
 ## 安装
 
 FIT-GGUF 需要 Python 3.11+ 和一个包含 `llama-quantize` 的兼容 llama.cpp 运行时。
@@ -190,6 +227,11 @@ fit fidelity-search \
 ≤ 16 次。若穿越点落在局部非单调区域，搜索会上报 `noise_inversion` 并保持失败
 关闭，而不是自动出货。
 
+### 5. 校准新模型并发布其 Guard（v0.3）
+
+步骤 4 需要该精确模型的已 validated Guard Profile。`fit calibrate` 负责产出它 ——
+见 [v0.3：校准与注册表](#v03校准与注册表)。
+
 ## 工作原理
 
 1. **锚定** — 选择预测体积不超过预算的最大受支持低档预设。
@@ -222,11 +264,18 @@ fit fidelity-search \
 
 ## 项目记录
 
+- `CHANGELOG.md` — 发布历史。
 - `DECISIONS.md` — 已接受与已拒绝的设计决策（D-0001..D-0024）。
 - `FINAL_REPORT.md` — v0.1 研究报告及其已验证论断。
 - `docs/llama-integration.md` — 对 llama.cpp 集成路径的核查记录。
-- `eval-data/PROVENANCE.md` — 五个预注册 KL 评测切片的来源、偏移与 SHA-256。
-- `experiments/` — 预注册实验记录（门禁先于执行冻结，结果如实记录）。
+- `docs/execution-profile.md` — 执行参数（GPU 卸载、线程、暂存位置）及其为何属于
+  溯源信息而非评测语义。
+- `eval-data/PROVENANCE.md` — 五个冻结 KL 评测切片的来源、偏移与 SHA-256。
+- `src/fit_gguf/contracts/fidelity-calibration-v1.json` — 机读校准合同（窗口规则、
+  样本下限、去重键、晋升规则、失败状态枚举），`fit calibrate` 与 `fit registry` 共同加载。
+- `src/fit_gguf/registry/` — Fidelity Registry v1 信任根：逐模型条目、校准记录、
+  清单与参照定位层。
+- `experiments/` — 实验记录：冻结输入、日志与机读结果。
 
 ## 许可证
 

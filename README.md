@@ -132,6 +132,49 @@ R6 Reproducibility             PASS
 Release Gates                  6 / 6 PASS
 ```
 
+## v0.3: Calibration and the Registry
+
+v0.2 could enforce a tier, but only once a model's Same-top floor existed.
+v0.3 turns that step into a product: a new model is onboarded by **one
+command**, with no model-specific scripting and no manual intervention.
+
+```bash
+fit calibrate \
+  --source model-BF16.gguf \
+  --imatrix-corpus corpus.txt \
+  --runtime /path/to/llama.cpp/bin \
+  --eval-data eval-slices \
+  --out-dir out/MyModel \
+  --model-id MyModel
+```
+
+`fit calibrate` pins its inputs, generates or reuses an imatrix, builds the
+five aligned BF16 references, walks a standard preset ladder, spends at most
+**4 gap probes per tier**, and derives the floors — all inside the tier windows
+`W(K) = [0.85K, 1.15K]` (Quality .05 / Balanced .10 / Compact .15 / Mini .20).
+
+It emits a **Calibration Bundle**: `calibration-record.json`,
+`reference-manifest.json`, `curve-points.jsonl`, `guard-profile.yaml`,
+`profile-report.md`, a candidate `registry-entry.json`, `SHA256SUMS`, and the
+bundled `references/`.
+
+**Fail-closed, not best-effort.** A tier whose window cannot be filled reports
+`INSUFFICIENT_WINDOW` and stays `candidate`; floors are never borrowed from
+another model, the sample minimum is never relaxed, and search points are never
+back-filled into the floor set. `fit plan` refuses an unvalidated model rather
+than defaulting to a plausible-looking floor.
+
+`fit registry` makes that trust root inspectable:
+
+```bash
+fit registry list                    # entries + status
+fit registry verify                  # structural + hash + cross-object verification
+fit registry validate out/MyModel    # validate a Calibration Bundle
+```
+
+Entries are keyed by **exact source-weights SHA-256**, not by model name: a
+Guard only claims to apply to the bytes it was calibrated on.
+
 ## Install
 
 FIT-GGUF requires Python 3.11+ and a compatible llama.cpp runtime containing
@@ -219,6 +262,11 @@ reproducibility. Search budgets: `--profile normal` ≤ 8 fresh evaluations,
 region the search reports `noise_inversion` and fails closed rather than
 delivering automatically.
 
+### 5. Calibrate a new model, then publish its Guard (v0.3)
+
+Step 4 needs a validated Guard Profile for the exact model. `fit calibrate`
+produces one — see [v0.3: Calibration and the Registry](#v03-calibration-and-the-registry).
+
 ## How it works
 
 1. **Anchor** — select the largest supported lower preset whose predicted
@@ -275,13 +323,21 @@ same serialized imatrix path string.
 
 ## Project records
 
+- `CHANGELOG.md` — release history.
 - `DECISIONS.md` — accepted and rejected design decisions (D-0001..D-0024).
 - `FINAL_REPORT.md` — the v0.1 research report and its validated claims.
 - `docs/llama-integration.md` — reviewed integration path through llama.cpp.
-- `eval-data/PROVENANCE.md` — sources, offsets and SHA-256 of the five
-  preregistered KL evaluation slices.
-- `experiments/` — preregistered experiment records (gates frozen before
-  execution, results recorded as measured).
+- `docs/execution-profile.md` — execution parameters (GPU offload, threads,
+  scratch placement) and why they are provenance, not evaluator semantics.
+- `eval-data/PROVENANCE.md` — sources, offsets and SHA-256 of the five frozen
+  KL evaluation slices.
+- `src/fit_gguf/contracts/fidelity-calibration-v1.json` — the machine-readable
+  calibration contract (window rule, sample minimum, dedup key, promotion rule,
+  failure-state enumeration) that `fit calibrate` and `fit registry` both load.
+- `src/fit_gguf/registry/` — the Fidelity Registry v1 trust root: per-model
+  entries, calibration records, manifests and the reference locator layer.
+- `experiments/` — experiment records: frozen inputs, logs and machine-readable
+  results.
 
 ## License
 
