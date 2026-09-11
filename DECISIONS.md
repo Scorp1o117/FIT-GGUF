@@ -537,3 +537,39 @@ Recorded only, per owner direction (2026-08-30: "先记录在项目里，之后
 preregistration and the D-0022/D-0023 standard of a fresh sealed third
 model for transfer validation; Huihui and orcarouter are development
 data from now on.
+
+## D-0025
+
+Title:
+Keep every capability the source model ships — never silently drop the MTP/NextN
+head, the vision tower, or any other auxiliary module.
+
+Decision (owner directive, 2026-09-11):
+"不要去掉mtp！以后也不要！FIT-GGUF里面记上，除非特别要求，否则保留原模型所有
+能力！" A FIT-GGUF source conversion and every artifact derived from it must carry
+the complete capability set of the model it was made from. Removing an auxiliary
+head is a *product* decision that requires an explicit owner request and an
+explicit record; it is never a default, never a convenience, and never a way to
+make a conversion load.
+
+Context:
+`convert_hf_to_gguf.py` derives `block_count` and `nextn_predict_layers` from the
+HF config, so a config that declares `mtp_num_hidden_layers = 1` yields
+`block_count = 41` plus `nextn = 1`. When the weights for that layer are absent the
+runtime then fails with `check_tensor_dims: tensor 'blk.40.attn_norm.weight' not
+found`. The tempting fix — `--no-mtp` — silently strips the declaration from the
+artifact and is forbidden by this decision.
+
+Consequences:
+- A source whose declarations and tensors disagree is an **input-drift condition**,
+  not a licence to drop the declaration. Resolve it by supplying the declared
+  weights, or by recording an owner-approved, explicitly-labelled exception.
+- Text-only exports are not valid FIT-GGUF sources for a multimodal model: the
+  project's own abliteration export path (`text_only = true`) drops the vision
+  tower, so a full-capability assembly step is required before conversion.
+- Every calibration record and release note states which auxiliary modules the
+  source carries, so a missing one is visible in the record rather than in a
+  downstream failure.
+
+Status:
+Recorded 2026-09-11. Applies to all future conversions and releases.
