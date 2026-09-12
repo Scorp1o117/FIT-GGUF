@@ -1,0 +1,27 @@
+{
+  "analysis_imatrix_arg": "experiments/2026-09-11-nex25-mini-4tier/calibration/calibration-imatrix.gguf",
+  "analysis_path": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/analyses/analysis-IQ3_XXS-Q4_K_M/analysis.json",
+  "command": [
+    "tools/llama-b10666-rocm/llama-quantize",
+    "--imatrix",
+    "experiments/2026-09-11-nex25-mini-4tier/calibration/calibration-imatrix.gguf",
+    "--tensor-type-file",
+    "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS01-plan-tensor-types.txt",
+    "artifacts/source/Nex-N2.5-mini-abliterix-v8-t17-BF16.gguf",
+    "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-MINI-12.69GiB-IQ3_XXS.gguf",
+    "IQ3_XXS"
+  ],
+  "expect_bytes": null,
+  "imatrix_arg": "experiments/2026-09-11-nex25-mini-4tier/calibration/calibration-imatrix.gguf",
+  "output_path": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-MINI-12.69GiB-IQ3_XXS.gguf",
+  "refinalized_expected_bytes": 13623758752,
+  "returncode": 0,
+  "schema_version": 1,
+  "sha256": "a96bb1004ff085f2b0c467dc79e59223fc387e68f827e0418c126fea674392b6",
+  "size_bytes": 13623758752,
+  "size_matches_expectation": true,
+  "size_matches_refinalization": true,
+  "stderr_tail": ".attn_v.weight                 - [  2048,    512,      1,      1], type =   bf16, converting to q4_K .. size =     2.00 MiB ->     0.56 MiB\n[ 725/ 733] blk.39.ffn_down_exps.weight          - [   512,   2048,    256,      1], type =   bf16, converting to iq3_xxs .. size =   512.00 MiB ->    98.00 MiB\n[ 726/ 733] blk.39.ffn_down_shexp.weight         - [   512,   2048,      1,      1], type =   bf16, converting to iq3_xxs .. size =     2.00 MiB ->     0.38 MiB\n[ 727/ 733] blk.39.ffn_gate_exps.weight          - [  2048,    512,    256,      1], type =   bf16, converting to iq3_xxs .. size =   512.00 MiB ->    98.00 MiB\n[ 728/ 733] blk.39.ffn_gate_inp.weight           - [  2048,    256,      1,      1], type =    f32, size =    2.000 MiB\n[ 729/ 733] blk.39.ffn_gate_inp_shexp.weight     - [  2048,      1,      1,      1], type =    f32, size =    0.008 MiB\n[ 730/ 733] blk.39.ffn_gate_shexp.weight         - [  2048,    512,      1,      1], type =   bf16, converting to iq3_xxs .. size =     2.00 MiB ->     0.38 MiB\n[ 731/ 733] blk.39.ffn_up_exps.weight            - [  2048,    512,    256,      1], type =   bf16, converting to iq3_xxs .. size =   512.00 MiB ->    98.00 MiB\n[ 732/ 733] blk.39.ffn_up_shexp.weight           - [  2048,    512,      1,      1], type =   bf16, converting to iq3_xxs .. size =     2.00 MiB ->     0.38 MiB\n[ 733/ 733] blk.39.post_attention_norm.weight    - [  2048,      1,      1,      1], type =    f32, size =    0.008 MiB\nllama_model_quantize_impl: model size  = 66152.24 MiB (16.01 BPW)\nllama_model_quantize_impl: quant size  = 12982.15 MiB (3.14 BPW)\nload_imatrix: imatrix datasets=['/run/media/s117/OS/Models/imatrix-calibration/APEX-imatrix-Small.txt']\nload_imatrix: loaded 510 importance matrix entries from experiments/2026-09-11-nex25-mini-4tier/calibration/calibration-imatrix.gguf computed on 500 chunks\nprepare_imatrix: have 510 importance matrix entries\n\nllama_quantize: quantize time = 588046.53 ms\nllama_quantize:    total time = 588046.53 ms\n",
+  "tensor_types_path": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS01-plan-tensor-types.txt",
+  "tensor_types_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,65 @@
+calibration_contract: fidelity-calibration-v1
+calibration_contract_sha256: 455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47
+evaluator_contract: eval-v1
+generalization_scope: exact_model_only
+guard_profile_id: guard-Nex-N2.5-mini-abliterix-v8-t17-exact-v1
+guard_profile_version: 1
+scope:
+  identifier: Nex-N2.5-mini-abliterix-v8-t17
+  type: exact_model
+source_sha256: effa80f31a7eda6e3fc41d2cecb5d47d64eaa0b8ad0e7e5cbe57e80f6f8668b9
+status: candidate
+tiers:
+  quality:
+    kl_anchor: 0.05
+    same_top_floor: 0.9352
+    floor_method: min_fallback
+    sample_count: 1
+    witness:
+      point_id: probe-quality-1
+      macro_kl: 0.0432434
+      macro_same_top: 0.935244
+      pass: true
+    validation_status: candidate
+  balanced:
+    kl_anchor: 0.1
+    same_top_floor: 0.8909
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: probe-balanced-1
+      macro_kl: 0.0957476
+      macro_same_top: 0.8963120000000001
+      pass: true
+    validation_status: validated
+  compact:
+    kl_anchor: 0.15
+    same_top_floor: 0.8559
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: IQ3_M
+      macro_kl: 0.1498172
+      macro_same_top: 0.8601179999999999
+      pass: true
+    validation_status: validated
+  mini:
+    kl_anchor: 0.2
+    same_top_floor: 0.8288
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: IQ3_XXS
+      macro_kl: 0.18604
+      macro_same_top: 0.839232
+      pass: true
+    validation_status: validated
+validation_basis: fidelity-calibration-v1
+confidence:
+  note: fidelity-calibration-v1 onboarding; floor_method/sample_count per tier
+  window_n:
+    quality: 1
+    balanced: 3
+    compact: 3
+    mini: 3
+profile_hash: f366213002312b303fabf4441295f7e72c8a0f049678bad259e5c4ddb1dff244

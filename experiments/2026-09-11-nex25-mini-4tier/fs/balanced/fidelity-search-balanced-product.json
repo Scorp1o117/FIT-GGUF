@@ -1,0 +1,59 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 16714051488,
+  "macro_kl": 0.0997526,
+  "same_top": 0.8932340000000001,
+  "passed": true,
+  "eval_index": 5,
+  "source": "bracket"
+ },
+ "fresh_evals": 5,
+ "budget": 8,
+ "bracket_fail_bytes": 16609193888,
+ "bracket_pass_bytes": 16714051488,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {
+  "16609193888": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS01-plan-tensor-types.txt",
+  "16714051488": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS05-plan-tensor-types.txt",
+  "16818909088": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS04-plan-tensor-types.txt",
+  "17028624288": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS03-plan-tensor-types.txt",
+  "17448054688": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS02-plan-tensor-types.txt"
+ },
+ "artifact_analyses": {
+  "16609193888": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/analyses/analysis-IQ3_M-Q6_K",
+  "16714051488": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/analyses/analysis-IQ3_M-Q6_K",
+  "16818909088": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/analyses/analysis-IQ3_M-Q6_K",
+  "17028624288": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/analyses/analysis-IQ3_M-Q6_K",
+  "17448054688": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/analyses/analysis-IQ3_M-Q6_K"
+ },
+ "artifact_plans": {
+  "16609193888": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS01-plan-plan.json",
+  "16714051488": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS05-plan-plan.json",
+  "16818909088": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS04-plan-plan.json",
+  "17028624288": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS03-plan-plan.json",
+  "17448054688": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-042521-FS02-plan-plan.json"
+ },
+ "guard_binding": {
+  "model_name": "Nex-N2.5-mini-abliterix-v8-t17-BF16",
+  "source_sha256": "effa80f31a7eda6e3fc41d2cecb5d47d64eaa0b8ad0e7e5cbe57e80f6f8668b9"
+ },
+ "artifact": {
+  "path": "experiments/2026-09-11-nex25-mini-4tier/fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-BALANCED-15.57GiB-IQ3_S.gguf",
+  "size_bytes": 16714051488,
+  "g2_delta": 0,
+  "primary_type": "IQ3_S",
+  "primary_type_source": "element-weighted dominant type of the FIT recipe",
+  "naming": "Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-BALANCED-15.57GiB-<primary-type>.gguf",
+  "search_tolerance_mib": 128,
+  "active_constraint": "kl",
+  "healthy_frontier": true,
+  "verified_metrics": {
+   "macro_kl": 0.0997526,
+   "same_top_pct": 89.3234
+  }
+ }
+}

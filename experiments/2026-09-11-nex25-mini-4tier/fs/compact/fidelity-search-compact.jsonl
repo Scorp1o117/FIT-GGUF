@@ -1,0 +1,16 @@
+{"t": 0.0, "event": "eval_submit", "size_bytes": 11659235232, "source": "coarse", "eval_index": 1}
+{"t": 473.458, "event": "eval_result", "size_bytes": 11659235232, "macro_kl": 0.284982, "same_top": 0.796014, "passed": false, "eval_index": 1, "source": "coarse"}
+{"t": 473.458, "event": "eval_submit", "size_bytes": 12712667552, "source": "coarse", "eval_index": 2}
+{"t": 949.075, "event": "eval_result", "size_bytes": 12624605088, "macro_kl": 0.1676118, "same_top": 0.8534479999999999, "passed": false, "eval_index": 2, "source": "coarse"}
+{"t": 949.075, "event": "eval_submit", "size_bytes": 13766099872, "source": "coarse", "eval_index": 3}
+{"t": 1415.277, "event": "eval_result", "size_bytes": 13765021600, "macro_kl": 0.1605484, "same_top": 0.854798, "passed": false, "eval_index": 3, "source": "coarse"}
+{"t": 1415.278, "event": "eval_submit", "size_bytes": 14819532192, "source": "coarse", "eval_index": 4}
+{"t": 1877.924, "event": "eval_result", "size_bytes": 14772088736, "macro_kl": 0.1495032, "same_top": 0.8581340000000001, "passed": true, "eval_index": 4, "source": "coarse"}
+{"t": 1877.925, "event": "eval_submit", "size_bytes": 14268555168, "source": "bracket", "eval_index": 5}
+{"t": 2344.878, "event": "eval_result", "size_bytes": 14167674784, "macro_kl": 0.1557856, "same_top": 0.856164, "passed": false, "eval_index": 5, "source": "bracket"}
+{"t": 2344.88, "event": "eval_submit", "size_bytes": 14469881760, "source": "bracket", "eval_index": 6}
+{"t": 2808.317, "event": "eval_result", "size_bytes": 14436110240, "macro_kl": 0.1534306, "same_top": 0.85685, "passed": false, "eval_index": 6, "source": "bracket"}
+{"t": 2808.318, "event": "eval_submit", "size_bytes": 14604099488, "source": "bracket", "eval_index": 7}
+{"t": 3271.994, "event": "eval_result", "size_bytes": 14570327968, "macro_kl": 0.1521634, "same_top": 0.857102, "passed": false, "eval_index": 7, "source": "bracket"}
+{"t": 3272.0, "event": "eval_submit", "size_bytes": 14671208352, "source": "bracket", "eval_index": 8}
+{"t": 3735.786, "event": "eval_result", "size_bytes": 14704545696, "macro_kl": 0.1507336, "same_top": 0.858274, "passed": false, "eval_index": 8, "source": "bracket"}

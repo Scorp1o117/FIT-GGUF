@@ -1,0 +1,6 @@
+{"t": 0.0, "event": "eval_submit", "size_bytes": 24729130912, "source": "coarse", "eval_index": 1}
+{"t": 362.828, "event": "eval_result", "size_bytes": 24729130912, "macro_kl": 0.0585588, "same_top": 0.924678, "passed": false, "eval_index": 1, "source": "coarse"}
+{"t": 362.828, "event": "eval_submit", "size_bytes": 24965694752, "source": "coarse", "eval_index": 2}
+{"t": 741.046, "event": "eval_result", "size_bytes": 24936738720, "macro_kl": 0.043987399999999996, "same_top": 0.9340999999999999, "passed": true, "eval_index": 2, "source": "coarse"}
+{"t": 741.047, "event": "eval_submit", "size_bytes": 24832934816, "source": "bracket", "eval_index": 3}
+{"t": 1116.399, "event": "eval_result", "size_bytes": 24823238560, "macro_kl": 0.0465028, "same_top": 0.933568, "passed": true, "eval_index": 3, "source": "bracket"}

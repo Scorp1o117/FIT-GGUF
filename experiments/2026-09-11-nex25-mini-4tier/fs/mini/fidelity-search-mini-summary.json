@@ -1,0 +1,49 @@
+{
+ "status": "budget_exhausted",
+ "guarantee": "budget spent before tolerance bracket was reached (observed PASS only)",
+ "best": {
+  "size_bytes": 14562736032,
+  "macro_kl": 0.195715,
+  "same_top": 0.834832,
+  "passed": true,
+  "eval_index": 8,
+  "source": "coarse"
+ },
+ "fresh_evals": 8,
+ "budget": 8,
+ "bracket_fail_bytes": 13839218592,
+ "bracket_pass_bytes": 14562736032,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {
+  "9497653152": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS01-plan-tensor-types.txt",
+  "10202757024": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS02-plan-tensor-types.txt",
+  "10901108640": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS03-plan-tensor-types.txt",
+  "11681249184": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS04-plan-tensor-types.txt",
+  "12404766624": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS05-plan-tensor-types.txt",
+  "13115701152": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS06-plan-tensor-types.txt",
+  "13839218592": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS07-plan-tensor-types.txt",
+  "14562736032": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS08-plan-tensor-types.txt"
+ },
+ "artifact_analyses": {
+  "9497653152": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M",
+  "10202757024": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M",
+  "10901108640": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M",
+  "11681249184": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M",
+  "12404766624": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M",
+  "13115701152": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M",
+  "13839218592": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M",
+  "14562736032": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/analyses/analysis-IQ2_XXS-Q4_K_M"
+ },
+ "artifact_plans": {
+  "9497653152": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS01-plan-plan.json",
+  "10202757024": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS02-plan-plan.json",
+  "10901108640": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS03-plan-plan.json",
+  "11681249184": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS04-plan-plan.json",
+  "12404766624": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS05-plan-plan.json",
+  "13115701152": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS06-plan-plan.json",
+  "13839218592": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS07-plan-plan.json",
+  "14562736032": "experiments/2026-09-11-nex25-mini-4tier/fs/mini/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-063441-FS08-plan-plan.json"
+ }
+}

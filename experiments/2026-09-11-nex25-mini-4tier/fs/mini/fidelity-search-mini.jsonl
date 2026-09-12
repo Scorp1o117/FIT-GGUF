@@ -1,0 +1,16 @@
+{"t": 0.0, "event": "eval_submit", "size_bytes": 9497653152, "source": "coarse", "eval_index": 1}
+{"t": 708.933, "event": "eval_result", "size_bytes": 9497653152, "macro_kl": 0.4794412, "same_top": 0.730728, "passed": false, "eval_index": 1, "source": "coarse"}
+{"t": 708.933, "event": "eval_submit", "size_bytes": 10226972192, "source": "coarse", "eval_index": 2}
+{"t": 1413.171, "event": "eval_result", "size_bytes": 10202757024, "macro_kl": 0.2525904, "same_top": 0.8131520000000001, "passed": false, "eval_index": 2, "source": "coarse"}
+{"t": 1413.171, "event": "eval_submit", "size_bytes": 10956291232, "source": "coarse", "eval_index": 3}
+{"t": 2100.012, "event": "eval_result", "size_bytes": 10901108640, "macro_kl": 0.24262680000000003, "same_top": 0.817186, "passed": false, "eval_index": 3, "source": "coarse"}
+{"t": 2100.012, "event": "eval_submit", "size_bytes": 11685610272, "source": "coarse", "eval_index": 4}
+{"t": 2772.365, "event": "eval_result", "size_bytes": 11681249184, "macro_kl": 0.2318, "same_top": 0.819656, "passed": false, "eval_index": 4, "source": "coarse"}
+{"t": 2772.367, "event": "eval_submit", "size_bytes": 12414929312, "source": "coarse", "eval_index": 5}
+{"t": 3439.997, "event": "eval_result", "size_bytes": 12404766624, "macro_kl": 0.2250712, "same_top": 0.8236659999999999, "passed": false, "eval_index": 5, "source": "coarse"}
+{"t": 3439.999, "event": "eval_submit", "size_bytes": 13144248352, "source": "coarse", "eval_index": 6}
+{"t": 4095.947, "event": "eval_result", "size_bytes": 13115701152, "macro_kl": 0.21356640000000002, "same_top": 0.8274539999999999, "passed": false, "eval_index": 6, "source": "coarse"}
+{"t": 4095.953, "event": "eval_submit", "size_bytes": 13873567392, "source": "coarse", "eval_index": 7}
+{"t": 4708.549, "event": "eval_result", "size_bytes": 13839218592, "macro_kl": 0.2012004, "same_top": 0.8322419999999999, "passed": false, "eval_index": 7, "source": "coarse"}
+{"t": 4708.551, "event": "eval_submit", "size_bytes": 14602886432, "source": "coarse", "eval_index": 8}
+{"t": 5297.737, "event": "eval_result", "size_bytes": 14562736032, "macro_kl": 0.195715, "same_top": 0.834832, "passed": true, "eval_index": 8, "source": "coarse"}

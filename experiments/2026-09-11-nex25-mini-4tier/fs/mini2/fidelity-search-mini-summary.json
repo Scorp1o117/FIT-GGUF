@@ -1,0 +1,31 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 13623758752,
+  "macro_kl": 0.18604,
+  "same_top": 0.839232,
+  "passed": true,
+  "eval_index": 1,
+  "source": "coarse"
+ },
+ "fresh_evals": 2,
+ "budget": 16,
+ "bracket_fail_bytes": null,
+ "bracket_pass_bytes": 13623758752,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": "no FAIL found within [min_size, hi_pass]; true crossing may lie below the searchable floor",
+ "artifact_recipes": {
+  "13623758752": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS01-plan-tensor-types.txt",
+  "14549374880": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS02-plan-tensor-types.txt"
+ },
+ "artifact_analyses": {
+  "13623758752": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/analyses/analysis-IQ3_XXS-Q4_K_M",
+  "14549374880": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/analyses/analysis-IQ3_XXS-Q4_K_M"
+ },
+ "artifact_plans": {
+  "13623758752": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS01-plan-plan.json",
+  "14549374880": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS02-plan-plan.json"
+ }
+}

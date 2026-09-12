@@ -1,0 +1,200 @@
+{
+ "schema": "fit.calibration_record.v1",
+ "contract_id": "fidelity-calibration-v1",
+ "calibration_contract_sha256": "455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47",
+ "model_id": "Nex-N2.5-mini-abliterix-v8-t17",
+ "created": "2026-09-12",
+ "inputs": {
+  "source_weights_sha256": "effa80f31a7eda6e3fc41d2cecb5d47d64eaa0b8ad0e7e5cbe57e80f6f8668b9",
+  "imatrix_corpus_sha256": "df82db0baebe0694385a254461db16f4aab48582fbc74eb33ecf5506ba5f7002",
+  "imatrix_chunks": 500,
+  "evaluator_contract_sha256": "5ce78dee9d11e6dfe83416628d0459d462719c0ecddf194c53ea9629db243d7c",
+  "runtime_dir": "tools/llama-b10666-rocm"
+ },
+ "process": {
+  "imatrix_missing_matrices": [
+   "output.weight",
+   "blk.0.ssm_a",
+   "blk.0.ssm_conv1d.weight",
+   "blk.0.ssm_dt.bias",
+   "blk.1.ssm_a",
+   "blk.1.ssm_conv1d.weight",
+   "blk.1.ssm_dt.bias",
+   "blk.2.ssm_a",
+   "blk.2.ssm_conv1d.weight",
+   "blk.2.ssm_dt.bias",
+   "blk.4.ssm_a",
+   "blk.4.ssm_conv1d.weight",
+   "blk.4.ssm_dt.bias",
+   "blk.5.ssm_a",
+   "blk.5.ssm_conv1d.weight",
+   "blk.5.ssm_dt.bias",
+   "blk.6.ssm_a",
+   "blk.6.ssm_conv1d.weight",
+   "blk.6.ssm_dt.bias",
+   "blk.8.ssm_a",
+   "blk.8.ssm_conv1d.weight",
+   "blk.8.ssm_dt.bias",
+   "blk.9.ssm_a",
+   "blk.9.ssm_conv1d.weight",
+   "blk.9.ssm_dt.bias",
+   "blk.10.ssm_a",
+   "blk.10.ssm_conv1d.weight",
+   "blk.10.ssm_dt.bias",
+   "blk.12.ssm_a",
+   "blk.12.ssm_conv1d.weight",
+   "blk.12.ssm_dt.bias",
+   "blk.13.ssm_a",
+   "blk.13.ssm_conv1d.weight",
+   "blk.13.ssm_dt.bias",
+   "blk.14.ssm_a",
+   "blk.14.ssm_conv1d.weight",
+   "blk.14.ssm_dt.bias",
+   "blk.16.ssm_a",
+   "blk.16.ssm_conv1d.weight",
+   "blk.16.ssm_dt.bias",
+   "blk.17.ssm_a",
+   "blk.17.ssm_conv1d.weight",
+   "blk.17.ssm_dt.bias",
+   "blk.18.ssm_a",
+   "blk.18.ssm_conv1d.weight",
+   "blk.18.ssm_dt.bias",
+   "blk.20.ssm_a",
+   "blk.20.ssm_conv1d.weight",
+   "blk.20.ssm_dt.bias",
+   "blk.21.ssm_a",
+   "blk.21.ssm_conv1d.weight",
+   "blk.21.ssm_dt.bias",
+   "blk.22.ssm_a",
+   "blk.22.ssm_conv1d.weight",
+   "blk.22.ssm_dt.bias",
+   "blk.24.ssm_a",
+   "blk.24.ssm_conv1d.weight",
+   "blk.24.ssm_dt.bias",
+   "blk.25.ssm_a",
+   "blk.25.ssm_conv1d.weight",
+   "blk.25.ssm_dt.bias",
+   "blk.26.ssm_a",
+   "blk.26.ssm_conv1d.weight",
+   "blk.26.ssm_dt.bias",
+   "blk.28.ssm_a",
+   "blk.28.ssm_conv1d.weight",
+   "blk.28.ssm_dt.bias",
+   "blk.29.ssm_a",
+   "blk.29.ssm_conv1d.weight",
+   "blk.29.ssm_dt.bias",
+   "blk.30.ssm_a",
+   "blk.30.ssm_conv1d.weight",
+   "blk.30.ssm_dt.bias",
+   "blk.32.ssm_a",
+   "blk.32.ssm_conv1d.weight",
+   "blk.32.ssm_dt.bias",
+   "blk.33.ssm_a",
+   "blk.33.ssm_conv1d.weight",
+   "blk.33.ssm_dt.bias",
+   "blk.34.ssm_a",
+   "blk.34.ssm_conv1d.weight",
+   "blk.34.ssm_dt.bias",
+   "blk.36.ssm_a",
+   "blk.36.ssm_conv1d.weight",
+   "blk.36.ssm_dt.bias",
+   "blk.37.ssm_a",
+   "blk.37.ssm_conv1d.weight",
+   "blk.37.ssm_dt.bias",
+   "blk.38.ssm_a",
+   "blk.38.ssm_conv1d.weight",
+   "blk.38.ssm_dt.bias"
+  ],
+  "unresolved_tiers": [
+   "quality"
+  ],
+  "curve_points": 21
+ },
+ "derivation": {
+  "quality": {
+   "tier": "quality",
+   "anchor": 0.05,
+   "window": [
+    0.0425,
+    0.0575
+   ],
+   "sample_count": 1,
+   "floor": 0.9352,
+   "floor_method": "min_fallback",
+   "witness": {
+    "point_id": "probe-quality-1",
+    "macro_kl": 0.0432434,
+    "macro_same_top": 0.935244,
+    "pass": true
+   },
+   "validation_status": "candidate",
+   "failure": "INSUFFICIENT_WINDOW"
+  },
+  "balanced": {
+   "tier": "balanced",
+   "anchor": 0.1,
+   "window": [
+    0.085,
+    0.115
+   ],
+   "sample_count": 3,
+   "floor": 0.8909,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "probe-balanced-1",
+    "macro_kl": 0.0957476,
+    "macro_same_top": 0.8963120000000001,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "compact": {
+   "tier": "compact",
+   "anchor": 0.15,
+   "window": [
+    0.1275,
+    0.1725
+   ],
+   "sample_count": 3,
+   "floor": 0.8559,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "IQ3_M",
+    "macro_kl": 0.1498172,
+    "macro_same_top": 0.8601179999999999,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  },
+  "mini": {
+   "tier": "mini",
+   "anchor": 0.2,
+   "window": [
+    0.17,
+    0.23
+   ],
+   "sample_count": 3,
+   "floor": 0.8288,
+   "floor_method": "empirical_p5",
+   "witness": {
+    "point_id": "IQ3_XXS",
+    "macro_kl": 0.18604,
+    "macro_same_top": 0.839232,
+    "pass": true
+   },
+   "validation_status": "validated",
+   "failure": null
+  }
+ },
+ "artifacts": {
+  "guard_profile_sha256": "40ec3f9732424cf8b032a69c41f350aecd1a7ec0756fddc42ca5fad89ff8a8f5",
+  "reference_manifest_sha256": "75c1c1e0d04fe385c0cb3aa48053410bcb938a4b1a8467c4e5bee72b211d5713",
+  "curve_points_sha256": "35d7ca1694726b0e50f47d3a16fad01d8ee7b119fe7012608235a24045d90c8c"
+ },
+ "failures": [
+  "INSUFFICIENT_WINDOW"
+ ],
+ "overall_status": "candidate"
+}

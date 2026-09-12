@@ -1,0 +1,68 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 14772088736,
+  "macro_kl": 0.1495032,
+  "same_top": 0.8581340000000001,
+  "passed": true,
+  "eval_index": 4,
+  "source": "coarse"
+ },
+ "fresh_evals": 8,
+ "budget": 8,
+ "bracket_fail_bytes": 14704545696,
+ "bracket_pass_bytes": 14772088736,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {
+  "11659235232": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS01-plan-tensor-types.txt",
+  "12624605088": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS02-plan-tensor-types.txt",
+  "13765021600": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS03-plan-tensor-types.txt",
+  "14167674784": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS05-plan-tensor-types.txt",
+  "14436110240": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS06-plan-tensor-types.txt",
+  "14570327968": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS07-plan-tensor-types.txt",
+  "14704545696": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS08-plan-tensor-types.txt",
+  "14772088736": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS04-plan-tensor-types.txt"
+ },
+ "artifact_analyses": {
+  "11659235232": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K",
+  "12624605088": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K",
+  "13765021600": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K",
+  "14167674784": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K",
+  "14436110240": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K",
+  "14570327968": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K",
+  "14704545696": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K",
+  "14772088736": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/analyses/analysis-IQ2_M-Q6_K"
+ },
+ "artifact_plans": {
+  "11659235232": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS01-plan-plan.json",
+  "12624605088": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS02-plan-plan.json",
+  "13765021600": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS03-plan-plan.json",
+  "14167674784": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS05-plan-plan.json",
+  "14436110240": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS06-plan-plan.json",
+  "14570327968": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS07-plan-plan.json",
+  "14704545696": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS08-plan-plan.json",
+  "14772088736": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-052309-FS04-plan-plan.json"
+ },
+ "guard_binding": {
+  "model_name": "Nex-N2.5-mini-abliterix-v8-t17-BF16",
+  "source_sha256": "effa80f31a7eda6e3fc41d2cecb5d47d64eaa0b8ad0e7e5cbe57e80f6f8668b9"
+ },
+ "artifact": {
+  "path": "experiments/2026-09-11-nex25-mini-4tier/fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-COMPACT-13.76GiB-IQ2_S.gguf",
+  "size_bytes": 14772088736,
+  "g2_delta": 0,
+  "primary_type": "IQ2_S",
+  "primary_type_source": "element-weighted dominant type of the FIT recipe",
+  "naming": "Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-COMPACT-13.76GiB-<primary-type>.gguf",
+  "search_tolerance_mib": 128,
+  "active_constraint": "kl",
+  "healthy_frontier": true,
+  "verified_metrics": {
+   "macro_kl": 0.1495032,
+   "same_top_pct": 85.8134
+  }
+ }
+}

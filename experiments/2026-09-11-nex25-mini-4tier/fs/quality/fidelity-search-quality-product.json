@@ -1,0 +1,53 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 24823238560,
+  "macro_kl": 0.0465028,
+  "same_top": 0.933568,
+  "passed": true,
+  "eval_index": 3,
+  "source": "bracket"
+ },
+ "fresh_evals": 3,
+ "budget": 8,
+ "bracket_fail_bytes": 24729130912,
+ "bracket_pass_bytes": 24823238560,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": null,
+ "artifact_recipes": {
+  "24729130912": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-032157-FS01-plan-tensor-types.txt",
+  "24823238560": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-032157-FS03-plan-tensor-types.txt",
+  "24936738720": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-032157-FS02-plan-tensor-types.txt"
+ },
+ "artifact_analyses": {
+  "24729130912": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/analyses/analysis-Q5_K_M-Q6_K",
+  "24823238560": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/analyses/analysis-Q5_K_M-Q6_K",
+  "24936738720": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/analyses/analysis-Q5_K_M-Q6_K"
+ },
+ "artifact_plans": {
+  "24729130912": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-032157-FS01-plan-plan.json",
+  "24823238560": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-032157-FS03-plan-plan.json",
+  "24936738720": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-032157-FS02-plan-plan.json"
+ },
+ "guard_binding": {
+  "model_name": "Nex-N2.5-mini-abliterix-v8-t17-BF16",
+  "source_sha256": "effa80f31a7eda6e3fc41d2cecb5d47d64eaa0b8ad0e7e5cbe57e80f6f8668b9"
+ },
+ "artifact": {
+  "path": "experiments/2026-09-11-nex25-mini-4tier/fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-QUALITY-23.12GiB-Q5_K_M.gguf",
+  "size_bytes": 24823238560,
+  "g2_delta": 0,
+  "primary_type": "Q5_K_M",
+  "primary_type_source": "base preset of the FIT recipe \u2014 the dominant type (Q5_K) is a bare tensor type, not a nameable GGUF preset",
+  "naming": "Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-QUALITY-23.12GiB-<primary-type>.gguf",
+  "search_tolerance_mib": 128,
+  "active_constraint": "kl",
+  "healthy_frontier": true,
+  "verified_metrics": {
+   "macro_kl": 0.0465028,
+   "same_top_pct": 93.35679999999999
+  }
+ }
+}

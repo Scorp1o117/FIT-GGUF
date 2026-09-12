@@ -1,0 +1,13 @@
+{
+  "lower_preset": "Q5_K_M",
+  "lower_size_bytes": 24729130912,
+  "overrides": [],
+  "predicted_size_bytes": 24729130912,
+  "schema_version": 1,
+  "selected_cost_bytes": 0,
+  "selected_count": 0,
+  "skipped_count": 371,
+  "target_bytes": 24729130912,
+  "unused_bytes": 0,
+  "upper_preset": "Q6_K"
+}

@@ -1,0 +1,5 @@
+763de6b733e3293b4a9d8cfb68b63d31543639aff1aca5e1eca87b1b92703c6b  calibration/calibration-imatrix.gguf
+6436ee9c8c0af3defabb07fe258072f3db2f9c4f27d7f0a6b52908042a0586cb  fs/balanced/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-BALANCED-15.57GiB-IQ3_S.gguf
+e32c3b16269896a937415a50357fb125e4a1863af5e1a2894d2489130aaf7083  fs/compact/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-COMPACT-13.76GiB-IQ2_S.gguf
+a96bb1004ff085f2b0c467dc79e59223fc387e68f827e0418c126fea674392b6  fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-MINI-12.69GiB-IQ3_XXS.gguf
+2450389c5bb4056cdf1b3d24f1601fbb1693b533a3b96916fe19e4ef5ca93c92  fs/quality/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-QUALITY-23.12GiB-Q5_K_M.gguf

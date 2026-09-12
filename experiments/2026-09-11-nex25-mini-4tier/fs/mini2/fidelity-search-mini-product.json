@@ -1,0 +1,50 @@
+{
+ "status": "verified_pass",
+ "guarantee": "minimum verified PASS within tolerance bracket",
+ "best": {
+  "size_bytes": 13623758752,
+  "macro_kl": 0.18604,
+  "same_top": 0.839232,
+  "passed": true,
+  "eval_index": 1,
+  "source": "coarse"
+ },
+ "fresh_evals": 2,
+ "budget": 16,
+ "bracket_fail_bytes": null,
+ "bracket_pass_bytes": 13623758752,
+ "active_constraint": "kl",
+ "tolerance_bytes": 134217728,
+ "note": "no FAIL found within [min_size, hi_pass]; true crossing may lie below the searchable floor",
+ "artifact_recipes": {
+  "13623758752": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS01-plan-tensor-types.txt",
+  "14549374880": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS02-plan-tensor-types.txt"
+ },
+ "artifact_analyses": {
+  "13623758752": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/analyses/analysis-IQ3_XXS-Q4_K_M",
+  "14549374880": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/analyses/analysis-IQ3_XXS-Q4_K_M"
+ },
+ "artifact_plans": {
+  "13623758752": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS01-plan-plan.json",
+  "14549374880": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-0912-081148-FS02-plan-plan.json"
+ },
+ "guard_binding": {
+  "model_name": "Nex-N2.5-mini-abliterix-v8-t17-BF16",
+  "source_sha256": "effa80f31a7eda6e3fc41d2cecb5d47d64eaa0b8ad0e7e5cbe57e80f6f8668b9"
+ },
+ "artifact": {
+  "path": "experiments/2026-09-11-nex25-mini-4tier/fs/mini2/Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-MINI-12.69GiB-IQ3_XXS.gguf",
+  "size_bytes": 13623758752,
+  "g2_delta": 0,
+  "primary_type": "IQ3_XXS",
+  "primary_type_source": "native preset (no tensor-level override)",
+  "naming": "Nex-N2.5-mini-abliterix-v8-t17-BF16-FIT-MINI-12.69GiB-<primary-type>.gguf",
+  "search_tolerance_mib": 128,
+  "active_constraint": "kl",
+  "healthy_frontier": true,
+  "verified_metrics": {
+   "macro_kl": 0.18604,
+   "same_top_pct": 83.9232
+  }
+ }
+}

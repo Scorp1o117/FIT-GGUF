@@ -1,0 +1,2 @@
+effa80f31a7eda6e3fc41d2cecb5d47d64eaa0b8ad0e7e5cbe57e80f6f8668b9  artifacts/source/Nex-N2.5-mini-abliterix-v8-t17-BF16.gguf
+c061d42293dceae4c5935bd070d5ea0ae29de097a77ca68b4ec25bf92e9a49f5  artifacts/source/Nex-N2.5-mini-v8-t17-mmproj-BF16.gguf
