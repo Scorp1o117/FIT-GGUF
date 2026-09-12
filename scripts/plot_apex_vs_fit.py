@@ -69,7 +69,7 @@ def main() -> None:
             color="#1f77b4", ms=9, lw=2, label="FIT (KL-anchored tiers)", zorder=4)
     for x, y, name in fit:
         tier = name.split("FIT-")[1].split("-")[0]
-        ax.annotate(tier, (x, y), textcoords="offset points", xytext=(6, -12),
+        ax.annotate(tier, (x, y), textcoords="offset points", xytext=(7, -13),
                     fontsize=9, color="#1f77b4", fontweight="bold")
 
     apex.sort()
@@ -77,13 +77,20 @@ def main() -> None:
             color="#d62728", ms=10, lw=2, label="APEX-I (LocalAI MoE profiles)", zorder=5)
     for x, y, name in apex:
         tier = name.split("APEX-")[1].replace(".gguf", "")
-        ax.annotate(tier, (x, y), textcoords="offset points", xytext=(6, 8),
+        ax.annotate(tier, (x, y), textcoords="offset points", xytext=(7, 7),
                     fontsize=9, color="#d62728", fontweight="bold")
 
     for g in TIER_GATES:
         ax.axhline(g, color="#bbbbbb", lw=1, ls="--", zorder=1)
         ax.annotate(f"tier gate {g:.2f}", (ax.get_xlim()[1], g), xytext=(-4, 3),
                     textcoords="offset points", ha="right", fontsize=7, color="#999999")
+
+    # Headroom so the lowest point (APEX I-Balanced) is never clipped, and the
+    # small-size labels (FIT MINI / APEX Mini) do not collide.
+    ys = [p[1] for p in native + fit + apex]
+    ax.set_ylim(0, max(ys) * 1.08)
+    ax.set_xlim(min(p[0] for p in native + fit + apex) - 0.6,
+                max(p[0] for p in native + fit + apex) + 1.6)
 
     ax.set_xlabel("artifact size (GiB)")
     ax.set_ylabel("macro KL vs BF16 (lower is better)")
