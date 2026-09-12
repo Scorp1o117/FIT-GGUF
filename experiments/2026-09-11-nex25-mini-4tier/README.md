@@ -106,6 +106,11 @@ narrow ladder makes the climb slower, not faster).
 
 ## Published artefacts
 
+The delivered GGUFs live in the models tree, not in this repository (the repo
+carries the records; `.gitignore` excludes `*.gguf`):
+
+    /run/media/s117/OS/Models/Nex-N2.5-mini-abliterix-FIT-GGUF/
+
 | File | SHA-256 (first 20) |
 |---|---|
 | `…-FIT-QUALITY-23.12GiB-Q5_K_M.gguf` | `2450389c5bb4056cdf1b` |
@@ -114,9 +119,14 @@ narrow ladder makes the climb slower, not faster).
 | `…-FIT-MINI-12.69GiB-IQ3_XXS.gguf` | `a96bb1004ff085f2b0c4` |
 | `calibration/calibration-imatrix.gguf` | `763de6b733e3293b4a9d` |
 
-Full list in `state/tier-artifacts-sha256.txt`. The vision projector
-(`artifacts/source/Nex-N2.5-mini-v8-t17-mmproj-BF16.gguf`, 902 MB) ships beside
-the tiers; FIT's search governs the text model only.
+Full list in `state/tier-artifacts-sha256.txt`; the release folder carries its own
+`SHA256SUMS` and a README with usage. All four hashes were re-verified after the
+move and match the recorded values.
+
+The **vision projector** (`Nex-N2.5-mini-v8-t17-mmproj-BF16.gguf`, 0.84 GiB) sits
+beside the tiers; FIT's search governs the text model only. The converter input
+(`Nex-N2.5-mini-abliterix-v8-t17-BF16.gguf`) stays in `artifacts/source/` as the
+pinned source of record.
 
 ## Reproduction
 
