@@ -1,0 +1,361 @@
+{
+  "created_utc": "2026-09-12T03:46:10.386502+00:00",
+  "protocol": "fit eval-v1 five-domain KL (llama-perplexity --kl-divergence vs bf16-<domain>.kld)",
+  "runtime": "tools/llama-b10666-rocm",
+  "n_gpu_layers": 30,
+  "threads": 16,
+  "artifacts": [
+    {
+      "name": "Nex-N2.5-mini-abliterated-APEX-I-Quality.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-APEX-GGUF/Nex-N2.5-mini-abliterated-APEX-I-Quality.gguf",
+      "size_bytes": 23065735072,
+      "macro_kl": 0.0467596,
+      "same_top_pct": 93.0258,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.029584,
+          "mean_kld_stderr": 0.001062,
+          "same_top_pct": 92.574,
+          "same_top_stderr_pct": 0.295,
+          "rms_delta_p_pct": 4.928
+        },
+        "wiki_valid": {
+          "mean_kld": 0.022763,
+          "mean_kld_stderr": 0.000715,
+          "same_top_pct": 93.118,
+          "same_top_stderr_pct": 0.285,
+          "rms_delta_p_pct": 4.4
+        },
+        "chinese": {
+          "mean_kld": 0.054762,
+          "mean_kld_stderr": 0.004363,
+          "same_top_pct": 92.889,
+          "same_top_stderr_pct": 0.294,
+          "rms_delta_p_pct": 6.207
+        },
+        "code": {
+          "mean_kld": 0.099521,
+          "mean_kld_stderr": 0.007061,
+          "same_top_pct": 92.953,
+          "same_top_stderr_pct": 0.283,
+          "rms_delta_p_pct": 9.019
+        },
+        "agent_chat": {
+          "mean_kld": 0.027168,
+          "mean_kld_stderr": 0.001803,
+          "same_top_pct": 93.595,
+          "same_top_stderr_pct": 0.267,
+          "rms_delta_p_pct": 4.503
+        }
+      }
+    },
+    {
+      "name": "Nex-N2.5-mini-abliterated-APEX-I-Balanced.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-APEX-GGUF/Nex-N2.5-mini-abliterated-APEX-I-Balanced.gguf",
+      "size_bytes": 25582317472,
+      "macro_kl": 0.040427000000000005,
+      "same_top_pct": 93.6644,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.023862,
+          "mean_kld_stderr": 0.001232,
+          "same_top_pct": 93.485,
+          "same_top_stderr_pct": 0.278,
+          "rms_delta_p_pct": 4.435
+        },
+        "wiki_valid": {
+          "mean_kld": 0.018075,
+          "mean_kld_stderr": 0.000571,
+          "same_top_pct": 94.181,
+          "same_top_stderr_pct": 0.263,
+          "rms_delta_p_pct": 3.908
+        },
+        "chinese": {
+          "mean_kld": 0.04752,
+          "mean_kld_stderr": 0.003466,
+          "same_top_pct": 93.19,
+          "same_top_stderr_pct": 0.288,
+          "rms_delta_p_pct": 5.856
+        },
+        "code": {
+          "mean_kld": 0.087001,
+          "mean_kld_stderr": 0.006253,
+          "same_top_pct": 93.051,
+          "same_top_stderr_pct": 0.282,
+          "rms_delta_p_pct": 8.072
+        },
+        "agent_chat": {
+          "mean_kld": 0.025677,
+          "mean_kld_stderr": 0.001754,
+          "same_top_pct": 94.415,
+          "same_top_stderr_pct": 0.25,
+          "rms_delta_p_pct": 4.312
+        }
+      }
+    },
+    {
+      "name": "Nex-N2.5-mini-abliterated-APEX-I-Compact.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-APEX-GGUF/Nex-N2.5-mini-abliterated-APEX-I-Compact.gguf",
+      "size_bytes": 16916297632,
+      "macro_kl": 0.10057800000000001,
+      "same_top_pct": 89.235,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.078857,
+          "mean_kld_stderr": 0.002292,
+          "same_top_pct": 88.792,
+          "same_top_stderr_pct": 0.355,
+          "rms_delta_p_pct": 7.992
+        },
+        "wiki_valid": {
+          "mean_kld": 0.064487,
+          "mean_kld_stderr": 0.002628,
+          "same_top_pct": 89.614,
+          "same_top_stderr_pct": 0.343,
+          "rms_delta_p_pct": 6.734
+        },
+        "chinese": {
+          "mean_kld": 0.113795,
+          "mean_kld_stderr": 0.00623,
+          "same_top_pct": 88.719,
+          "same_top_stderr_pct": 0.362,
+          "rms_delta_p_pct": 8.471
+        },
+        "code": {
+          "mean_kld": 0.17646,
+          "mean_kld_stderr": 0.009037,
+          "same_top_pct": 89.044,
+          "same_top_stderr_pct": 0.346,
+          "rms_delta_p_pct": 12.093
+        },
+        "agent_chat": {
+          "mean_kld": 0.069291,
+          "mean_kld_stderr": 0.003014,
+          "same_top_pct": 90.006,
+          "same_top_stderr_pct": 0.327,
+          "rms_delta_p_pct": 7.367
+        }
+      }
+    },
+    {
+      "name": "Nex-N2.5-mini-abliterated-APEX-Mini.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-APEX-GGUF/Nex-N2.5-mini-abliterated-APEX-Mini.gguf",
+      "size_bytes": 13912200096,
+      "macro_kl": 0.20082019999999998,
+      "same_top_pct": 83.7166,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.177716,
+          "mean_kld_stderr": 0.004,
+          "same_top_pct": 82.151,
+          "same_top_stderr_pct": 0.431,
+          "rms_delta_p_pct": 11.83
+        },
+        "wiki_valid": {
+          "mean_kld": 0.160339,
+          "mean_kld_stderr": 0.004629,
+          "same_top_pct": 83.719,
+          "same_top_stderr_pct": 0.415,
+          "rms_delta_p_pct": 10.712
+        },
+        "chinese": {
+          "mean_kld": 0.211679,
+          "mean_kld_stderr": 0.007782,
+          "same_top_pct": 82.915,
+          "same_top_stderr_pct": 0.43,
+          "rms_delta_p_pct": 11.65
+        },
+        "code": {
+          "mean_kld": 0.296137,
+          "mean_kld_stderr": 0.012428,
+          "same_top_pct": 84.902,
+          "same_top_stderr_pct": 0.396,
+          "rms_delta_p_pct": 15.325
+        },
+        "agent_chat": {
+          "mean_kld": 0.15823,
+          "mean_kld_stderr": 0.005113,
+          "same_top_pct": 84.896,
+          "same_top_stderr_pct": 0.39,
+          "rms_delta_p_pct": 11.254
+        }
+      }
+    },
+    {
+      "name": "Nex-N2.5-mini-abliterated-FIT-QUALITY-23.12GiB-Q5_K_M.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-FIT-GGUF/Nex-N2.5-mini-abliterated-FIT-QUALITY-23.12GiB-Q5_K_M.gguf",
+      "size_bytes": 24823238560,
+      "macro_kl": 0.0465028,
+      "same_top_pct": 93.35679999999999,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.026168,
+          "mean_kld_stderr": 0.000884,
+          "same_top_pct": 93.03,
+          "same_top_stderr_pct": 0.286,
+          "rms_delta_p_pct": 4.814
+        },
+        "wiki_valid": {
+          "mean_kld": 0.021259,
+          "mean_kld_stderr": 0.001035,
+          "same_top_pct": 93.928,
+          "same_top_stderr_pct": 0.269,
+          "rms_delta_p_pct": 4.129
+        },
+        "chinese": {
+          "mean_kld": 0.057592,
+          "mean_kld_stderr": 0.004443,
+          "same_top_pct": 92.641,
+          "same_top_stderr_pct": 0.299,
+          "rms_delta_p_pct": 6.342
+        },
+        "code": {
+          "mean_kld": 0.099231,
+          "mean_kld_stderr": 0.007058,
+          "same_top_pct": 93.162,
+          "same_top_stderr_pct": 0.279,
+          "rms_delta_p_pct": 8.476
+        },
+        "agent_chat": {
+          "mean_kld": 0.028264,
+          "mean_kld_stderr": 0.001789,
+          "same_top_pct": 94.023,
+          "same_top_stderr_pct": 0.258,
+          "rms_delta_p_pct": 4.619
+        }
+      }
+    },
+    {
+      "name": "Nex-N2.5-mini-abliterated-FIT-BALANCED-15.57GiB-IQ3_S.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-FIT-GGUF/Nex-N2.5-mini-abliterated-FIT-BALANCED-15.57GiB-IQ3_S.gguf",
+      "size_bytes": 16714051488,
+      "macro_kl": 0.0997526,
+      "same_top_pct": 89.3234,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.076242,
+          "mean_kld_stderr": 0.002183,
+          "same_top_pct": 88.501,
+          "same_top_stderr_pct": 0.359,
+          "rms_delta_p_pct": 7.979
+        },
+        "wiki_valid": {
+          "mean_kld": 0.057634,
+          "mean_kld_stderr": 0.001566,
+          "same_top_pct": 90.019,
+          "same_top_stderr_pct": 0.337,
+          "rms_delta_p_pct": 6.666
+        },
+        "chinese": {
+          "mean_kld": 0.11697,
+          "mean_kld_stderr": 0.006056,
+          "same_top_pct": 88.131,
+          "same_top_stderr_pct": 0.37,
+          "rms_delta_p_pct": 8.325
+        },
+        "code": {
+          "mean_kld": 0.178924,
+          "mean_kld_stderr": 0.009647,
+          "same_top_pct": 89.485,
+          "same_top_stderr_pct": 0.34,
+          "rms_delta_p_pct": 11.862
+        },
+        "agent_chat": {
+          "mean_kld": 0.068993,
+          "mean_kld_stderr": 0.002849,
+          "same_top_pct": 90.481,
+          "same_top_stderr_pct": 0.32,
+          "rms_delta_p_pct": 7.352
+        }
+      }
+    },
+    {
+      "name": "Nex-N2.5-mini-abliterated-FIT-COMPACT-13.76GiB-IQ2_S.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-FIT-GGUF/Nex-N2.5-mini-abliterated-FIT-COMPACT-13.76GiB-IQ2_S.gguf",
+      "size_bytes": 14772088736,
+      "macro_kl": 0.1495032,
+      "same_top_pct": 85.8134,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.141761,
+          "mean_kld_stderr": 0.003483,
+          "same_top_pct": 83.934,
+          "same_top_stderr_pct": 0.413,
+          "rms_delta_p_pct": 10.803
+        },
+        "wiki_valid": {
+          "mean_kld": 0.114818,
+          "mean_kld_stderr": 0.002714,
+          "same_top_pct": 85.402,
+          "same_top_stderr_pct": 0.397,
+          "rms_delta_p_pct": 9.551
+        },
+        "chinese": {
+          "mean_kld": 0.160538,
+          "mean_kld_stderr": 0.007492,
+          "same_top_pct": 85.686,
+          "same_top_stderr_pct": 0.4,
+          "rms_delta_p_pct": 10.058
+        },
+        "code": {
+          "mean_kld": 0.223202,
+          "mean_kld_stderr": 0.009962,
+          "same_top_pct": 86.998,
+          "same_top_stderr_pct": 0.372,
+          "rms_delta_p_pct": 13.29
+        },
+        "agent_chat": {
+          "mean_kld": 0.107197,
+          "mean_kld_stderr": 0.004025,
+          "same_top_pct": 87.047,
+          "same_top_stderr_pct": 0.366,
+          "rms_delta_p_pct": 8.956
+        }
+      }
+    },
+    {
+      "name": "Nex-N2.5-mini-abliterated-FIT-MINI-12.69GiB-IQ3_XXS.gguf",
+      "path": "/run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-FIT-GGUF/Nex-N2.5-mini-abliterated-FIT-MINI-12.69GiB-IQ3_XXS.gguf",
+      "size_bytes": 13623758752,
+      "macro_kl": 0.18604,
+      "same_top_pct": 83.9232,
+      "per_domain": {
+        "wiki_test": {
+          "mean_kld": 0.167193,
+          "mean_kld_stderr": 0.003226,
+          "same_top_pct": 82.834,
+          "same_top_stderr_pct": 0.424,
+          "rms_delta_p_pct": 11.368
+        },
+        "wiki_valid": {
+          "mean_kld": 0.146676,
+          "mean_kld_stderr": 0.004125,
+          "same_top_pct": 83.125,
+          "same_top_stderr_pct": 0.421,
+          "rms_delta_p_pct": 10.633
+        },
+        "chinese": {
+          "mean_kld": 0.195311,
+          "mean_kld_stderr": 0.007522,
+          "same_top_pct": 83.66,
+          "same_top_stderr_pct": 0.423,
+          "rms_delta_p_pct": 11.03
+        },
+        "code": {
+          "mean_kld": 0.280972,
+          "mean_kld_stderr": 0.011573,
+          "same_top_pct": 84.816,
+          "same_top_stderr_pct": 0.397,
+          "rms_delta_p_pct": 15.053
+        },
+        "agent_chat": {
+          "mean_kld": 0.140048,
+          "mean_kld_stderr": 0.004405,
+          "same_top_pct": 85.181,
+          "same_top_stderr_pct": 0.387,
+          "rms_delta_p_pct": 10.427
+        }
+      }
+    }
+  ]
+}
