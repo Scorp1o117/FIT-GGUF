@@ -1,4 +1,4 @@
-# Nex-N2.5-mini-abliterix-v8-t17: fourth-model onboarding — calibration + four fidelity tiers
+# Nex-N2.5-mini-abliterated: fourth-model onboarding — calibration + four fidelity tiers
 
 **Date**: 2026-09-11/12 · **Runtime**: llama.cpp b10666 (`4e97ac86e`, ROCm) · **Status**: in progress
 
@@ -10,9 +10,9 @@ weights come from this project's own companion pipeline (`abliterix` direct + EG
 
 | Item | Value |
 |---|---|
-| Abliterated weights | `Nex-N2.5-mini-abliterix-v8-t17` (direct + EGA, 160-token convention; shipped 12/100 refusals @ KL 0.0662) |
-| Text BF16 GGUF | `artifacts/source/Nex-N2.5-mini-abliterix-v8-t17-BF16.gguf` — 40 blocks, 733 tensors, sha256 in `state/source-sha256.txt` |
-| Vision projector | `artifacts/source/Nex-N2.5-mini-v8-t17-mmproj-BF16.gguf` (902 MB) — built from the original checkpoint |
+| Abliterated weights | `Nex-N2.5-mini-abliterated` (direct + EGA, 160-token convention; shipped 12/100 refusals @ KL 0.0662) |
+| Text BF16 GGUF | `artifacts/source/Nex-N2.5-mini-abliterated-BF16.gguf` — 40 blocks, 733 tensors, sha256 in `state/source-sha256.txt` |
+| Vision projector | `artifacts/source/Nex-N2.5-mini-abliterated-mmproj-BF16.gguf` (902 MB) — built from the original checkpoint |
 | imatrix corpus | `APEX-imatrix-Small.txt`, 500 chunks (contract default) |
 | Eval data | `eval-data/` five frozen slices (wiki_test, wiki_valid, chinese, code, agent_chat) |
 
@@ -109,7 +109,7 @@ narrow ladder makes the climb slower, not faster).
 The delivered GGUFs live in the models tree, not in this repository (the repo
 carries the records; `.gitignore` excludes `*.gguf`):
 
-    /run/media/s117/OS/Models/Nex-N2.5-mini-abliterix-FIT-GGUF/
+    /run/media/s117/OS/Models/Nex-N2.5-mini-abliterated-FIT-GGUF/
 
 | File | SHA-256 (first 20) |
 |---|---|
@@ -123,9 +123,9 @@ Full list in `state/tier-artifacts-sha256.txt`; the release folder carries its o
 `SHA256SUMS` and a README with usage. All four hashes were re-verified after the
 move and match the recorded values.
 
-The **vision projector** (`Nex-N2.5-mini-v8-t17-mmproj-BF16.gguf`, 0.84 GiB) sits
+The **vision projector** (`Nex-N2.5-mini-abliterated-mmproj-BF16.gguf`, 0.84 GiB) sits
 beside the tiers; FIT's search governs the text model only. The converter input
-(`Nex-N2.5-mini-abliterix-v8-t17-BF16.gguf`) stays in `artifacts/source/` as the
+(`Nex-N2.5-mini-abliterated-BF16.gguf`) stays in `artifacts/source/` as the
 pinned source of record.
 
 ## Reproduction

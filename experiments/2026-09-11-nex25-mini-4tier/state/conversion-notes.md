@@ -1,10 +1,10 @@
-# Nex-N2.5-mini-abliterix-v8-t17 — conversion provenance and the MTP exception
+# Nex-N2.5-mini-abliterated — conversion provenance and the MTP exception
 
 ## Sources
 
 | Artefact | Origin | Note |
 |---|---|---|
-| Text BF16 GGUF | `Nex-N2.5-mini-abliterix-v8-t17` (abliterix direct+EGA bake) | 40 blocks, 733 tensors |
+| Text BF16 GGUF | `Nex-N2.5-mini-abliterated` (abliterix direct+EGA bake; formerly -v8-t17) | 40 blocks, 733 tensors |
 | mmproj BF16 GGUF | `Nex-N2.5-mini` (original) | vision tower is untouched by the abliteration, so the projector is exactly the source's |
 
 The abliteration export is **text-only** (`text_only = true`): it carries the text
