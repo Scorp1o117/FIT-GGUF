@@ -139,6 +139,61 @@ def _build_parser() -> argparse.ArgumentParser:
     cal_parser.add_argument("--contract", default=None, help="Calibration contract JSON (default: packaged fidelity-calibration-v1)")
     cal_parser.add_argument("--replay-existing", default=None, help="Zero-eval mode: re-derive from a recorded curve-points/summary JSON")
     cal_parser.add_argument("--replay-manifest", default=None, help="Artifact manifest (name/size/sha) for replay dedup keys")
+    cal_parser.add_argument(
+        "--tier-search", action="store_true",
+        help=(
+            "Finishing stage: after the floors are frozen, solve each tier for "
+            "the SMALLEST artifact that passes its KL anchor and same-top floor. "
+            "Window probes serve the floor derivation; this serves the product. "
+            "Adds probes and writes tier-search-report.json; the guard profile "
+            "and floor derivation are not touched."
+        ),
+    )
+    cal_parser.add_argument(
+        "--tier-search-budget", type=int, default=2,
+        help="Fresh evals per tier during --tier-search (default 2)",
+    )
+    cal_parser.add_argument(
+        "--tier-search-tolerance-mib", type=int, default=128,
+        help="Tier-search bracket tolerance in MiB (default 128)",
+    )
+    cal_parser.add_argument(
+        "--tier-search-tiers", default=None,
+        help="Comma-separated subset of tiers to solve (default: every tier in the profile)",
+    )
+    ts_parser = subparsers.add_parser(
+        "tier-search",
+        help=(
+            "Solve each tier of an already-emitted Calibration Bundle for the "
+            "smallest artifact passing its anchor + same-top floor (standalone "
+            "re-run of the `fit calibrate --tier-search` finishing stage)"
+        ),
+    )
+    ts_parser.add_argument("--bundle", required=True, help="Calibration Bundle directory")
+    ts_parser.add_argument("--source", required=True, help="BF16 source GGUF")
+    ts_parser.add_argument("--imatrix", required=True, help="imatrix GGUF the calibration used")
+    ts_parser.add_argument("--runtime", required=True, help="llama.cpp runtime dir")
+    ts_parser.add_argument("--eval-data", required=True, help="Directory with the five frozen eval slices")
+    ts_parser.add_argument("--tiers", default=None, help="Comma-separated subset (default: all in the profile)")
+    ts_parser.add_argument("--budget", type=int, default=2, help="Fresh evals per tier (default 2)")
+    ts_parser.add_argument("--tolerance-mib", type=int, default=128, help="Bracket tolerance in MiB (default 128)")
+    ts_parser.add_argument("--refs-dir", default=None, help="Scratch reference dir (default: tmpfs scratch root)")
+    ts_parser.add_argument("--workdir", default=None, help="Scratch dir for probe artifacts (default: tmpfs scratch root)")
+    ts_parser.add_argument(
+        "--log-dir", default=None,
+        help="Subprocess log directory. Default: inside the scratch volume. Do not "
+             "point this at an ntfs3 mount — llama.cpp's unbuffered stderr "
+             "redirected onto ntfs3 panics this kernel (see "
+             "calibrate.assert_hot_loop_fs_safe).",
+    )
+    ts_parser.add_argument("--n-gpu-layers", type=int, default=99)
+    ts_parser.add_argument("--threads", type=int, default=16)
+    ts_parser.add_argument("--contract", default=None, help="Calibration contract JSON (default: packaged fidelity-calibration-v1)")
+    ts_parser.add_argument(
+        "--no-reseal", action="store_true",
+        help="Skip refreshing the bundle's derived digests (calibration-record.json, "
+             "registry-entry.json, SHA256SUMS) after the search appended to the curve",
+    )
     registry_parser = subparsers.add_parser(
         "registry",
         help="Fidelity Registry v1: list/show/verify/validate (read-only product CLI; "
@@ -284,6 +339,14 @@ def _run(args: argparse.Namespace) -> int:
             probe_budget=args.probe_budget,
             contract_path=Path(args.contract) if args.contract else None,
             log_dir=Path(args.log_dir) if args.log_dir else None,
+            tier_search=args.tier_search,
+            tier_search_budget=args.tier_search_budget,
+            tier_search_tolerance_mib=args.tier_search_tolerance_mib,
+            tier_search_tiers=(
+                [x.strip() for x in args.tier_search_tiers.split(",") if x.strip()]
+                if args.tier_search_tiers
+                else None
+            ),
         )
         if args.replay_existing:
             if not args.replay_manifest:
@@ -305,7 +368,103 @@ def _run(args: argparse.Namespace) -> int:
         print(f"calibration complete: overall={report['overall_status']} "
               f"failures={report['open_failures'] or 'none'}")
         print(f"bundle: {result.get('bundle', args.out_dir)}")
+        search = result.get("tier_search")
+        if search:
+            print(f"tier search ({len(search)} tiers):")
+            for tier, row in search.items():
+                if row.get("status") == "ok":
+                    print(f"  {tier:>9}: {row['best_point']:<20} "
+                          f"{row['best_bytes'] / 2**30:6.2f} GiB  "
+                          f"KL={row['macro_kl']:.4f}  top={row['same_top']:.4f}  "
+                          f"saved={row['saved_bytes'] / 2**30:.2f} GiB "
+                          f"vs {row['preset_baseline']}")
+                else:
+                    print(f"  {tier:>9}: {row.get('status')}")
         return 0 if report["overall_status"] == "validated" else 3
+
+    if args.command == "tier-search":
+        from fit_gguf import calibration as cal
+        from fit_gguf.calibrate import CalibrateConfig, _runtime_env, default_scratch_root
+        from fit_gguf.tier_search import (
+            prepare_scratch_references,
+            reseal_bundle,
+            run_tier_search,
+            tiers_from_profile,
+            write_report,
+        )
+
+        bundle = Path(args.bundle).resolve()
+        if not (bundle / "guard-profile.yaml").is_file():
+            print(f"fit: error: {bundle} is not a Calibration Bundle "
+                  "(no guard-profile.yaml)", file=sys.stderr)
+            return 2
+
+        scratch = Path(args.workdir) if args.workdir else default_scratch_root() / "tier-search"
+        cfg = CalibrateConfig(
+            source=Path(args.source),
+            imatrix_corpus=Path("/dev/null"),  # unused: the imatrix is supplied
+            runtime_dir=Path(args.runtime),
+            eval_data_dir=Path(args.eval_data),
+            out_dir=bundle,
+            model_id=json.loads(
+                (bundle / "registry-entry.json").read_text(encoding="utf-8")
+            )["model_id"],
+            imatrix_path=Path(args.imatrix),
+            imatrix_arg=str(Path(args.imatrix).resolve()),
+            n_gpu_layers=args.n_gpu_layers,
+            threads=args.threads,
+            workdir=scratch,
+            log_dir=Path(args.log_dir) if args.log_dir else scratch / "logs",
+            contract_path=Path(args.contract) if args.contract else None,
+        )
+        cfg.log_dir.mkdir(parents=True, exist_ok=True)
+        env = _runtime_env(cfg.runtime_dir)
+
+        contract, _ = cal.load_contract(cfg.contract_path)
+        tiers = tiers_from_profile(bundle)
+        if args.tiers:
+            wanted = [x.strip() for x in args.tiers.split(",") if x.strip()]
+            unknown = sorted(set(wanted) - set(tiers))
+            if unknown:
+                print(f"fit: error: tier(s) not in the guard profile: {unknown}",
+                      file=sys.stderr)
+                return 2
+            tiers = {k: v for k, v in tiers.items() if k in wanted}
+        if not tiers:
+            print("fit: error: no tiers selected", file=sys.stderr)
+            return 2
+
+        refs_dir = (
+            Path(args.refs_dir) if args.refs_dir else default_scratch_root() / f"cal-{cfg.model_id}" / "references"
+        )
+        prepare_scratch_references(cfg, env, bundle, refs_dir)
+
+        report, _ = run_tier_search(
+            cfg, contract, Path(args.imatrix), refs_dir, env, tiers,
+            budget=args.budget,
+            tolerance_mib=args.tolerance_mib,
+            work=scratch,
+        )
+        out = write_report(bundle, report)
+        print(f"tier-search report -> {out}")
+
+        if not args.no_reseal:
+            # The search appended to curve-points.jsonl, so the digests
+            # stage_emit recorded for it are now stale. Re-hash all three
+            # (record → registry pin → entry digest) or validate_bundle fails.
+            reseal_bundle(bundle)
+            print("bundle resealed (record + registry entry + SHA256SUMS)")
+
+        for tier, row in report.items():
+            if row.get("status") == "ok":
+                print(f"  {tier:>9}: {row['best_point']:<20} "
+                      f"{row['best_bytes'] / 2**30:6.2f} GiB  "
+                      f"KL={row['macro_kl']:.4f}  top={row['same_top']:.4f}  "
+                      f"saved={row['saved_bytes'] / 2**30:.2f} GiB "
+                      f"vs {row['preset_baseline']}")
+            else:
+                print(f"  {tier:>9}: {row.get('status')}")
+        return 0 if all(r.get("status") == "ok" for r in report.values()) else 3
 
     if args.command == "registry":
         from fit_gguf import registry as reg

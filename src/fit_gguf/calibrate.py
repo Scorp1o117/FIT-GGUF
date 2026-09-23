@@ -71,6 +71,12 @@ class CalibrateConfig:
     log_dir: Path | None = None
     replay_existing: str | None = None
     replay_manifest: str | None = None
+    # Finishing stage: solve each tier for its SMALLEST passing artifact. The
+    # window probes above serve floor derivation; this serves the product.
+    tier_search: bool = False
+    tier_search_budget: int = 2
+    tier_search_tolerance_mib: int = 128
+    tier_search_tiers: list[str] | None = None
 
     def log(self, message: str) -> None:
         print(f"[calibrate] {message}", flush=True)
@@ -430,6 +436,13 @@ def stage_ladder(cfg: CalibrateConfig, env: dict, imx: Path, refs_dir: Path,
         )
         if rc != 0 or not artifact.is_file():
             cfg.log(f"ladder {preset}: quantize FAILED — point skipped")
+            # A failed quantize still leaves a partial artifact behind.  Q8_0 on
+            # occamy dies at ~31 GiB of a ~37 GiB file once the scratch quota is
+            # reached; without this the dead weight stays in the scratch and the
+            # NEXT stage -- the gap probes, which need ~16 GiB -- aborts with
+            # EDQUOT.  Observed exactly that: 11 evaluated ladder points, then
+            # "Disk quota exceeded" inside the balanced-tier probe.
+            artifact.unlink(missing_ok=True)
             continue
         obs = eval_artifact(cfg, artifact, refs_dir, preset, env)
         observations.append(obs)
@@ -557,10 +570,20 @@ def stage_gap_probes(
                 policy="balanced", model_name=cfg.model_id,
             )
             artifact = (cfg.workdir or cfg.out_dir) / f"{tag}.gguf"
-            pipeline_quantize(
-                analysis_json, plan_prefix.parent / f"{tag}-tensor-types.txt",
-                artifact, imatrix_arg=imatrix_arg,
-            )
+            try:
+                pipeline_quantize(
+                    analysis_json, plan_prefix.parent / f"{tag}-tensor-types.txt",
+                    artifact, imatrix_arg=imatrix_arg,
+                )
+            except Exception as exc:  # noqa: BLE001
+                # A probe that cannot even be written must not take the whole
+                # calibration down with it: every ladder point is already paid
+                # for, and on occamy the balanced probe aborted the entire run
+                # with EDQUOT (a partial ladder-Q8_0 artifact had exhausted the
+                # scratch quota) while 11 evaluated points sat in the bundle.
+                cfg.log(f"gap {tier}: probe {tag} quantize FAILED ({exc}) — skipped")
+                artifact.unlink(missing_ok=True)
+                continue
             probes += 1
             try:
                 obs = eval_artifact(cfg, artifact, refs_dir, tag, env)
@@ -858,6 +881,36 @@ def run_calibrate(cfg: CalibrateConfig) -> dict:
         evaluation["open_failures"] = sorted(set(evaluation["open_failures"]) | {"INSUFFICIENT_WINDOW"})
         evaluation["overall_status"] = "candidate"
 
+    # Finishing stage: solve each tier for the SMALLEST artifact that passes its
+    # anchor and floor. This must happen BEFORE stage_emit — the search appends
+    # probes to curve-points.jsonl and stage_emit records that file's digest, so
+    # running it afterwards would leave a stale digest in calibration-record.json.
+    # The floors were frozen by stage_floors just above, which is the point: the
+    # artifacts the search selects must not feed back into the floor they are
+    # judged against.
+    search_obs: list[dict] = []
+    if cfg.tier_search:
+        from fit_gguf.tier_search import (
+            run_tier_search,
+            tiers_from_evaluation,
+            write_report,
+        )
+
+        tier_specs = tiers_from_evaluation(evaluation)
+        if cfg.tier_search_tiers:
+            wanted = set(cfg.tier_search_tiers)
+            missing_tiers = sorted(wanted - set(tier_specs))
+            if missing_tiers:
+                cfg.log(f"tier-search: {missing_tiers} not in the guard profile — ignored")
+            tier_specs = {k: v for k, v in tier_specs.items() if k in wanted}
+        search_report, search_obs = run_tier_search(
+            cfg, contract, imx, refs_dir, env, tier_specs,
+            budget=cfg.tier_search_budget,
+            tolerance_mib=cfg.tier_search_tolerance_mib,
+            work=work,
+        )
+        write_report(cfg.out_dir, search_report)
+
     # Publish scratch → bundle. These are bulk copies from this process, which
     # do not reproduce the subprocess write pattern the guard above rejects.
     publish_tree(refs_dir, published_refs, "bf16-*.kld")
@@ -868,7 +921,7 @@ def run_calibrate(cfg: CalibrateConfig) -> dict:
     if not (imx_copy.exists() and imx_copy.samefile(imx)):
         shutil.copyfile(imx, imx_copy)
     bundle = stage_emit(
-        cfg, contract, contract_sha, evaluation, observations + new_obs,
+        cfg, contract, contract_sha, evaluation, observations + new_obs + search_obs,
         refs_dir, domains, missing, unresolved,
     )
     if work.resolve() != cfg.out_dir.resolve():
@@ -878,4 +931,5 @@ def run_calibrate(cfg: CalibrateConfig) -> dict:
         "bundle": str(bundle),
         "report": evaluation,
         "source_sha256": source_sha,
+        "tier_search": search_report if cfg.tier_search else None,
     }
