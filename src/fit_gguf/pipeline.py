@@ -732,7 +732,16 @@ def plan(
         try:
             optimization = select(effective_target)
         except OptimizationError as exc:
-            raise PipelineError(f"oracle loop failed to converge: {exc}") from exc
+            # The floors are mandatory spending, so a window has a minimum
+            # achievable size that sits ABOVE its lower preset -- and the oracle
+            # loop, which only knows how to shrink, will walk past it. Say so
+            # instead of reporting the optimizer's internal bound.
+            raise PipelineError(
+                f"oracle loop failed to converge at target {effective_target:,} "
+                f"(requested {target:,}): {exc}. With --always-active-floors the "
+                f"minimum achievable size in this window is the lower preset plus "
+                f"the floor cost; pick a lower preset pair to go smaller."
+            ) from exc
     if prediction.total_bytes > target:
         raise PipelineError(
             f"Predicted {prediction.total_bytes:,} bytes exceeds target {target:,}"
