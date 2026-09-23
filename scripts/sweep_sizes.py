@@ -38,6 +38,7 @@ from fit_gguf.calibrate import (  # noqa: E402
     register_curve_point,
 )
 from fit_gguf.eval.provenance import sha256_file  # noqa: E402
+from fit_gguf.floors import floor_policy_id  # noqa: E402
 from fit_gguf.pipeline import plan as pipeline_plan  # noqa: E402
 from fit_gguf.pipeline import quantize as pipeline_quantize  # noqa: E402
 
@@ -92,6 +93,7 @@ def run_one(args, ctx, size: float) -> dict:
             args.curve_bundle, point_id, obs,
             always_active_floors=bool(args.floors), tier=args.tier,
             recipe_stem=prefix,
+            floor_policy=floor_policy_id() if args.floors else None,
         )
     print(
         f"[sweep] {size:g} GiB -> {obs['size_bytes'] / GIB:.2f} GiB  "

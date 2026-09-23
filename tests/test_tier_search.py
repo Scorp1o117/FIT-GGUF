@@ -449,3 +449,29 @@ def test_reusable_points_keeps_the_ladder_and_drops_a_foreign_regime(tmp_path):
     # that is comparable — still never both at once.
     pool_off, _ = reusable_points(curve, bundle, presets={"IQ3_M"}, always_active_floors=False)
     assert [o["point_id"] for o in pool_off] == ["IQ3_M", "tier-balanced-s3"]
+
+
+def test_a_point_from_another_floor_policy_is_not_reusable():
+    """The regime boolean is not enough — the table and the semantics move too.
+
+    Every point in occamy's ledger claimed ``always_active_floors: true`` after
+    the application bug was fixed, but four of five tiers' winners had been built
+    by the old semantics. Nothing in their own numbers said so; only a policy
+    identity does.
+    """
+    from fit_gguf.tier_search import reusable_points
+    from pathlib import Path
+
+    curve = [
+        {"point_id": "IQ3_M", "size_bytes": 1, "macro_kl": 0.1, "same_top": 0.9},
+        {"point_id": "old-14G", "size_bytes": 2, "macro_kl": 0.09, "same_top": 0.9,
+         "always_active_floors": True, "floor_policy": "aaaa"},
+        {"point_id": "new-14G", "size_bytes": 3, "macro_kl": 0.08, "same_top": 0.9,
+         "always_active_floors": True, "floor_policy": "bbbb"},
+    ]
+    pool, dropped = reusable_points(
+        curve, Path("/nonexistent"), presets={"IQ3_M"},
+        always_active_floors=True, floor_policy="bbbb",
+    )
+    assert [o["point_id"] for o in pool] == ["IQ3_M", "new-14G"]
+    assert dropped == ["old-14G"]

@@ -144,6 +144,54 @@ All notable changes to FIT-GGUF. Format follows
 
 ### Fixed
 
+- **A curve point records which planning POLICY produced it, not just whether
+  floors were on.**
+
+  The regime boolean answers "were floors active". It cannot answer "which table,
+  applied how" — and those move a plan too. When the floor-application bug above
+  was fixed, every point in the ledger still claimed `always_active_floors: true`
+  while four of five tiers' winners had been built by the old semantics, so the
+  search would have kept defeated-floor artifacts as their tiers' winners and the
+  fix would have changed nothing that ships.
+
+  Points now carry `floor_policy`: a digest of the floor table plus
+  `FLOOR_SEMANTICS_VERSION`, which is bumped when the *meaning* of the table
+  changes while its text does not. `reusable_points` requires both the regime and
+  the policy to match, so editing the table or fixing how a floor is applied
+  invalidates exactly the points that are no longer comparable — automatically
+  for table edits, and by one integer for semantic ones.
+
+  This is the third instance of the same class in one project: a policy moved, the
+  ledger did not notice, and because the search ranks by size a stale point did
+  not add noise — it won.
+
+- **A precision floor could be silently defeated by the plan it was correcting.**
+
+  `llama-quantize` resolves a tensor-type file by **first match**: a second line
+  for the same tensor is not a merge, it is dead text, and the earlier one takes
+  the tensor. `apply_floors` *appended* its raise to the optimizer's selection
+  instead of replacing the pick for that tensor, so any tensor the optimizer had
+  also chosen produced two lines and the floor lost the tie.
+
+  Auditing the five shipped occamy tiers against their own recipes: Reference 0
+  defeated, Quality **100**, Balanced **85**, Compact **258**, Mini **260** — the
+  shared experts shipping at the base preset's type where the floor said `Q6_K`,
+  and on Compact/Mini `attn_gate` and `ssm_alpha` below their floors as well. The
+  measured KL in those tiers stays honest (the eval ran on the bytes that
+  shipped), but the *policy* was not the one the release described.
+
+  The same bug produced the quieter failure that found it: a fixed-size A/B of
+  two candidate floor rules reproduced the incumbent artifact **byte for byte**
+  (identical sha256) — a comparison that cannot change the bytes cannot measure
+  anything.
+
+  `apply_floors` now replaces the pick, and `write_tensor_type_file`
+  deduplicates as a second lock, keeping the highest type, so the file cannot
+  carry a duplicate however a caller assembled the plan. The cost arithmetic is
+  unchanged and now correct by construction: the floor's delta is measured from
+  the pick it replaces, so the pick's delta plus the floor's compose to a single
+  preset-to-floor step.
+
 - **A curve point is only reusable in the floor regime it was planned under.**
 
   Turning precision floors on is a policy change, but nothing in a tier name says

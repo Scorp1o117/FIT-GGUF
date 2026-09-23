@@ -398,6 +398,7 @@ def register_curve_point(
     always_active_floors: bool,
     tier: str | None = None,
     recipe_stem: Path | None = None,
+    floor_policy: str | None = None,
 ) -> bool:
     """Admit an externally measured artifact into a bundle's curve ledger.
 
@@ -428,6 +429,7 @@ def register_curve_point(
         "same_top": float(obs["same_top"]),
         "per_domain": obs.get("per_domain"),
         "always_active_floors": bool(always_active_floors),
+        "floor_policy": floor_policy,
         "probe": {"source": "sweep", "tier": tier},
     }
     if recipe_stem is not None:

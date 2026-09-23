@@ -64,6 +64,7 @@ from fit_gguf.calibrate import (
     eval_artifact,
 )
 from fit_gguf.eval.provenance import sha256_file
+from fit_gguf.floors import floor_policy_id
 from fit_gguf.registry import canonical_json_bytes, entry_digest
 
 DEFAULT_TIERS = ("mini", "compact", "balanced", "quality", "reference")
@@ -174,6 +175,18 @@ def prior_points_for_tier(curve: list[dict], tier: str) -> set[str]:
     }
 
 
+def _point_plan_record(bundle: Path, point: dict) -> dict | None:
+    """The archived plan record for a point, or ``None`` when there is none."""
+    plan = Path(bundle) / "probes" / f"{point['point_id']}-plan.json"
+    if not plan.is_file():
+        return None
+    try:
+        record = json.loads(plan.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return record.get("record", record)
+
+
 def point_floor_regime(bundle: Path, point: dict) -> bool | None:
     """Whether a curve point was planned with precision floors on.
 
@@ -198,33 +211,59 @@ def point_floor_regime(bundle: Path, point: dict) -> bool | None:
     probe = point.get("probe") or {}
     if "always_active_floors" in probe:
         return bool(probe["always_active_floors"])
-    plan = Path(bundle) / "probes" / f"{point['point_id']}-plan.json"
-    if not plan.is_file():
+    record = _point_plan_record(bundle, point)
+    if record is None:
         return None
-    try:
-        record = json.loads(plan.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
-    record = record.get("record", record)
     if "always_active_floors" not in record:
         return False
     return bool(record["always_active_floors"])
 
 
+def point_floor_policy(bundle: Path, point: dict) -> str | None:
+    """Which floor POLICY a point was planned under, or ``None``.
+
+    The regime boolean answers "were floors on".  It cannot answer "which
+    table, applied how" — and those move a plan too.  When the floor application
+    bug was fixed, every ``floors: true`` point in the ledger had been built by
+    the *old* semantics while still claiming the new regime, so the search would
+    have kept four of five defeated-floor artifacts as their tiers' winners.
+
+    ``None`` is the honest answer for a point that predates the field or was
+    planned with the floors off, and — as with the regime — an unresolvable
+    point is never reused.
+    """
+    if "floor_policy" in point:
+        return point["floor_policy"]
+    record = _point_plan_record(bundle, point)
+    if record is None:
+        return None
+    return record.get("floor_policy")
+
+
 def reusable_points(
-    curve: list[dict], bundle: Path, *, presets: set[str], always_active_floors: bool
+    curve: list[dict],
+    bundle: Path,
+    *,
+    presets: set[str],
+    always_active_floors: bool,
+    floor_policy: str | None = None,
 ) -> tuple[list[dict], list[str]]:
-    """``(pool, dropped_ids)`` for one search under the current floor regime.
+    """``(pool, dropped_ids)`` for one search under the current planning policy.
 
     Ladder presets always survive; every other point must prove it was planned
-    the way this run plans.  A point measured under a different policy is not a
-    bound, it is a different experiment that happens to share a name.
+    the way this run plans — same regime **and** same floor policy.  A point
+    measured under a different policy is not a bound, it is a different
+    experiment that happens to share a name.
     """
+    expected = floor_policy if always_active_floors else None
     dropped = [
         o["point_id"]
         for o in curve
         if o["point_id"] not in presets
-        and point_floor_regime(bundle, o) != always_active_floors
+        and (
+            point_floor_regime(bundle, o) != always_active_floors
+            or point_floor_policy(bundle, o) != expected
+        )
     ]
     drop = set(dropped)
     return [o for o in curve if o["point_id"] not in drop], dropped
@@ -312,7 +351,9 @@ def run_tier_search(
     report: dict[str, dict] = {}
     new_obs: list[dict] = []
     regime_pool, stale = reusable_points(
-        curve, bundle, presets=presets, always_active_floors=always_active_floors
+        curve, bundle, presets=presets,
+        always_active_floors=always_active_floors,
+        floor_policy=floor_policy_id() if always_active_floors else None,
     )
 
     for tier, spec in tiers.items():
@@ -420,6 +461,7 @@ def run_tier_search(
             # same way. Two shapes for one fact is how the regime mismatch
             # stayed invisible.
             obs["always_active_floors"] = bool(always_active_floors)
+            obs["floor_policy"] = floor_policy_id() if always_active_floors else None
             obs["probe"] = {
                 "tier": tier,
                 "target_bytes": int(target),

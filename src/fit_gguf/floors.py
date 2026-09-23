@@ -40,6 +40,8 @@ projection and an SSM gate are always-active in any model that has them.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from dataclasses import replace
 from functools import reduce
@@ -86,6 +88,36 @@ ALWAYS_ACTIVE_FLOORS: tuple[tuple[str, str], ...] = (
 def _bpw(qtype: str) -> float:
     block_size, type_size = GGML_TYPE_TRAITS[qtype.lower()]
     return type_size * 8.0 / block_size
+
+
+# Bumped when the MEANING of the table changes, not its contents. 1 = a floor was
+# appended to the optimizer's selection; 2 = a floor replaces it (llama.cpp
+# resolves a tensor-type file by first match, so an appended duplicate silently
+# lost the tie). A curve point planned under either is not comparable to the
+# other, and nothing about the point's own numbers would say so.
+FLOOR_SEMANTICS_VERSION = 2
+
+
+def floor_policy_id() -> str:
+    """Stable identity of the floor policy: semantics version + table contents.
+
+    The same hazard as the floor regime, one level finer.  Turning floors on is a
+    policy change a boolean can record; *changing the table* or *fixing how a
+    floor is applied* is a policy change a boolean cannot — the point still says
+    ``always_active_floors: true`` while having been planned by different rules.
+    On occamy that let four of five tiers keep a defeated-floor artifact as their
+    winner after the application bug was fixed.
+
+    A digest of the table catches edits automatically; the version catches
+    changes to the semantics that leave the table text identical.  Both are
+    needed, and neither is a number a human has to remember to bump for the
+    common case.
+    """
+    payload = json.dumps(
+        {"version": FLOOR_SEMANTICS_VERSION, "floors": [list(pair) for pair in ALWAYS_ACTIVE_FLOORS]},
+        sort_keys=True,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
 def _align(value: int, alignment: int = GGUF_DEFAULT_ALIGNMENT) -> int:

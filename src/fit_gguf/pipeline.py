@@ -677,7 +677,7 @@ def plan(
             # exactly the always-active tensors. Floors redirect budget to them;
             # because the oracle loop below re-selects on a measured overshoot,
             # the floors compete for the same budget rather than adding to it.
-            from fit_gguf.floors import apply_floors
+            from fit_gguf.floors import apply_floors, floor_policy_id
 
             optimization = apply_floors(optimization, lower_recipe, layout)
         return optimization
@@ -811,6 +811,10 @@ def plan(
         "selected_cost_bytes": optimization.selected_cost_bytes,
         "oracle_iterations": oracle_iterations,
         "always_active_floors": bool(always_active_floors),
+        # Which floor POLICY, not merely whether floors were on: the table's
+        # contents and how a floor is applied both move a plan, and a boolean
+        # cannot tell two of them apart.
+        "floor_policy": floor_policy_id() if always_active_floors else None,
         "recipe_path": str(recipe_path),
         "recipe_sha256": _sha256_file(recipe_path),
         "tensor_types_path": str(types_path),
