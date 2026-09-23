@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import re
 
+from fit_gguf.candidates import GGML_TYPE_TRAITS
 from fit_gguf.optimizer import OptimizationPlan
 
 # llama.cpp release archives ship extensionless executables on POSIX and
@@ -98,9 +99,34 @@ def runtime_env(runtime_dir: str | Path, base: dict | None = None) -> dict:
 
 
 def write_tensor_type_file(plan: OptimizationPlan, path: str | Path) -> None:
-    """Write exact-name llama.cpp tensor overrides in deterministic order."""
-    lines = [
-        f"^{re.escape(tensor)}$={qtype}"
-        for tensor, qtype in sorted(plan.overrides, key=lambda override: override[0])
-    ]
+    """Write exact-name llama.cpp tensor overrides in deterministic order.
+
+    **One line per tensor, and the highest type wins.** ``llama-quantize``
+    resolves this file by *first match*: a second line for the same tensor is not
+    a merge, it is dead text, and the earlier one takes the tensor.  So a
+    duplicate is never harmless — it is a silent downgrade.  Occamy shipped four
+    of five tiers with their precision floors evaporated exactly this way, which
+    is why the deduplication lives here and not only in the caller that was
+    supposed to avoid it.
+    """
+    best: dict[str, str] = {}
+    for tensor, qtype in plan.overrides:
+        current = best.get(tensor)
+        if current is None or _bits_per_weight(qtype) > _bits_per_weight(current):
+            best[tensor] = qtype
+    lines = [f"^{re.escape(tensor)}$={qtype}" for tensor, qtype in sorted(best.items())]
     Path(path).write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
+
+
+def _bits_per_weight(qtype: str) -> float:
+    """Encoded bits per weight for a GGML type name, 0.0 when unknown.
+
+    An unknown name sorts below every known one rather than raising: this runs
+    while writing a file, and a name this table has never seen is a reason to
+    keep the other candidate, not to abort a plan.
+    """
+    traits = GGML_TYPE_TRAITS.get(qtype.lower())
+    if traits is None:
+        return 0.0
+    block_size, type_size = traits
+    return type_size * 8.0 / block_size

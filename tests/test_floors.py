@@ -138,6 +138,73 @@ def test_an_empty_floor_table_is_a_no_op():
     assert apply_floors(plan, recipe, layout, ()) is plan
 
 
+def test_a_floor_replaces_the_optimizers_pick_instead_of_joining_it():
+    """The bug that evaporated four of five shipped tiers' floors.
+
+    ``llama-quantize`` resolves a tensor-type file by FIRST match, so a plan that
+    selected the same tensor at a lower type must not leave two lines behind: the
+    earlier one takes the tensor and the floor is dead text. The floor replaces
+    the pick, and the cost is the step from the preset straight to the floor.
+    """
+    recipe, layout = make_inputs({"blk.0.ffn_gate_shexp.weight": ("iq3_s", SHAPE)})
+    pick_delta = _tensor_bytes(SHAPE, "Q4_K") - _tensor_bytes(SHAPE, "IQ3_S")
+    pick = SimpleNamespace(
+        tensor="blk.0.ffn_gate_shexp.weight", to_qtype="q4_k", delta_bytes=pick_delta
+    )
+    out = apply_floors(
+        FakePlan(selected=(pick,), predicted_size_bytes=1000), recipe, layout, FLOORS
+    )
+    assert [c.tensor for c in out.selected] == ["blk.0.ffn_gate_shexp.weight"]
+    assert out.selected[0].to_qtype == "q6_k"
+    # The floor's own delta is the step from the pick it replaced; the pick's own
+    # delta stays in predicted_size_bytes, so the two compose to one preset->floor
+    # step and nothing is double-counted.
+    assert out.selected[0].delta_bytes == (
+        _tensor_bytes(SHAPE, "Q6_K") - _tensor_bytes(SHAPE, "Q4_K")
+    )
+    assert out.predicted_size_bytes == 1000 + out.selected[0].delta_bytes
+    assert pick_delta + out.selected[0].delta_bytes == (
+        _tensor_bytes(SHAPE, "Q6_K") - _tensor_bytes(SHAPE, "IQ3_S")
+    )
+
+
+def test_the_written_file_says_one_thing_per_tensor():
+    """Belt and braces: dedup at the writer, because the trap is invisible.
+
+    A duplicate line is not a merge in llama.cpp, so the file must be incapable
+    of carrying one however a caller assembled the plan.
+    """
+    from fit_gguf.llama_integration import write_tensor_type_file
+    from fit_gguf.optimizer import OptimizationPlan
+
+    def cand(tensor, qtype, delta):
+        return SimpleNamespace(
+            tensor=tensor, to_qtype=qtype, delta_bytes=delta, importance=0.0,
+            raw_importance=0.0, expected_gain=0.0, utility_per_byte=0.0,
+            profiled=False, block=0, role="r",
+        )
+
+    plan = OptimizationPlan(
+        schema_version=1, target_bytes=1000, lower_size_bytes=900,
+        predicted_size_bytes=1000, unused_bytes=0,
+        selected=(cand("blk.0.x.weight", "q4_k", 1),
+                  cand("blk.0.x.weight", "q6_k", 2)),
+        skipped_count=0,
+    )
+    out = tmp_path_file()
+    write_tensor_type_file(plan, out)
+    lines = [line for line in out.read_text().splitlines() if line.strip()]
+    assert len(lines) == 1
+    assert lines[0].endswith("=q6_k")
+
+
+def tmp_path_file():
+    import tempfile
+    from pathlib import Path
+
+    return Path(tempfile.mkdtemp()) / "types.txt"
+
+
 def test_the_shipped_table_covers_the_always_active_groups():
     patterns = [p for p, _ in ALWAYS_ACTIVE_FLOORS]
     import re
@@ -165,3 +232,40 @@ def test_the_shipped_table_covers_the_always_active_groups():
 def test_bpw_is_ordered_like_the_type_names(qtype):
     assert _bpw(qtype) > 0
     assert _bpw("q8_0") > _bpw("q6_k") > _bpw("q4_k")
+
+
+def _floor_for(name: str) -> str | None:
+    import re
+
+    for pattern, qtype in ALWAYS_ACTIVE_FLOORS:
+        if re.search(pattern, name):
+            return qtype
+    return None
+
+
+def test_the_published_recipe_rules_are_pinned():
+    """Two levels lifted from a hand-audited external tensor map.
+
+    IsValorum's APEX-I-MiniPlus-V2.1 keeps the DeltaNet recurrence decay at F32
+    and the attention gates at Q8_0 on all 30 hybrid layers; our search had both
+    at Q4_K because both bracketing presets agree on them. Pin the levels so a
+    later refactor cannot quietly drop them back.
+    """
+    assert _floor_for("blk.12.ssm_alpha.weight") == "F32"
+    assert _floor_for("blk.12.attn_gate.weight") == "Q8_0"
+
+
+def test_the_two_lifted_floors_cost_almost_nothing():
+    """They are only defensible because they are free — so assert the cost.
+
+    A floor that grew into real money would have to be re-argued against the
+    budget it takes from the experts. On occamy: ssm_alpha is (2048, 32) and
+    attn_gate (2048, 4096), so the pair is ~0.2 MiB + ~4 MiB per layer, about
+    126 MiB across the whole model.
+    """
+    alpha = _tensor_bytes((2048, 32), "F32") - _tensor_bytes((2048, 32), "Q4_K")
+    gate = _tensor_bytes((2048, 4096), "Q8_0") - _tensor_bytes((2048, 4096), "Q4_K")
+    assert 0 < alpha < 1024 * 1024
+    assert 0 < gate < 8 * 1024 * 1024
+    # 30 hybrid layers carry both.
+    assert (alpha + gate) * 30 < 192 * 1024 * 1024
