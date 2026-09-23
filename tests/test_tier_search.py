@@ -344,3 +344,43 @@ def test_mini_kl_only_gate_finds_the_artifact_a_dual_gate_hides():
     assert row["clears_floor"] is False
     assert row["preset_baseline"] == "IQ3_XXS"
     assert row["saved_bytes"] == 13623758848 - 12100000000
+
+
+# ------------------------------------------------------------ restart mode
+def test_prior_points_are_the_tiers_own_history():
+    """A restart must drop the tier's probes and keep the ladder.
+
+    Ladder presets are the bounds no policy change can move — dropping them too
+    would leave nothing to bracket against.
+    """
+    from fit_gguf.tier_search import prior_points_for_tier
+
+    curve = [
+        {"point_id": "IQ3_M"},
+        {"point_id": "IQ4_XS"},
+        {"point_id": "probe-balanced-1", "probe": {"tier": "balanced"}},
+        {"point_id": "tier-balanced-s3"},
+        {"point_id": "floor-balanced-14.9G"},
+        {"point_id": "probe-compact-1", "probe": {"tier": "compact"}},
+        {"point_id": "tier-compact-s1"},
+    ]
+    assert prior_points_for_tier(curve, "balanced") == {
+        "probe-balanced-1", "tier-balanced-s3", "floor-balanced-14.9G",
+    }
+    assert prior_points_for_tier(curve, "compact") == {
+        "probe-compact-1", "tier-compact-s1",
+    }
+    assert prior_points_for_tier(curve, "mini") == set()
+
+
+def test_a_restart_keeps_the_ladder_and_drops_only_that_tier():
+    from fit_gguf.tier_search import prior_points_for_tier
+
+    curve = [
+        {"point_id": "IQ3_M"},
+        {"point_id": "tier-balanced-s3"},
+        {"point_id": "tier-compact-s1"},
+    ]
+    prior = prior_points_for_tier(curve, "balanced")
+    pool = [o for o in curve if o["point_id"] not in prior]
+    assert [o["point_id"] for o in pool] == ["IQ3_M", "tier-compact-s1"]

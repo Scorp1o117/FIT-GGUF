@@ -131,6 +131,23 @@ def tiers_from_evaluation(evaluation: dict) -> dict[str, dict]:
 
 
 # --------------------------------------------------------------------- search
+def prior_points_for_tier(curve: list[dict], tier: str) -> set[str]:
+    """Every curve point that belongs to this tier's own search history.
+
+    A point belongs to a tier when its probe record says so, or when its id
+    carries the tier's prefix — ``probe-<tier>-N`` from a calibration gap probe,
+    ``tier-<tier>-sN`` from this search, ``floor-<tier>-<size>G`` from a
+    fixed-size sweep. Ladder presets carry none of those, which is the point:
+    they are the bounds no policy change can move.
+    """
+    return {
+        o["point_id"] for o in curve
+        if o.get("probe", {}).get("tier") == tier
+        or o["point_id"].startswith(f"tier-{tier}-")
+        or o["point_id"].startswith(f"floor-{tier}-")
+    }
+
+
 def _fresh_tag(bundle: Path, tier: str) -> str:
     """First unused ``tier-<tier>-s<N>`` probe tag.
 
@@ -189,6 +206,7 @@ def run_tier_search(
     tolerance_mib: int = 128,
     work: Path | None = None,
     always_active_floors: bool = False,
+    restart_tiers: set[str] | None = None,
 ) -> tuple[dict, list[dict]]:
     """Bisect each tier's size bracket and keep the smallest evaluated PASS.
 
@@ -216,7 +234,20 @@ def run_tier_search(
         anchor = float(spec["anchor"])
         floor = spec.get("floor")
         cfg.log(f"tier-search {tier}: anchor={anchor} same_top_reference={floor}")
-        pool = curve + new_obs
+        # A policy change moves EVERY point, so an earlier pass's winner is not a
+        # bound on this one -- and because the search ranks by size, a marginally
+        # smaller older point can outrank a much better allocation and freeze the
+        # tier before the new one is ever measured. `restart_tiers` drops that
+        # tier's own history, leaving the ladder presets (which no policy can
+        # move) as the bounds.
+        if restart_tiers and tier in restart_tiers:
+            prior = prior_points_for_tier(curve, tier)
+            pool = [o for o in curve if o["point_id"] not in prior] + new_obs
+            cfg.log(
+                f"tier-search {tier}: restart — ignoring {len(prior)} prior point(s)"
+            )
+        else:
+            pool = curve + new_obs
 
         for _ in range(budget):
             passing = [o for o in pool if passes(o, anchor)]
@@ -306,7 +337,8 @@ def run_tier_search(
                 f"{'PASS' if passes(obs, anchor) else 'FAIL'}"
             )
 
-        report[tier] = _summarise(tier, curve + new_obs, anchor, floor, presets)
+        summary_pool = pool if (restart_tiers and tier in restart_tiers) else curve + new_obs
+        report[tier] = _summarise(tier, summary_pool, anchor, floor, presets)
         best = report[tier]
         if best["status"] == "ok":
             cfg.log(

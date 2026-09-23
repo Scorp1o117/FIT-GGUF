@@ -183,6 +183,13 @@ def _build_parser() -> argparse.ArgumentParser:
     ts_parser.add_argument("--runtime", required=True, help="llama.cpp runtime dir")
     ts_parser.add_argument("--eval-data", required=True, help="Directory with the five frozen eval slices")
     ts_parser.add_argument("--tiers", default=None, help="Comma-separated subset (default: all in the profile)")
+    ts_parser.add_argument(
+        "--restart-tiers", default=None,
+        help=("Tiers to re-solve from the ladder, ignoring their own earlier probes. "
+              "Use after a policy change: the search ranks by size, so an older point "
+              "that is marginally smaller freezes the tier before the new allocation "
+              "is ever measured."),
+    )
     ts_parser.add_argument("--budget", type=int, default=2, help="Fresh evals per tier (default 2)")
     ts_parser.add_argument("--tolerance-mib", type=int, default=128, help="Bracket tolerance in MiB (default 128)")
     ts_parser.add_argument(
@@ -457,6 +464,10 @@ def _run(args: argparse.Namespace) -> int:
             tolerance_mib=args.tolerance_mib,
             work=scratch,
             always_active_floors=args.always_active_floors,
+            restart_tiers=(
+                {x.strip() for x in args.restart_tiers.split(",") if x.strip()}
+                if args.restart_tiers else None
+            ),
         )
         out = write_report(bundle, report)
         print(f"tier-search report -> {out}")
