@@ -188,9 +188,7 @@ def main() -> int:
         entry = {
             "tier": tier,
             "point": r["point"],
-            "artifact": name,
             "size_bytes": size,
-            "artifact_sha256": record["sha256"],
             "primary_type": r["primary_type"],
             "anchor": r["anchor"],
             "same_top_reference": r["same_top_reference"],
@@ -217,11 +215,19 @@ def main() -> int:
                   f"top={obs['same_top']:.4f} (probe KL={r['probe_kl']:.4f}) "
                   f"-> {'PASS' if obs['macro_kl'] <= r['anchor'] else 'FAIL'}")
 
+        # Provenance travels with the artifact: the recipe is what reproduces it,
+        # and the quantize record is the invocation that did.
+        for suffix, src in (
+            (".tensor-types.txt", r["recipe_path"]),
+            (".plan.json", r["plan_path"]),
+            (".quantize-record.json", Path(f"{tmp}.quantize-record.json")),
+        ):
+            if src.is_file():
+                shutil.copyfile(src, dest / f"{name}{suffix}")
+
         shutil.move(str(tmp), str(target))
-        # Provenance travels with the artifact: the recipe is what reproduces it.
-        shutil.copyfile(r["recipe_path"], dest / f"{name}.tensor-types.txt")
-        shutil.copyfile(r["plan_path"], dest / f"{name}.plan.json")
         entry["artifact"] = name
+        # Re-hashed after the move: this is the digest of the bytes at rest.
         entry["artifact_sha256"] = sha256_file(target)
         emitted.append(entry)
         print(f"[emit] {tier}: {name}  {size / 2**30:.2f} GiB")
