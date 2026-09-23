@@ -4,6 +4,75 @@ All notable changes to FIT-GGUF. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **`fit tier-search` — solve each tier for the smallest artifact that reaches
+  its KL anchor, instead of shipping the preset the window happened to contain.**
+
+  `fit calibrate` fills each tier's window by probing the **largest uncovered KL
+  gap** inside it (`_largest_uncovered_gap`). That serves the *floor derivation* —
+  it wants enough samples in the window to take a stable P5 — and it is blind to
+  what the tier is actually for. A tier's product is the smallest artifact that
+  reaches the anchor, and that artifact generally lies **between** two ladder
+  presets.
+
+  On `occamy-1.0-abliterated` the quality window held `IQ4_XS` (17.44 GiB, KL
+  0.0503 — a FAIL) and `Q4_K_M` (19.71 GiB, KL 0.0471). The answer lives in the KL
+  gap `0.0471..0.0503`; the largest gap was `0.0503..0.0575`, so the single probe
+  went **above** `IQ4_XS` and produced a *smaller* artifact with a *worse* KL
+  (17.27 GiB @ 0.0555), failing the anchor outright. The tier then fell back to
+  the `Q4_K_M` preset — 1.71 GiB larger than the minimum PASS on the same curve.
+  Across the four tiers the gap was **6.2 GiB (9.8%)**.
+
+  Two entry points:
+
+  * `fit calibrate --tier-search` — finishing stage. It runs after the floors are
+    frozen and **before** `stage_emit`, and that ordering is load-bearing: the
+    search appends its probes to `curve-points.jsonl`, whose digest `stage_emit`
+    records in `calibration-record.json`. A post-emit run would leave a stale
+    digest (the bundle still validates — nothing re-hashes the curve — but the
+    record would lie).
+  * `fit tier-search` — standalone re-run against an emitted bundle, for
+    tightening a tier later without redoing the calibration. It reseals the
+    record, the ladder seed material, the registry pin and `SHA256SUMS`
+    afterwards: rewriting the record moves its digest, which moves the registry
+    entry's pin, which moves the entry digest, and `validate_bundle` fails on the
+    first stale pin.
+
+  Floors are frozen *before* the search runs, deliberately: the artifacts it
+  selects must not feed back into the floor they are judged against. Neither the
+  search nor the reseal touches the guard profile or the floor derivation.
+
+  The gate is **KL alone**, per v0.3 (`fidelity_search.TierContract.passes`). The
+  model's calibrated same-top floor is carried through the report as
+  `same_top_reference` / `clears_floor` — the same "reference, not gate" role the
+  tier contract already gives it — but it never decides a verdict. This is not
+  cosmetic: on occamy the mini floor sat **0.0003** above an 11.27 GiB point that
+  clears the 0.20 anchor, and the balanced floor left only **0.0012** of headroom,
+  so a dual gate both hides a smaller valid artifact and can steer a
+  KL-clearing probe *upward* when its same-top dips.
+
+- **`scripts/emit_tier_artifacts.py`** — turns a tier-search report into the
+  shipped files. `fit tier-search` answers *which* artifact each tier ships and
+  leaves its recipe behind; nothing emitted it. The script quantizes from the
+  recorded analysis + recipe, names the result
+  `<model>-FIT-<TIER>-<size>G-<type>.gguf` (suffix kept a nameable preset — the
+  Hugging Face model page drops files whose suffix it cannot match), and
+  **re-evaluates the shipped bytes** so the report carries the file's own measured
+  KL rather than a promise inherited from the probe.
+
+### Fixed
+
+- **A failed probe quantize no longer takes the whole calibration down.** On
+  occamy the balanced-tier probe aborted an entire run with `EDQUOT` — a partial
+  ladder-`Q8_0` artifact had exhausted the scratch quota — while 11 evaluated
+  points sat in the bundle. A probe that cannot be written now logs, unlinks its
+  partial artifact, and is skipped; the bracket is unchanged, so it costs one
+  budget slot and nothing else. A failed ladder quantize likewise unlinks the
+  partial file it leaves behind, which is what starved the next stage.
+
 ## [0.3.3] — 2026-09-10
 
 A released file name has to be readable by the tools that read file names.
