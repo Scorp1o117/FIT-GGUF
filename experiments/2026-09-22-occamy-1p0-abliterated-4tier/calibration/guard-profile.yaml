@@ -1,0 +1,65 @@
+calibration_contract: fidelity-calibration-v1
+calibration_contract_sha256: 455338c52de7aa1b4d826ae759a69f8837476ffdb1c16e2d007a289a03c54d47
+evaluator_contract: eval-v1
+generalization_scope: exact_model_only
+guard_profile_id: guard-occamy-1.0-abliterated-exact-v1
+guard_profile_version: 1
+scope:
+  identifier: occamy-1.0-abliterated
+  type: exact_model
+source_sha256: b77f117553d1106e56fd14cbc95f6a92022f98bb0bd385735805412ef8f78856
+status: validated
+tiers:
+  quality:
+    kl_anchor: 0.05
+    same_top_floor: 0.9127
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: Q4_K_M
+      macro_kl: 0.0471004
+      macro_same_top: 0.923476
+      pass: true
+    validation_status: validated
+  balanced:
+    kl_anchor: 0.1
+    same_top_floor: 0.8803
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: probe-balanced-2
+      macro_kl: 0.09650420000000001
+      macro_same_top: 0.8851300000000001
+      pass: true
+    validation_status: validated
+  compact:
+    kl_anchor: 0.15
+    same_top_floor: 0.8442
+    floor_method: empirical_p5
+    sample_count: 4
+    witness:
+      point_id: probe-compact-1
+      macro_kl: 0.1331198
+      macro_same_top: 0.863854
+      pass: true
+    validation_status: validated
+  mini:
+    kl_anchor: 0.2
+    same_top_floor: 0.8356
+    floor_method: empirical_p5
+    sample_count: 3
+    witness:
+      point_id: probe-mini-1
+      macro_kl: 0.1719246
+      macro_same_top: 0.843238
+      pass: true
+    validation_status: validated
+validation_basis: fidelity-calibration-v1
+confidence:
+  note: fidelity-calibration-v1 onboarding; floor_method/sample_count per tier
+  window_n:
+    quality: 3
+    balanced: 3
+    compact: 4
+    mini: 3
+profile_hash: 93eb81712f3f98a74ad3d56dd2b9c0bc9faf00fb50d460b1117f1c42b95fb22b
