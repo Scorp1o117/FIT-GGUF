@@ -58,6 +58,19 @@ from fit_gguf.tier_search import prepare_scratch_references  # noqa: E402
 DEFAULT_TIERS = ("quality", "balanced", "compact", "mini")
 
 
+def _log(message: str) -> None:
+    """Progress for a batch run.
+
+    stdout is a pipe when this runs under a job runner, and without an explicit
+    flush Python buffers it until the process exits — which hides every per-tier
+    line for the better part of an hour.  Errors keep using print(): they go to
+    stderr, which is unbuffered anyway.
+    """
+    sys.stdout.write(message + "\n")
+    sys.stdout.flush()
+
+
+
 def artifact_name(model_id: str, tier: str, size_bytes: int, primary_type: str) -> str:
     """``<model>-FIT-<TIER>-<size>G-<type>.gguf``.
 
@@ -120,7 +133,7 @@ def main() -> int:
     for tier in wanted:
         row = report[tier]
         if row.get("status") != "ok":
-            print(f"[emit] {tier}: skipped (tier-search status {row.get('status')!r})")
+            _log(f"[emit] {tier}: skipped (tier-search status {row.get('status')!r})")
             continue
         point = row["best_point"]
         plan_path = bundle / "probes" / f"{point}-plan.json"
@@ -147,7 +160,7 @@ def main() -> int:
 
     if args.dry_run:
         for r in plan_rows:
-            print(f"[emit] {r['tier']:>9}: {r['point']:<20} "
+            _log(f"[emit] {r['tier']:>9}: {r['point']:<20} "
                   f"recipe={r['recipe_path'].name} primary={r['primary_type']} "
                   f"probe={r['probe_bytes'] / 2**30:.2f} GiB KL={r['probe_kl']:.4f}")
         return 0
@@ -181,7 +194,7 @@ def main() -> int:
     for r in plan_rows:
         tier = r["tier"]
         tmp = work / f"{tier}.gguf"
-        print(f"[emit] {tier}: quantize from {r['recipe_path'].name}")
+        _log(f"[emit] {tier}: quantize from {r['recipe_path'].name}")
         record = pipeline_quantize(r["analysis_path"], r["recipe_path"], tmp)
         size = int(record["size_bytes"])
         name = artifact_name(model_id, tier, size, r["primary_type"])
@@ -213,7 +226,7 @@ def main() -> int:
                 "per_domain": obs.get("per_domain"),
             }
             entry["kl_matches_probe"] = abs(obs["macro_kl"] - r["probe_kl"]) < 1e-9
-            print(f"[emit] {tier}: shipped KL={obs['macro_kl']:.4f} "
+            _log(f"[emit] {tier}: shipped KL={obs['macro_kl']:.4f} "
                   f"top={obs['same_top']:.4f} (probe KL={r['probe_kl']:.4f}) "
                   f"-> {'PASS' if obs['macro_kl'] <= r['anchor'] else 'FAIL'}")
 
@@ -232,7 +245,7 @@ def main() -> int:
         # Re-hashed after the move: this is the digest of the bytes at rest.
         entry["artifact_sha256"] = sha256_file(target)
         emitted.append(entry)
-        print(f"[emit] {tier}: {name}  {size / 2**30:.2f} GiB")
+        _log(f"[emit] {tier}: {name}  {size / 2**30:.2f} GiB")
 
     out = dest / "emit-report.json"
     out.write_text(json.dumps({
@@ -241,15 +254,15 @@ def main() -> int:
         "tiers": emitted,
     }, indent=1) + "\n", encoding="utf-8")
 
-    print(f"\n[emit] {len(emitted)} artifacts -> {dest}")
+    _log(f"\n[emit] {len(emitted)} artifacts -> {dest}")
     total = sum(e["size_bytes"] for e in emitted)
-    print(f"[emit] total {total / 2**30:.2f} GiB")
+    _log(f"[emit] total {total / 2**30:.2f} GiB")
     for e in emitted:
         shipped = e.get("shipped")
         tail = (f"  shipped KL={shipped['macro_kl']:.4f}" if shipped else "")
-        print(f"  {e['tier']:>9}: {e['artifact']:<52} "
+        _log(f"  {e['tier']:>9}: {e['artifact']:<52} "
               f"{e['size_bytes'] / 2**30:6.2f} GiB{tail}")
-    print(f"[emit] report -> {out}")
+    _log(f"[emit] report -> {out}")
 
     if not args.keep_work and work.resolve() != bundle.resolve():
         shutil.rmtree(work, ignore_errors=True)
