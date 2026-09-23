@@ -227,9 +227,22 @@ fit tier-search --bundle out/MyModel … --tiers mini  # tighten a tier later
 On `occamy-1.0-abliterated` the window heuristic probed **above** `IQ4_XS`
 (17.44 GiB, KL 0.0503 — a FAIL) into the largest gap, produced a *smaller*
 artifact with a *worse* KL, and the tier fell back to the `Q4_K_M` preset.
-Solving the bracket instead landed the same tier at **17.50 GiB, KL 0.0463** —
-2.21 GiB under that preset. Across the four tiers the difference against the
-smallest passing preset in each was **7.24 GiB (11.4%)**.
+Solving the bracket instead landed the same tier at **17.50 GiB, KL 0.0464** —
+2.21 GiB under that preset. Across five tiers the difference against the smallest
+passing preset in each is **11.08 GiB (12.3%)**.
+
+**A window is a palette, not a bracket.** `generate_upgrade_candidates` emits one
+transition per tensor — lower type to upper type — so a window can only express
+the union of its two endpoint recipes' types. A tensor typed identically at both
+ends is unreachable at any budget, and a window whose endpoints differ in one
+type can *interpolate* but never re-allocate. On occamy the 0.02 anchor was
+bracketed with `Q4_K_M`–`Q6_K` — one transition, `q4_k → q6_k`, for all 371
+candidates — and three probes reached 0.0217 at best, so the tier fell back to
+the `Q6_K` preset at 26.56 GiB. A `Q5_K_M`–`Q8_0` window (432 candidates, every
+role) reached **23.55 GiB @ 0.0195** in a single probe: 3.00 GiB under the
+preset, and ahead of the external `APEX-I-Balanced` recipe (23.60 GiB @ 0.0197)
+whose palette had prompted the question. Choosing a tier's window is choosing
+what that tier can be.
 
 The stage runs *before* the bundle is emitted — it appends to
 `curve-points.jsonl`, whose digest the record pins — and *after* the floors are

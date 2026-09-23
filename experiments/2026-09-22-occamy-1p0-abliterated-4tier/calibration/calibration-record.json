@@ -106,7 +106,7 @@
    "blk.38.ssm_dt.bias"
   ],
   "unresolved_tiers": [],
-  "curve_points": 31
+  "curve_points": 58
  },
  "derivation": {
   "quality": {
@@ -189,7 +189,7 @@
  "artifacts": {
   "guard_profile_sha256": "fd0158c440a68abfeedd98ea614f3d45a9807fa2173aa5080d80a9089404e995",
   "reference_manifest_sha256": "32464735ce5ff247b6e0aa91c4e8244637da3332c8269c75eb79bb51faf3fd16",
-  "curve_points_sha256": "ecb50bea0893a504be9114b16d85cdcb3f333a59f8e51b1ee282ecc8e111578b"
+  "curve_points_sha256": "f083e9597b7b397fc7633436e8e875701967dfd305d2bcdb59e8ae95ba5fc32d"
  },
  "failures": [],
  "overall_status": "validated"

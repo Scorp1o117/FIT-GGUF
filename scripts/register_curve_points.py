@@ -29,7 +29,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "src"))
 
-from fit_gguf.calibrate import register_curve_point  # noqa: E402
+from fit_gguf.calibrate import default_scratch_root, register_curve_point  # noqa: E402
 
 GIB = 2**30
 
@@ -53,12 +53,18 @@ def main() -> int:
                     help="Sweep report JSON; repeatable")
     ap.add_argument("--tier", default=None,
                     help="Optional tier to scope the points to (makes them restartable)")
+    ap.add_argument("--workdir", type=Path, default=None,
+                    help="Sweep scratch dir holding the plans; defaults to "
+                         "<scratch>/<tag>-work, where sweep_sizes.py puts it")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
     total = added = skipped = 0
     for report in args.report:
         payload = json.loads(report.read_text(encoding="utf-8"))
+        tag = (report.name[: -len("-report.json")]
+               if report.name.endswith("-report.json") else report.stem)
+        workdir = args.workdir or default_scratch_root() / f"{tag}-work"
         for row in payload["rows"]:
             total += 1
             if row.get("status") != "ok":
@@ -66,9 +72,12 @@ def main() -> int:
                 skipped += 1
                 continue
             pid = point_id_for(report, row, args.tier)
+            source_stem = workdir / f"{tag}-{row['requested_gib']:g}G"
             if args.dry_run:
+                have = [s for s in ("-plan.json", "-recipe.json", "-tensor-types.txt")
+                        if Path(f"{source_stem}{s}").is_file()]
                 print(f"  would add {pid:28} {row['actual_size_bytes'] / GIB:6.2f} GiB "
-                      f"KL={row['macro_kl']:.4f} floors={row['floors']}")
+                      f"KL={row['macro_kl']:.4f} floors={row['floors']} recipe={have}")
                 added += 1
                 continue
             ok = register_curve_point(
@@ -82,14 +91,17 @@ def main() -> int:
                 },
                 always_active_floors=bool(row["floors"]),
                 tier=args.tier,
+                recipe_stem=source_stem,
             )
+            copied = [s for s in ("-plan.json", "-recipe.json", "-tensor-types.txt")
+                      if (args.bundle / "probes" / f"{pid}{s}").is_file()]
             if ok:
                 added += 1
                 print(f"  add   {pid:28} {row['actual_size_bytes'] / GIB:6.2f} GiB "
-                      f"KL={row['macro_kl']:.4f} floors={row['floors']}")
+                      f"KL={row['macro_kl']:.4f} floors={row['floors']} recipe={copied}")
             else:
                 skipped += 1
-                print(f"  have  {pid:28} already registered")
+                print(f"  have  {pid:28} already registered (recipe={copied})")
     verb = "would add" if args.dry_run else "added"
     print(f"\n[register] {total} row(s): {verb} {added}, skipped {skipped}")
     return 0

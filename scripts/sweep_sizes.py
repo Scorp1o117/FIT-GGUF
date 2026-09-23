@@ -91,6 +91,7 @@ def run_one(args, ctx, size: float) -> dict:
         register_curve_point(
             args.curve_bundle, point_id, obs,
             always_active_floors=bool(args.floors), tier=args.tier,
+            recipe_stem=prefix,
         )
     print(
         f"[sweep] {size:g} GiB -> {obs['size_bytes'] / GIB:.2f} GiB  "

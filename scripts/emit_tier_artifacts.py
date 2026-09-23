@@ -49,6 +49,7 @@ from fit_gguf.calibrate import (  # noqa: E402
     default_scratch_root,
     eval_artifact,
 )
+from fit_gguf.calibration import load_contract  # noqa: E402
 from fit_gguf.eval.provenance import sha256_file  # noqa: E402
 from fit_gguf.pipeline import primary_type_from_plan  # noqa: E402
 from fit_gguf.pipeline import quantize as pipeline_quantize  # noqa: E402
@@ -122,6 +123,7 @@ def main() -> int:
     if unknown:
         print(f"[emit] error: no tier-search result for {unknown}", file=sys.stderr)
         return 2
+    presets = set(load_contract()[0]["ladder_standard_presets"])
 
     work = args.workdir or default_scratch_root() / "tier-emit"
     work.mkdir(parents=True, exist_ok=True)
@@ -130,6 +132,7 @@ def main() -> int:
 
     # ---- plan ---------------------------------------------------------------
     plan_rows: list[dict] = []
+    preset_rows: list[dict] = []
     for tier in wanted:
         row = report[tier]
         if row.get("status") != "ok":
@@ -138,11 +141,36 @@ def main() -> int:
         point = row["best_point"]
         plan_path = bundle / "probes" / f"{point}-plan.json"
         recipe_path = bundle / "probes" / f"{point}-tensor-types.txt"
-        for needed in (plan_path, recipe_path):
-            if not needed.is_file():
-                print(f"[emit] error: {needed} missing — cannot reproduce {tier}",
-                      file=sys.stderr)
-                return 2
+        missing = [p for p in (plan_path, recipe_path) if not p.is_file()]
+        if missing and point in presets:
+            # A tier whose answer IS a ladder preset has no recipe of its own --
+            # the preset is the recipe.  Record it as the tier's product and ship
+            # nothing: copying 26 GiB of a standard file so that a lineup looks
+            # complete would be a worse lie than the missing file.  The report
+            # carries the size and the measurement, so the tier is still plotted
+            # and still comparable.
+            preset_rows.append({
+                "tier": tier,
+                "point": point,
+                "size_bytes": int(row["best_bytes"]),
+                "primary_type": point,
+                "anchor": float(row["anchor"]),
+                "same_top_reference": row.get("same_top_reference"),
+                "probe": {
+                    "size_bytes": int(row["best_bytes"]),
+                    "macro_kl": float(row["macro_kl"]),
+                    "same_top": float(row["same_top"]),
+                },
+                "preset_fallback": True,
+                "shipped": None,
+            })
+            _log(f"[emit] {tier}: best point is the {point} preset — no FIT recipe "
+                  f"of its own, reporting it as the tier product and shipping nothing")
+            continue
+        if missing:
+            print(f"[emit] error: {missing[0]} missing — cannot reproduce {tier}",
+                  file=sys.stderr)
+            return 2
         plan = json.loads(plan_path.read_text(encoding="utf-8"))
         plan_rows.append({
             "tier": tier,
@@ -251,16 +279,18 @@ def main() -> int:
     out.write_text(json.dumps({
         "model_id": model_id,
         "bundle": str(bundle),
-        "tiers": emitted,
+        "tiers": sorted(emitted + preset_rows, key=lambda e: e["size_bytes"]),
     }, indent=1) + "\n", encoding="utf-8")
 
-    _log(f"\n[emit] {len(emitted)} artifacts -> {dest}")
+    _log(f"\n[emit] {len(emitted)} artifacts -> {dest}"
+         + (f" (+{len(preset_rows)} tier(s) answered by a preset)" if preset_rows else ""))
     total = sum(e["size_bytes"] for e in emitted)
     _log(f"[emit] total {total / 2**30:.2f} GiB")
-    for e in emitted:
+    for e in sorted(emitted + preset_rows, key=lambda e: e["size_bytes"]):
         shipped = e.get("shipped")
         tail = (f"  shipped KL={shipped['macro_kl']:.4f}" if shipped else "")
-        _log(f"  {e['tier']:>9}: {e['artifact']:<52} "
+        label = e.get("artifact") or f"= {e['point']} preset (not shipped)"
+        _log(f"  {e['tier']:>9}: {label:<52} "
               f"{e['size_bytes'] / 2**30:6.2f} GiB{tail}")
     _log(f"[emit] report -> {out}")
 

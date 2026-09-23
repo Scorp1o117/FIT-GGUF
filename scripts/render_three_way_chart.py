@@ -39,6 +39,8 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "scripts"))
 
+from fit_gguf.fidelity import TIER_DISPLAY  # noqa: E402
+
 # The house style, imported so this chart cannot drift away from it.
 from render_release_charts import (  # noqa: E402
     BG,
@@ -63,13 +65,21 @@ GIB = 2**30
 # packs all three families into ~2 GiB, so a uniform above/below rule overlaps
 # there; these were placed by looking at the rendered chart. Anything not listed
 # keeps the default.
+NATIVE_LABEL_OFFSETS = {
+    # The FIT reference point lands almost on top of this preset's marker, and
+    # the preset label is the one that can move.
+    "Q5_K_M": (0, 16, "center"),
+}
 FIT_LABEL_OFFSETS = {
-    "mini": (-16, 6, "right"),
-    "compact": (-18, -22, "right"),
+    "mini": (-40, -8, "right"),
+    "compact": (-30, -30, "right"),
+    "balanced": (-16, -34, "right"),
+    "reference": (20, 10, "left"),
 }
 APEX_LABEL_OFFSETS = {
     "mini": (20, -20, "left"),
     "compact": (-6, -34, "right"),
+    "balanced": (-16, -28, "right"),
 }
 
 
@@ -101,7 +111,10 @@ def load_fit(path: Path) -> list[dict]:
     for row in payload["tiers"]:
         shipped = row.get("shipped")
         out.append({
-            "name": row["tier"],
+            # The tier key stays lowercase for offsets and lookups; what a reader
+            # sees is the product name, which is capitalized everywhere else.
+            "key": row["tier"],
+            "name": TIER_DISPLAY.get(row["tier"], row["tier"]),
             "gib": (shipped["size_bytes"] if shipped else row["size_bytes"]) / GIB,
             "kl": (shipped["macro_kl"] if shipped else row["macro_kl"]),
             "top": (shipped["same_top"] if shipped else row["same_top"]),
@@ -165,9 +178,10 @@ def render(native, fit, apex, model: str, out_dir: Path, lang: str, gates: list[
         label="llama.cpp 原生预设" if zh else "llama.cpp native presets", zorder=3,
     )
     for item in native:
+        dx, dy, ha = NATIVE_LABEL_OFFSETS.get(item["name"], (0, -17, "center"))
         ax.annotate(
             item["name"], (item["gib"], item["kl"]),
-            xytext=(0, -17), textcoords="offset points", ha="center",
+            xytext=(dx, dy), textcoords="offset points", ha=ha,
             fontsize=9, color=BLUE,
         )
 
@@ -178,7 +192,7 @@ def render(native, fit, apex, model: str, out_dir: Path, lang: str, gates: list[
         label="FIT 档位" if zh else "FIT tiers", zorder=5,
     )
     for item in fit:
-        dx, dy, ha = FIT_LABEL_OFFSETS.get(item["name"], (0, 15, "center"))
+        dx, dy, ha = FIT_LABEL_OFFSETS.get(item["key"], (0, 15, "center"))
         ax.annotate(
             f"{item['name']}\n{item['kl']:.4f}", (item["gib"], item["kl"]),
             xytext=(dx, dy), textcoords="offset points", ha=ha,

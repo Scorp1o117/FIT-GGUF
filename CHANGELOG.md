@@ -54,6 +54,85 @@ All notable changes to FIT-GGUF. Format follows
   so a dual gate both hides a smaller valid artifact and can steer a
   KL-clearing probe *upward* when its same-top dips.
 
+- **Precision floors for the tensors the candidate set cannot reach**
+  (`fit plan --always-active-floors`).
+
+  `generate_upgrade_candidates` admits **only positive-size lower-to-upper
+  transitions**, so a tensor typed *identically* in both bracketing presets never
+  becomes a candidate — it is unreachable at any budget, under any policy. That
+  is not an edge case: it is the always-active machinery. In an `IQ2_XS`→`IQ3_XXS`
+  window the attention, SSM and embedding tensors are typed the same at both ends,
+  so no plan can protect them however much budget it has.
+
+  `ALWAYS_ACTIVE_FLOORS` (`ffn_{gate,up,down}_shexp` → `Q6_K`, `attn_q/k/gate`,
+  `ssm_{alpha,beta,out}`, `token_embd.weight` → `Q4_K`) is a *floor*, not an
+  override: it is billed as ordinary spending, and the oracle loop re-selects on
+  measured overshoot, so the budget is **redirected, never increased**. The
+  llama.cpp native heuristic already lifts `attn_qkv`, `attn_v` and `output.weight`
+  one step in every preset, so those are deliberately not floored.
+
+  At a fixed size on occamy the floors are worth **−16.4% macro KL**
+  (14.90 GiB @ 0.0835 with, vs 14.89 GiB @ 0.0999 without) — and they are what
+  makes a lower base preset safe to use at all.
+
+- **`fit tier-search --restart-tiers <tier,...>`** — re-solve a tier from the
+  ladder instead of from its own history. A policy change moves **every** point,
+  and because the search ranks by size, a marginally smaller older point can
+  outrank a much better allocation and freeze the tier before the new one is ever
+  measured. `--restart-tiers` drops that tier's own probes and sweeps, leaving the
+  ladder presets — the bounds no policy can move — as the bracket.
+
+- **A lower base preset per tier** (`bracketing_pair(steps=2)`). A plan can only
+  spend `target − lower_preset`, so anchoring one rung lower buys a full ladder
+  step of headroom at no cost to the target: `balanced` moved from an
+  `IQ3_M`-based window to `IQ3_XS`/`IQ3_XXS` and found 13.80 GiB where the
+  adjacent pair had bottomed out at 14.89. The rule is not free — a lower base is
+  a *wider* window with a coarser candidate set, and on occamy the `IQ3_XXS`-based
+  probes at 13.64/13.71 GiB both failed where the `IQ3_XS`-based sweep at
+  13.80 passed — so it is a widening, not a guarantee.
+
+- **The Reference tier, and capitalized tier names.** `KL_ANCHORS` gains
+  `reference: 0.02` — near-reference fidelity at the smallest artifact that
+  reaches it — and `TIER_DISPLAY` gives every tier the name the product uses
+  (`Mini`, `Compact`, `Balanced`, `Quality`, `Reference`). A **product tier need
+  not be a calibrated one**: the guard profile carries the tiers a calibration
+  derived floors for, while the product offers the tiers in `KL_ANCHORS`, so a
+  wanted tier that the profile does not carry is planned with `floor: None` (the
+  same-top reference is informational anyway) instead of being refused.
+
+  **A tier's window decides what the tier can be, and the candidate palette is
+  the union of the two endpoint recipes' types.** On occamy the search bracketed
+  the 0.02 anchor with `Q4_K_M`–`Q6_K` — a window whose every tensor offers
+  exactly one transition, `q4_k → q6_k`. Its probes plateaued at 26.21 / 26.34 /
+  26.40 GiB with KL 0.0224 / 0.0220 / 0.0217, never reaching the anchor, so the
+  tier fell back to the `Q6_K` preset at 26.56 GiB. A `Q5_K_M`–`Q8_0` window has
+  **432 candidates** across every role, and one probe at 23.6 GiB reached
+  **23.55 GiB @ KL 0.0195** — 3.00 GiB under the preset, and ahead of the
+  external `APEX-I-Balanced` recipe (23.60 GiB @ 0.0197) that had prompted the
+  question. The window is not a bracket, it is the *palette*: a window whose
+  endpoints differ in one type can interpolate, and only interpolate.
+
+- **`scripts/sweep_sizes.py`** — plan → quantize → evaluate one or more exact
+  sizes from a frozen analysis. `fit tier-search` bisects for the smallest
+  artifact that passes a gate, which cannot answer *"same bytes, different
+  distribution, which KL?"*: the old point is still the smallest PASS, so the
+  search stops and the new allocation is never measured. An unreachable size is a
+  **result**, not a crash — floors are mandatory spending, so every window has a
+  minimum achievable size above its lower preset.
+
+  `--curve-bundle` registers each measured point into the bundle's curve as it
+  goes — plan and recipe included, because a ledger entry that cannot be rebuilt
+  is not a ledger entry — and **`scripts/register_curve_points.py`** ingests
+  sweeps that ran before that existed. A measurement the search cannot see does
+  not exist: on occamy a paid-for 13.80 GiB / 0.0959 floor artifact sat in a
+  sweep report while the balanced tier reported a worse, larger point as its
+  winner.
+
+  A sweep also decouples *measuring* from *bracketing*: once a sweep has measured
+  a passing point, `fit tier-search --budget 0` records the verdict and pays for
+  no probes, which is how occamy's reference tier was re-solved in seconds after
+  its window changed.
+
 - **`scripts/emit_tier_artifacts.py`** — turns a tier-search report into the
   shipped files. `fit tier-search` answers *which* artifact each tier ships and
   leaves its recipe behind; nothing emitted it. The script quantizes from the
@@ -64,6 +143,40 @@ All notable changes to FIT-GGUF. Format follows
   KL rather than a promise inherited from the probe.
 
 ### Fixed
+
+- **A curve point is only reusable in the floor regime it was planned under.**
+
+  Turning precision floors on is a policy change, but nothing in a tier name says
+  so — and the search ranks by size, so a stale point does not merely add noise,
+  it *wins*. On occamy the pre-floor `tier-balanced-s3` (14.89 GiB, KL 0.0999) sat
+  just under the floor artifact at 14.90 GiB, so the search selected it and then
+  read its own bracket as "under tolerance"; the 13.80 GiB / 0.0959 floor
+  artifact that actually wins the tier was never looked at. `quality` lost the
+  same way: 19.13 GiB reported, 17.50 GiB / 0.0464 available.
+
+  Points now carry `always_active_floors`, and `reusable_points` refuses to mix
+  populations — a point measured under another policy is not a bound, it is a
+  different experiment that happens to share a name. Resolution order is the
+  point's own field, then the probe block, then the archived plan record, then
+  `None`; **`None` is never reused**, because a pre-floor plan predates the field
+  entirely and guessing would silently merge two incomparable populations. Ladder
+  presets are exempt *by name* rather than by default: they are uniform
+  quantizations that never consult the table, so they are the one thing a regime
+  change cannot move.
+
+  `--restart-tiers` remains the explicit "forget this tier's history" knob; the
+  regime filter is not a substitute for it, it is what makes it safe to forget
+  less. Corrected occamy result: `balanced` 13.80 GiB @ 0.0959 (was 14.89 @
+  0.0999), `quality` 17.50 GiB @ 0.0464 (was 19.13 @ 0.0490).
+
+- **A tier answered by a ladder preset is reported, not duplicated.**
+  `emit_tier_artifacts.py` reproduced every winner from
+  `probes/<point>-plan.json`, which a preset does not have — it errored out
+  instead. A preset has no recipe of its own: the preset *is* the recipe. The
+  tier is now recorded with its size and measurement and `preset_fallback: true`,
+  and nothing is written, because copying 26 GiB of a standard file so that a
+  lineup looks complete is a worse lie than the missing file. The chart reads the
+  row either way.
 
 - **A failed probe quantize no longer takes the whole calibration down.** On
   occamy the balanced-tier probe aborted an entire run with `EDQUOT` — a partial

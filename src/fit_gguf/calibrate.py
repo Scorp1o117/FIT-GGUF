@@ -371,6 +371,25 @@ def _append_curve_point(bundle: Path, obs: dict) -> None:
         handle.write(json.dumps(obs, sort_keys=True) + "\n")
 
 
+def archive_point_recipe(bundle: Path, point_id: str, source_stem: Path) -> list[str]:
+    """Copy a point's plan and recipe into the bundle under its registered id.
+
+    ``emit_tier_artifacts.py`` reproduces a tier winner from
+    ``probes/<point>-plan.json`` and ``probes/<point>-tensor-types.txt``.  A sweep
+    writes those into its own scratch workdir, so without this a registered point
+    can win a tier and still be unshippable — the ledger would name an artifact
+    nothing can rebuild.  Returns the suffixes actually copied.
+    """
+    copied = []
+    for suffix in ("-plan.json", "-recipe.json", "-tensor-types.txt"):
+        src = Path(f"{source_stem}{suffix}")
+        if not src.is_file():
+            continue
+        shutil.copyfile(src, bundle / "probes" / f"{point_id}{suffix}")
+        copied.append(suffix)
+    return copied
+
+
 def register_curve_point(
     bundle: Path,
     point_id: str,
@@ -378,6 +397,7 @@ def register_curve_point(
     *,
     always_active_floors: bool,
     tier: str | None = None,
+    recipe_stem: Path | None = None,
 ) -> bool:
     """Admit an externally measured artifact into a bundle's curve ledger.
 
@@ -390,6 +410,10 @@ def register_curve_point(
     what lets a later search tell two otherwise identical ``(size, KL)`` pairs
     apart — floors are mandatory spending, so the same size is a different
     artifact once the table is active.
+
+    ``recipe_stem`` is the plan's path without its suffix; when given, the plan
+    and recipe are archived beside the ledger under ``point_id`` so the point can
+    be reproduced.  Registration and reproducibility are the same promise.
 
     Idempotent: a point already in the ledger is left alone and ``False`` is
     returned, so re-running an ingest cannot double-count a measurement.
@@ -406,6 +430,8 @@ def register_curve_point(
         "always_active_floors": bool(always_active_floors),
         "probe": {"source": "sweep", "tier": tier},
     }
+    if recipe_stem is not None:
+        archive_point_recipe(bundle, point_id, Path(recipe_stem))
     _append_curve_point(bundle, point)
     return True
 
