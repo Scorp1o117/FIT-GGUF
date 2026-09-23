@@ -143,10 +143,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--tier-search", action="store_true",
         help=(
             "Finishing stage: after the floors are frozen, solve each tier for "
-            "the SMALLEST artifact that passes its KL anchor and same-top floor. "
-            "Window probes serve the floor derivation; this serves the product. "
-            "Adds probes and writes tier-search-report.json; the guard profile "
-            "and floor derivation are not touched."
+            "the SMALLEST artifact that reaches its KL anchor. Window probes "
+            "serve the floor derivation; this serves the product. Adds probes "
+            "and writes tier-search-report.json; the guard profile and floor "
+            "derivation are not touched."
         ),
     )
     cal_parser.add_argument(
@@ -165,8 +165,9 @@ def _build_parser() -> argparse.ArgumentParser:
         "tier-search",
         help=(
             "Solve each tier of an already-emitted Calibration Bundle for the "
-            "smallest artifact passing its anchor + same-top floor (standalone "
-            "re-run of the `fit calibrate --tier-search` finishing stage)"
+            "smallest artifact reaching its KL anchor (standalone re-run of the "
+            "`fit calibrate --tier-search` finishing stage). The model's "
+            "calibrated same-top floor is reported as a reference, never a gate"
         ),
     )
     ts_parser.add_argument("--bundle", required=True, help="Calibration Bundle directory")
