@@ -597,6 +597,7 @@ def plan(
     fidelity_tier: str | None = None,
     guard_registry: str | Path | None = None,
     source_sha256: str | None = None,
+    always_active_floors: bool = False,
 ) -> dict[str, object]:
     """Plan one artifact from a frozen analysis and write its three records."""
     if policy not in _POLICIES:
@@ -663,10 +664,23 @@ def plan(
 
     def select(select_target: int) -> OptimizationPlan:
         if policy == "original":
-            return optimize_greedy(select_target, candidate_set)
-        if policy == "balanced":
-            return optimize_block_balanced(select_target, candidate_set, block_span=resolved_span)
-        return optimize_random(select_target, candidate_set, seed=seed)
+            optimization = optimize_greedy(select_target, candidate_set)
+        elif policy == "balanced":
+            optimization = optimize_block_balanced(
+                select_target, candidate_set, block_span=resolved_span
+            )
+        else:
+            optimization = optimize_random(select_target, candidate_set, seed=seed)
+        if always_active_floors:
+            # The candidate set cannot express an upgrade for a tensor both
+            # bracketing presets type identically, so the optimizer is blind to
+            # exactly the always-active tensors. Floors redirect budget to them;
+            # because the oracle loop below re-selects on a measured overshoot,
+            # the floors compete for the same budget rather than adding to it.
+            from fit_gguf.floors import apply_floors
+
+            optimization = apply_floors(optimization, lower_recipe, layout)
+        return optimization
 
     optimization = select(target)
 
@@ -787,6 +801,7 @@ def plan(
         "skipped_count": optimization.skipped_count,
         "selected_cost_bytes": optimization.selected_cost_bytes,
         "oracle_iterations": oracle_iterations,
+        "always_active_floors": bool(always_active_floors),
         "recipe_path": str(recipe_path),
         "recipe_sha256": _sha256_file(recipe_path),
         "tensor_types_path": str(types_path),

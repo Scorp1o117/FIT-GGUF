@@ -77,6 +77,7 @@ class CalibrateConfig:
     tier_search_budget: int = 2
     tier_search_tolerance_mib: int = 128
     tier_search_tiers: list[str] | None = None
+    tier_search_floors: bool = False
 
     def log(self, message: str) -> None:
         print(f"[calibrate] {message}", flush=True)
@@ -908,6 +909,7 @@ def run_calibrate(cfg: CalibrateConfig) -> dict:
             budget=cfg.tier_search_budget,
             tolerance_mib=cfg.tier_search_tolerance_mib,
             work=work,
+            always_active_floors=cfg.tier_search_floors,
         )
         write_report(cfg.out_dir, search_report)
 

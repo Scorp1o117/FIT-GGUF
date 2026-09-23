@@ -188,6 +188,7 @@ def run_tier_search(
     budget: int = 2,
     tolerance_mib: int = 128,
     work: Path | None = None,
+    always_active_floors: bool = False,
 ) -> tuple[dict, list[dict]]:
     """Bisect each tier's size bracket and keep the smallest evaluated PASS.
 
@@ -266,6 +267,7 @@ def run_tier_search(
             pipeline_plan(
                 analysis_json, prefix, target_bytes=int(target),
                 policy="balanced", model_name=cfg.model_id,
+                always_active_floors=always_active_floors,
             )
             artifact = work / f"{tag}.gguf"
             try:

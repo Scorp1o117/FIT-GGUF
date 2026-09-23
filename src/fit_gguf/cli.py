@@ -67,6 +67,13 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     plan_parser.add_argument("--seed", default=None, help="Seed for --policy random")
     plan_parser.add_argument(
+        "--always-active-floors", action="store_true",
+        help=("Raise always-active tensors (shared expert, attn_q/k/gate, "
+              "ssm gates, token_embd) to a precision floor after selection. The "
+              "candidate set only holds tensors the two bracketing presets type "
+              "differently, so these are otherwise unreachable at any budget."),
+    )
+    plan_parser.add_argument(
         "--block-span",
         default="auto",
         help="Block-quarter span for --policy balanced (default: auto)",
@@ -178,6 +185,10 @@ def _build_parser() -> argparse.ArgumentParser:
     ts_parser.add_argument("--tiers", default=None, help="Comma-separated subset (default: all in the profile)")
     ts_parser.add_argument("--budget", type=int, default=2, help="Fresh evals per tier (default 2)")
     ts_parser.add_argument("--tolerance-mib", type=int, default=128, help="Bracket tolerance in MiB (default 128)")
+    ts_parser.add_argument(
+        "--always-active-floors", action="store_true",
+        help="Raise always-active tensors to a precision floor when planning probes",
+    )
     ts_parser.add_argument("--refs-dir", default=None, help="Scratch reference dir (default: tmpfs scratch root)")
     ts_parser.add_argument("--workdir", default=None, help="Scratch dir for probe artifacts (default: tmpfs scratch root)")
     ts_parser.add_argument(
@@ -445,6 +456,7 @@ def _run(args: argparse.Namespace) -> int:
             budget=args.budget,
             tolerance_mib=args.tolerance_mib,
             work=scratch,
+            always_active_floors=args.always_active_floors,
         )
         out = write_report(bundle, report)
         print(f"tier-search report -> {out}")
@@ -532,6 +544,7 @@ def _run(args: argparse.Namespace) -> int:
             refine_profile=args.refine_profile,
             fidelity_tier=args.fidelity_tier,
             guard_registry=args.guard_registry,
+            always_active_floors=args.always_active_floors,
         )
         print(
             f"plan written: policy={record['policy']} target={record['target_bytes']:,} "
