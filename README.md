@@ -207,6 +207,40 @@ fit fidelity-search \
   --preset-ladder IQ3_M,IQ4_XS,Q4_K_M,Q5_K_M,Q6_K
 ```
 
+### Tiers are solved, not read off the ladder
+
+The window probes above exist to derive the floors: `_largest_uncovered_gap`
+fills the **largest** KL gap in a window, which is what a stable P5 wants. That
+is not the same question as *what should this tier ship*. A tier's product is the
+smallest artifact that reaches its anchor, and that artifact generally lies
+**between** two ladder presets.
+
+`--tier-search` adds a finishing stage that answers the product question directly:
+it bisects each tier's size bracket, evaluates the candidates, and keeps the
+smallest PASS together with its recipe.
+
+```bash
+fit calibrate … --tier-search                        # finishing stage, one command
+fit tier-search --bundle out/MyModel … --tiers mini  # tighten a tier later
+```
+
+On `occamy-1.0-abliterated` the window heuristic probed **above** `IQ4_XS`
+(17.44 GiB, KL 0.0503 — a FAIL) into the largest gap, produced a *smaller*
+artifact with a *worse* KL, and the tier fell back to the `Q4_K_M` preset.
+Solving the bracket instead landed the same tier at **17.50 GiB, KL 0.0463** —
+2.21 GiB under that preset. Across the four tiers the difference against the
+smallest passing preset in each was **7.24 GiB (11.4%)**.
+
+The stage runs *before* the bundle is emitted — it appends to
+`curve-points.jsonl`, whose digest the record pins — and *after* the floors are
+frozen, so the artifacts it selects can never feed back into the floor they are
+judged against. Run against an existing bundle, `fit tier-search` reseals the
+record, the seed material, the registry pin and `SHA256SUMS`.
+
+`scripts/emit_tier_artifacts.py` turns a tier-search report into the shipped
+files: `<model>-FIT-<TIER>-<size>G-<type>.gguf`, each with its plan, recipe and
+quantize record beside it, and each **re-evaluated on the bytes that ship**.
+
 **Fail-closed, not best-effort.** The calibration line reports what it actually
 measured: a tier whose window cannot be filled reports `INSUFFICIENT_WINDOW`
 and the guard stays `candidate`; floors are never borrowed from another model,
