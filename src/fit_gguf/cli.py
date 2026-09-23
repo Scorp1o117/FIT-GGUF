@@ -443,12 +443,30 @@ def _run(args: argparse.Namespace) -> int:
         tiers = tiers_from_profile(bundle)
         if args.tiers:
             wanted = [x.strip() for x in args.tiers.split(",") if x.strip()]
-            unknown = sorted(set(wanted) - set(tiers))
+            # A tier may be a PRODUCT tier without being a CALIBRATED one: since
+            # v0.3 the gate is KL alone, so `reference` is a new number rather
+            # than a new calibration, and a guard profile that predates it is
+            # still complete for the model it describes. Such a tier carries no
+            # same-top reference (informational anyway) and is planned normally.
+            from fit_gguf.fidelity import KL_ANCHORS
+
+            unknown = sorted(set(wanted) - set(tiers) - set(KL_ANCHORS))
             if unknown:
-                print(f"fit: error: tier(s) not in the guard profile: {unknown}",
-                      file=sys.stderr)
+                print(
+                    f"fit: error: unknown tier(s): {unknown} "
+                    f"(guard profile: {sorted(tiers)}, product: {sorted(KL_ANCHORS)})",
+                    file=sys.stderr,
+                )
                 return 2
-            tiers = {k: v for k, v in tiers.items() if k in wanted}
+            uncalibrated = sorted(set(wanted) - set(tiers))
+            if uncalibrated:
+                print(
+                    f"tier-search: {uncalibrated} not in the guard profile - "
+                    f"planned without a same-top reference"
+                )
+            tiers = {k: v for k, v in tiers.items() if k in wanted} | {
+                k: {"anchor": KL_ANCHORS[k], "floor": None} for k in uncalibrated
+            }
         if not tiers:
             print("fit: error: no tiers selected", file=sys.stderr)
             return 2
