@@ -52,6 +52,7 @@ from fit_gguf.calibrate import (  # noqa: E402
 from fit_gguf.eval.provenance import sha256_file  # noqa: E402
 from fit_gguf.pipeline import primary_type_from_plan  # noqa: E402
 from fit_gguf.pipeline import quantize as pipeline_quantize  # noqa: E402
+from fit_gguf.pipeline import size_label  # noqa: E402
 from fit_gguf.tier_search import prepare_scratch_references  # noqa: E402
 
 DEFAULT_TIERS = ("quality", "balanced", "compact", "mini")
@@ -60,14 +61,15 @@ DEFAULT_TIERS = ("quality", "balanced", "compact", "mini")
 def artifact_name(model_id: str, tier: str, size_bytes: int, primary_type: str) -> str:
     """``<model>-FIT-<TIER>-<size>G-<type>.gguf``.
 
-    The suffix stays a nameable preset — the Hugging Face model page matches file
-    names against the known preset set and drops a file whose suffix is not one of
-    them (see ``pipeline.primary_type_from_plan``).  The tier is carried in the
-    middle because four files ship as a named set with different KL gates, and
-    size alone does not say which gate each one satisfies.
+    The size label comes from ``pipeline.size_label`` rather than a local round:
+    one rounding rule, and the half-GiB case is exactly where two copies of it
+    would drift apart.  The suffix stays a nameable preset — the Hugging Face
+    model page matches file names against the known preset set and drops a file
+    whose suffix is not one of them (see ``primary_type_from_plan``).  The tier is
+    carried in the middle because four files ship as a named set with different KL
+    gates, and size alone does not say which gate each one satisfies.
     """
-    gib = round(size_bytes / 2**30)
-    return f"{model_id}-FIT-{tier.upper()}-{gib}G-{primary_type}.gguf"
+    return f"{model_id}-FIT-{tier.upper()}-{size_label(size_bytes)}-{primary_type}.gguf"
 
 
 def main() -> int:

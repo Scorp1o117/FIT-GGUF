@@ -164,23 +164,35 @@ def default_model_name(source_path: str) -> str:
     return stem
 
 
+def size_label(size_bytes: int) -> str:
+    """The ``<Size>G`` label a release file name carries.
+
+    Exact half-GiB sizes render with one decimal (``7.5G``) so the 0.5-GiB
+    release grid does not collide; every other size rounds half-up to an integer
+    (``7G``, ``9G`` from 8.76 GiB).
+
+    Split out of :func:`suggested_filename` because anything that names a release
+    artifact has to agree with it: two implementations of one rounding rule is
+    one implementation too many, and the half-GiB case is exactly where they
+    would drift apart.
+    """
+    gib = max(size_bytes, 1) / (1 << 30)
+    if abs(gib - round(gib)) < 1e-6:
+        return f"{max(1, round(gib))}G"
+    if abs(gib * 2 - round(gib * 2)) < 1e-6:
+        return f"{round(gib * 2) / 2:g}G"
+    return f"{int(gib + 0.5) if gib >= 0.5 else 1}G"
+
+
 def suggested_filename(model_name: str, target_bytes: int, dominant_qtype: str) -> str:
     """Release naming convention: <Model>-FIT-<Size>G-<QTYPE>.gguf.
 
     The encoded promise is the TARGET size in GiB (the product claim is
-    "main model file ≈ target"). Exact half-GiB targets render with one
-    decimal (`7.5G`) so the 0.5-GiB release grid does not collide; every
-    other target rounds half-up to an integer (`7G`, `9G` from 8.76 GiB).
+    "main model file ≈ target"). See :func:`size_label` for the rounding rule.
     The qtype is the canonical uppercase form of the element-weighted
     dominant type.
     """
-    gib = max(target_bytes, 1) / (1 << 30)
-    if abs(gib - round(gib)) < 1e-6:
-        label = f"{max(1, round(gib))}G"
-    elif abs(gib * 2 - round(gib * 2)) < 1e-6:
-        label = f"{round(gib * 2) / 2:g}G"
-    else:
-        label = f"{int(gib + 0.5) if gib >= 0.5 else 1}G"
+    label = size_label(target_bytes)
     return f"{model_name}-FIT-{label}-{dominant_qtype.upper()}.gguf"
 
 

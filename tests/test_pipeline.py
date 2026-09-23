@@ -399,6 +399,25 @@ def test_suggested_filename_rules():
     assert suggested_filename("M", 100, "q2_k") == "M-FIT-1G-Q2_K.gguf"
 
 
+def test_size_label_is_the_one_rounding_rule():
+    """`suggested_filename` and any other release namer must agree.
+
+    Extracted so the tier emitter could reuse it: the half-GiB case is exactly
+    where two copies of this rule would drift apart.
+    """
+    from fit_gguf.pipeline import size_label, suggested_filename
+
+    assert size_label(13_831_691_232) == "13G"
+    assert size_label(3 * (1 << 29)) == "1.5G"
+    assert size_label(15 * (1 << 29)) == "7.5G"
+    assert size_label(9_408_728_256) == "9G"
+    assert size_label(100) == "1G"
+    assert size_label(0) == "1G"
+    # The extraction must not have moved suggested_filename's output.
+    for size in (13_831_691_232, 3 * (1 << 29), 9_408_728_256, 100):
+        assert size_label(size) in suggested_filename("M", size, "iq4_xs")
+
+
 def test_primary_type_names_the_native_preset_when_nothing_was_overridden():
     """A zero-override plan IS the lower preset, so it is named for that preset.
 
