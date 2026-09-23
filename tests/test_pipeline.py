@@ -10,6 +10,7 @@ import pytest
 import stub_runtime
 
 from fit_gguf.models import DryRunResult, DryRunTensorAssignment
+from fit_gguf.floors import floor_policy_id
 from fit_gguf.imatrix import ImatrixProfile, ImatrixTensorProfile
 from fit_gguf.pipeline import (
     PipelineError,
@@ -259,6 +260,19 @@ def test_analysis_plan_quantize_end_to_end_with_stub_runtime(e2e):
 
     balanced = plan(analysis, out_dir / "balanced-fit50", fit="0.5", policy="balanced")
     assert balanced["block_span"] == 1
+
+    # Floors on is the path `fit tier-search` always takes, and it used to raise
+    # NameError here: the import lived inside the branch that APPLIES the floors
+    # while the record that DESCRIBES them is written further down.
+    floored = plan(
+        analysis, out_dir / "floored-fit50", fit="0.5", policy="balanced",
+        always_active_floors=True,
+    )
+    assert floored["always_active_floors"] is True
+    assert floored["floor_policy"] == floor_policy_id()
+    assert plan(analysis, out_dir / "unfloored", fit="0.5", policy="balanced")[
+        "floor_policy"
+    ] is None
 
     with pytest.raises(PipelineError):
         plan(analysis, out_dir / "r", fit="0.5", policy="random")

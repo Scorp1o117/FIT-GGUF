@@ -684,6 +684,13 @@ def plan(
 
     optimization = select(target)
 
+    # Imported once, at function scope, because `floors` pulls in the candidate
+    # and layout tables this module is already built on and a module-level import
+    # would close the loop. It used to sit inside the `if` below, which put it out
+    # of reach of the record written further down — a NameError that only fires
+    # when floors are on, i.e. on the one path the tier search always takes.
+    from fit_gguf.floors import floor_policy_id
+
     prefix = Path(out_prefix)
     if prefix.parent != Path("."):
         prefix.parent.mkdir(parents=True, exist_ok=True)

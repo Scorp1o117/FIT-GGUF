@@ -380,7 +380,8 @@ def run_tier_search(
             cfg.log(
                 f"tier-search {tier}: ignoring {len(drop)} of {len(curve)} curve "
                 f"point(s) — {len(prior - set(stale))} restarted, "
-                f"{len(stale)} planned under a different floor regime"
+                f"{len(stale)} planned under a different policy "
+                f"(floor regime or floor table)"
             )
 
         for _ in range(budget):
