@@ -16,6 +16,7 @@ continues to the sizes that do fit.
         --eval-data eval-data --refs-dir /dev/shm/cal-<model>/references \\
         --sizes 13.8,14.1,14.3 --model-name <model> --imatrix-arg <path> \\
         --dest /path/to/out [--no-floors] [--tag sweep]
+        [--curve-bundle <calibration-bundle> [--tier <tier>]]
 """
 
 from __future__ import annotations
@@ -34,6 +35,7 @@ from fit_gguf.calibrate import (  # noqa: E402
     _runtime_env,
     default_scratch_root,
     eval_artifact,
+    register_curve_point,
 )
 from fit_gguf.eval.provenance import sha256_file  # noqa: E402
 from fit_gguf.pipeline import plan as pipeline_plan  # noqa: E402
@@ -78,6 +80,18 @@ def run_one(args, ctx, size: float) -> dict:
         "artifact_sha256": sha256_file(keep),
         "recipe_sha256": sha256_file(Path(f"{prefix}-tensor-types.txt")),
     }
+    if args.curve_bundle:
+        # A measurement the search cannot see does not exist. `tier-search` reads
+        # only the bundle curve, so a sweep left in its own report is invisible to
+        # it — which is how a paid-for 13.80 GiB / 0.0959 floor artifact stayed
+        # unknown while the tier reported a worse, larger point as its winner.
+        point_id = (
+            f"{args.tag}-{args.tier}-{size:g}G" if args.tier else f"{args.tag}-{size:g}G"
+        )
+        register_curve_point(
+            args.curve_bundle, point_id, obs,
+            always_active_floors=bool(args.floors), tier=args.tier,
+        )
     print(
         f"[sweep] {size:g} GiB -> {obs['size_bytes'] / GIB:.2f} GiB  "
         f"KL={obs['macro_kl']:.4f}  top={obs['same_top']:.4f}  "
@@ -102,6 +116,14 @@ def main() -> int:
     ap.add_argument("--no-floors", dest="floors", action="store_false")
     ap.add_argument("--workdir", type=Path, default=None)
     ap.add_argument("--tag", default="sweep")
+    ap.add_argument(
+        "--curve-bundle", type=Path, default=None,
+        help="Calibration bundle whose curve ledger this sweep should register into",
+    )
+    ap.add_argument(
+        "--tier", default=None,
+        help="Optional tier this sweep is scoped to (makes the points restartable)",
+    )
     args = ap.parse_args()
 
     sizes = [float(s) for s in args.sizes.split(",") if s.strip()]

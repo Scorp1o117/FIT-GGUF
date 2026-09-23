@@ -162,7 +162,7 @@ def prior_points_for_tier(curve: list[dict], tier: str) -> set[str]:
 
     A point belongs to a tier when its probe record says so, or when its id
     carries the tier's prefix — ``probe-<tier>-N`` from a calibration gap probe,
-    ``tier-<tier>-sN`` from this search, ``floor-<tier>-<size>G`` from a
+    ``tier-<tier>-sN`` from this search, ``<tag>-<tier>-<size>G`` from a
     fixed-size sweep. Ladder presets carry none of those, which is the point:
     they are the bounds no policy change can move.
     """
@@ -170,8 +170,64 @@ def prior_points_for_tier(curve: list[dict], tier: str) -> set[str]:
         o["point_id"] for o in curve
         if o.get("probe", {}).get("tier") == tier
         or o["point_id"].startswith(f"tier-{tier}-")
-        or o["point_id"].startswith(f"floor-{tier}-")
+        or f"-{tier}-" in o["point_id"]
     }
+
+
+def point_floor_regime(bundle: Path, point: dict) -> bool | None:
+    """Whether a curve point was planned with precision floors on.
+
+    Two points are only comparable when they were planned the same way.  Floors
+    are *mandatory spending*, so the same size is a different artifact once the
+    table is active: on occamy a pre-floor ``tier-balanced-s3`` sat at
+    14.89 GiB / KL 0.0999 while the floor plan at the same size reached 0.0835 —
+    and because the search ranks by size, that stale point outranked a smaller
+    13.80 GiB / 0.0959 floor artifact and froze the tier.
+
+    Resolution order: the point's own ``always_active_floors``, then the probe
+    block that carries the same fact for search probes, then the plan record
+    archived beside it, then ``None``.  ``None`` means *unknown*, and an unknown
+    point is never reused: a pre-floor plan predates the field entirely, so
+    guessing would silently mix two incomparable populations.  The one safe
+    direction is not a default but an exemption — ladder presets are uniform
+    quantizations that never consult the table, and the caller excludes them by
+    name.
+    """
+    if "always_active_floors" in point:
+        return bool(point["always_active_floors"])
+    probe = point.get("probe") or {}
+    if "always_active_floors" in probe:
+        return bool(probe["always_active_floors"])
+    plan = Path(bundle) / "probes" / f"{point['point_id']}-plan.json"
+    if not plan.is_file():
+        return None
+    try:
+        record = json.loads(plan.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    record = record.get("record", record)
+    if "always_active_floors" not in record:
+        return False
+    return bool(record["always_active_floors"])
+
+
+def reusable_points(
+    curve: list[dict], bundle: Path, *, presets: set[str], always_active_floors: bool
+) -> tuple[list[dict], list[str]]:
+    """``(pool, dropped_ids)`` for one search under the current floor regime.
+
+    Ladder presets always survive; every other point must prove it was planned
+    the way this run plans.  A point measured under a different policy is not a
+    bound, it is a different experiment that happens to share a name.
+    """
+    dropped = [
+        o["point_id"]
+        for o in curve
+        if o["point_id"] not in presets
+        and point_floor_regime(bundle, o) != always_active_floors
+    ]
+    drop = set(dropped)
+    return [o for o in curve if o["point_id"] not in drop], dropped
 
 
 def _fresh_tag(bundle: Path, tier: str) -> str:
@@ -255,6 +311,9 @@ def run_tier_search(
 
     report: dict[str, dict] = {}
     new_obs: list[dict] = []
+    regime_pool, stale = reusable_points(
+        curve, bundle, presets=presets, always_active_floors=always_active_floors
+    )
 
     for tier, spec in tiers.items():
         anchor = float(spec["anchor"])
@@ -266,14 +325,22 @@ def run_tier_search(
         # tier before the new one is ever measured. `restart_tiers` drops that
         # tier's own history, leaving the ladder presets (which no policy can
         # move) as the bounds.
-        if restart_tiers and tier in restart_tiers:
-            prior = prior_points_for_tier(curve, tier)
-            pool = [o for o in curve if o["point_id"] not in prior] + new_obs
+        #
+        # The floor regime is the same hazard with a silent trigger: turning
+        # floors on is a policy change too, but nothing in the tier name says so.
+        # `reusable_points` has already removed every point planned differently,
+        # so `pool` never mixes populations no matter which tiers restart.
+        prior = prior_points_for_tier(regime_pool, tier) if (
+            restart_tiers and tier in restart_tiers
+        ) else set()
+        drop = prior | set(stale)
+        pool = [o for o in regime_pool if o["point_id"] not in drop] + new_obs
+        if prior or stale:
             cfg.log(
-                f"tier-search {tier}: restart — ignoring {len(prior)} prior point(s)"
+                f"tier-search {tier}: ignoring {len(drop)} of {len(curve)} curve "
+                f"point(s) — {len(prior - set(stale))} restarted, "
+                f"{len(stale)} planned under a different floor regime"
             )
-        else:
-            pool = curve + new_obs
 
         for _ in range(budget):
             passing = [o for o in pool if passes(o, anchor)]
@@ -348,6 +415,11 @@ def run_tier_search(
             artifact.unlink(missing_ok=True)
 
             obs["point_id"] = tag
+            # Provenance at the point level, not inside the probe block: this is
+            # a property of the artifact, and a fixed-size sweep writes it the
+            # same way. Two shapes for one fact is how the regime mismatch
+            # stayed invisible.
+            obs["always_active_floors"] = bool(always_active_floors)
             obs["probe"] = {
                 "tier": tier,
                 "target_bytes": int(target),
@@ -363,8 +435,11 @@ def run_tier_search(
                 f"{'PASS' if passes(obs, anchor) else 'FAIL'}"
             )
 
-        summary_pool = pool if (restart_tiers and tier in restart_tiers) else curve + new_obs
-        report[tier] = _summarise(tier, summary_pool, anchor, floor, presets)
+        # `pool` is already regime-filtered and restart-filtered, so the summary
+        # reads the same population the search just searched.  Re-reading the raw
+        # curve here is what let a stale point win a tier it had never been
+        # measured for.
+        report[tier] = _summarise(tier, pool, anchor, floor, presets)
         best = report[tier]
         if best["status"] == "ok":
             cfg.log(

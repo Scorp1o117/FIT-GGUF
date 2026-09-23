@@ -371,6 +371,45 @@ def _append_curve_point(bundle: Path, obs: dict) -> None:
         handle.write(json.dumps(obs, sort_keys=True) + "\n")
 
 
+def register_curve_point(
+    bundle: Path,
+    point_id: str,
+    obs: dict,
+    *,
+    always_active_floors: bool,
+    tier: str | None = None,
+) -> bool:
+    """Admit an externally measured artifact into a bundle's curve ledger.
+
+    ``tier-search`` reads the curve and nothing else, so a measurement that lives
+    only in a sweep's own report is invisible to it: the artifact exists, the
+    eval was paid for, and the search still reports a worse point as the tier's
+    winner.  Registering it makes the ledger say what is actually on disk.
+
+    ``always_active_floors`` is mandatory and stored at the point level.  It is
+    what lets a later search tell two otherwise identical ``(size, KL)`` pairs
+    apart — floors are mandatory spending, so the same size is a different
+    artifact once the table is active.
+
+    Idempotent: a point already in the ledger is left alone and ``False`` is
+    returned, so re-running an ingest cannot double-count a measurement.
+    """
+    if point_id in {o["point_id"] for o in _load_curve_points(bundle)}:
+        return False
+    point = {
+        "point_id": point_id,
+        "size_bytes": int(obs["size_bytes"]),
+        "artifact_sha256": obs["artifact_sha256"],
+        "macro_kl": float(obs["macro_kl"]),
+        "same_top": float(obs["same_top"]),
+        "per_domain": obs.get("per_domain"),
+        "always_active_floors": bool(always_active_floors),
+        "probe": {"source": "sweep", "tier": tier},
+    }
+    _append_curve_point(bundle, point)
+    return True
+
+
 def write_seed_material(
     bundle: Path,
     observations: list[dict],

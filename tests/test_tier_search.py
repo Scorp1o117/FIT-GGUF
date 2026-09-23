@@ -384,3 +384,68 @@ def test_a_restart_keeps_the_ladder_and_drops_only_that_tier():
     prior = prior_points_for_tier(curve, "balanced")
     pool = [o for o in curve if o["point_id"] not in prior]
     assert [o["point_id"] for o in pool] == ["IQ3_M", "tier-compact-s1"]
+
+
+# --------------------------------------------------------- floor regime
+def test_point_floor_regime_reads_every_shape_the_ledger_uses(tmp_path):
+    """One fact, three historical spellings, and a refusal to guess.
+
+    Sweeps write the flag at the point level, search probes carry it in the
+    probe block, pre-floor plans have no field at all but do have a plan record,
+    and anything else is unknown — which is not the same as False.
+    """
+    from fit_gguf.tier_search import point_floor_regime
+
+    bundle = tmp_path / "bundle"
+    (bundle / "probes").mkdir(parents=True)
+    (bundle / "probes" / "tier-x-s1-plan.json").write_text(
+        json.dumps({"record": {"always_active_floors": True}}), encoding="utf-8"
+    )
+    (bundle / "probes" / "tier-x-s2-plan.json").write_text(
+        json.dumps({"record": {"target_bytes": 1}}), encoding="utf-8"
+    )
+
+    assert point_floor_regime(bundle, {"point_id": "sweep-14G", "always_active_floors": True}) is True
+    assert point_floor_regime(bundle, {"point_id": "p", "probe": {"always_active_floors": False}}) is False
+    assert point_floor_regime(bundle, {"point_id": "tier-x-s1"}) is True
+    assert point_floor_regime(bundle, {"point_id": "tier-x-s2"}) is False
+    assert point_floor_regime(bundle, {"point_id": "gone"}) is None
+
+
+def test_reusable_points_keeps_the_ladder_and_drops_a_foreign_regime(tmp_path):
+    """The regression: a stale point must not outrank a smaller honest one.
+
+    On occamy the pre-floor ``tier-balanced-s3`` (14.89 GiB, KL 0.0999) sat just
+    under the floor artifact at 14.90 GiB — so the search, which ranks by size,
+    picked it and then read its own bracket as "under tolerance". The 13.80 GiB
+    floor artifact that actually wins the tier was never looked at.
+    """
+    from fit_gguf.tier_search import reusable_points
+
+    bundle = tmp_path / "bundle"
+    (bundle / "probes").mkdir(parents=True)
+    # A pre-floor plan record: the field does not exist yet, which is exactly
+    # what makes it readable as False rather than as unknown.
+    (bundle / "probes" / "tier-balanced-s3-plan.json").write_text(
+        json.dumps({"record": {"target_bytes": 1}}), encoding="utf-8"
+    )
+    curve = [
+        {"point_id": "IQ3_M", "size_bytes": 15_440_519_168, "macro_kl": 0.1080, "same_top": 0.8802},
+        {"point_id": "tier-balanced-s3", "size_bytes": 15_984_623_648, "macro_kl": 0.0999,
+         "same_top": 0.8833},
+        {"point_id": "floor5-13.8G", "size_bytes": 14_815_721_472, "macro_kl": 0.0959,
+         "same_top": 0.8883, "always_active_floors": True},
+        {"point_id": "lost-provenance-14G", "size_bytes": 15_000_000_000, "macro_kl": 0.08,
+         "same_top": 0.89},
+    ]
+    pool, dropped = reusable_points(
+        curve, bundle, presets={"IQ3_M"}, always_active_floors=True
+    )
+    assert [o["point_id"] for o in pool] == ["IQ3_M", "floor5-13.8G"]
+    assert sorted(dropped) == ["lost-provenance-14G", "tier-balanced-s3"]
+    assert _summarise("balanced", pool, 0.10, None, {"IQ3_M"})["best_point"] == "floor5-13.8G"
+
+    # With floors off the populations swap, and the pre-floor point is the one
+    # that is comparable — still never both at once.
+    pool_off, _ = reusable_points(curve, bundle, presets={"IQ3_M"}, always_active_floors=False)
+    assert [o["point_id"] for o in pool_off] == ["IQ3_M", "tier-balanced-s3"]
