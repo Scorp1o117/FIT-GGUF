@@ -27,8 +27,22 @@ from pathlib import Path
 
 import yaml
 
-TIERS = ("quality", "balanced", "compact", "mini")
-KL_ANCHORS = {"quality": 0.05, "balanced": 0.10, "compact": 0.15, "mini": 0.20}
+# Ascending fidelity, which is also ascending size. `reference` is the
+# near-lossless tier: below 0.02 the remaining error is small enough that the
+# artifact is a reference for the model rather than a compromise of it.
+TIERS = ("mini", "compact", "balanced", "quality", "reference")
+KL_ANCHORS = {"mini": 0.20, "compact": 0.15, "balanced": 0.10, "quality": 0.05, "reference": 0.02}
+
+# Display names: the tier table reads Mini / Compact / Balanced / Quality /
+# Reference. The keys stay lowercase because they are identifiers that appear in
+# contract JSON, guard profiles and registry entries.
+TIER_DISPLAY = {
+    "mini": "Mini",
+    "compact": "Compact",
+    "balanced": "Balanced",
+    "quality": "Quality",
+    "reference": "Reference",
+}
 SCOPES = ("exact_model", "family", "architecture")
 _STATUSES = ("candidate", "validated")
 
@@ -83,8 +97,16 @@ def validate_guard_profile(profile: dict) -> None:
     if profile.get("status") not in _STATUSES:
         raise GuardProfileError(f"status must be one of {_STATUSES}")
     tiers = profile.get("tiers")
-    if not isinstance(tiers, dict) or set(tiers) != set(TIERS):
-        raise GuardProfileError(f"tiers must define exactly {sorted(TIERS)}")
+    # A SUBSET, not equality. Two different sets are in play: the tiers a
+    # calibration contract derives floors for (the contract's own anchors), and
+    # the tiers the product offers (KL_ANCHORS). `reference` is a product tier
+    # that needs no calibration -- its gate is KL alone -- so a profile covering
+    # four of five is complete for the model it describes, and refusing it would
+    # make every existing profile invalid the moment a tier is added.
+    if not isinstance(tiers, dict) or not tiers or not set(tiers) <= set(TIERS):
+        raise GuardProfileError(
+            f"tiers must be a non-empty subset of {sorted(TIERS)}, got {sorted(tiers or [])}"
+        )
     for tier, spec in tiers.items():
         if abs(float(spec.get("kl_anchor", -1)) - KL_ANCHORS[tier]) > 1e-9:
             raise GuardProfileError(f"tiers.{tier}.kl_anchor must be {KL_ANCHORS[tier]}")

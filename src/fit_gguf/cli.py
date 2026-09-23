@@ -91,7 +91,7 @@ def _build_parser() -> argparse.ArgumentParser:
     plan_parser.add_argument(
         "--fidelity-tier",
         default=None,
-        help="Claim a Fidelity tier (quality|balanced|compact|mini); requires a validated Guard Profile",
+        help="Claim a Fidelity tier (mini|compact|balanced|quality|reference); requires a validated Guard Profile",
     )
     plan_parser.add_argument(
         "--guard-registry",
@@ -241,7 +241,7 @@ def _build_parser() -> argparse.ArgumentParser:
     fs_parser.add_argument("--refs-dir", required=True, help="Directory of bf16-<domain>.kld references")
     fs_parser.add_argument("--eval-data-dir", required=True, help="Directory of kl-eval domain slices")
     fs_parser.add_argument(
-        "--tier", required=True, choices=("quality", "balanced", "compact", "mini"),
+        "--tier", required=True, choices=("mini", "compact", "balanced", "quality", "reference"),
         help="Fidelity tier to satisfy (KL-only hard gate since v0.3)",
     )
     fs_parser.add_argument(

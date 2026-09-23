@@ -66,7 +66,7 @@ from fit_gguf.calibrate import (
 from fit_gguf.eval.provenance import sha256_file
 from fit_gguf.registry import canonical_json_bytes, entry_digest
 
-DEFAULT_TIERS = ("quality", "balanced", "compact", "mini")
+DEFAULT_TIERS = ("mini", "compact", "balanced", "quality", "reference")
 
 
 # ------------------------------------------------------------------ predicates
@@ -93,13 +93,39 @@ def preset_sizes(curve: list[dict], presets: set[str]) -> list[tuple[int, str]]:
     )
 
 
-def bracketing_pair(sizes: list[tuple[int, str]], target: int) -> tuple[str, str] | None:
-    """The preset pair whose sizes bracket ``target`` — the dry-run anchors."""
-    below = [p for p in sizes if p[0] <= target]
+def bracketing_pair(
+    sizes: list[tuple[int, str]], target: int, *, steps: int = 2
+) -> tuple[str, str] | None:
+    """The preset pair that brackets ``target``, with the lower anchor walked
+    ``steps - 1`` extra rungs down the ladder.
+
+    A plan can only spend what the target has above its lower preset, and the
+    always-active floors are mandatory spending — so the room a tier gets is the
+    whole difference between its base preset and its target.
+
+    Bracketing with the preset immediately below the target leaves almost none of
+    it. Measured on occamy: balanced at 14.89 GiB sat 0.51 GiB above IQ3_M, and
+    every probe the search could afford stayed inside that 0.51 GiB; compact sat
+    0.07 GiB above IQ3_XXS and the floors could not fit at all ("below lower
+    baseline"). Anchoring one rung lower costs nothing — the optimizer still has
+    to reach the same target — and buys a full ladder step of room to trade,
+    which is what the floors and the imatrix both need.
+
+    ``steps=2`` is that rule: the upper anchor is the first preset above the
+    target, and the lower anchor is the one before the preset just below it.
+    """
     above = [p for p in sizes if p[0] > target]
-    if not below or not above:
+    if not above:
         return None
-    return below[-1][1], above[0][1]
+    upper = above[0]
+    index = sizes.index(upper)
+    # Walk down as far as the ladder allows: a short ladder degrades to the
+    # nearest available pair rather than refusing to plan at all, and a target
+    # below the smallest preset still has nothing to anchor on.
+    lower_index = max(0, index - steps)
+    if lower_index == index:
+        return None
+    return sizes[lower_index][1], upper[1]
 
 
 def tiers_from_profile(bundle: Path) -> dict[str, dict]:
