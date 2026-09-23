@@ -146,7 +146,12 @@ def main() -> int:
     for r in plan_rows:
         tier = r["tier"]
         tmp = work / f"APEX-{tier}.gguf"
-        name = f"{model_id}-APEX-{tier.upper()}-{r['base']}.gguf"
+        # APEX's i-* profiles are the same recipe plus a diverse imatrix -- verified
+        # by diffing laguna_s21_* against laguna_s21_i_*: byte-identical. So an
+        # imatrix argument is exactly what makes this an I-variant, and the name
+        # should say so.
+        family = "APEX-I" if args.imatrix else "APEX"
+        name = f"{model_id}-{family}-{tier.upper()}-{r['base']}.gguf"
         target = args.dest / name
         print(f"[apex] {tier}: quantize with {r['recipe'].name} (base {r['base']})", flush=True)
 
@@ -154,7 +159,7 @@ def main() -> int:
             size = target.stat().st_size
             print(f"[apex] {tier}: reusing {name} ({size / GIB:.2f} GiB)", flush=True)
             entry = {
-                "tier": tier, "family": "APEX", "artifact": name,
+                "tier": tier, "family": family, "artifact": name,
                 "size_bytes": size, "base_type": r["base"],
                 "recipe": r["recipe"].name, "recipe_sha256": sha256_file(r["recipe"]),
                 "reused": True,

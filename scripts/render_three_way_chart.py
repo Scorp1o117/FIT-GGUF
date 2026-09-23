@@ -189,7 +189,7 @@ def render(native, fit, apex, model: str, out_dir: Path, lang: str, gates: list[
         [x["gib"] for x in apex], [x["kl"] for x in apex],
         color=GREEN, linewidth=2.4, linestyle="--", marker="^", markersize=10,
         markeredgecolor=BG, markeredgewidth=1.3,
-        label="APEX 档位" if zh else "APEX tiers", zorder=4,
+        label="APEX I- 档位" if zh else "APEX I- tiers", zorder=4,
     )
     for item in apex:
         dx, dy, ha = APEX_LABEL_OFFSETS.get(item["name"], (0, -30, "center"))
@@ -214,10 +214,10 @@ def render(native, fit, apex, model: str, out_dir: Path, lang: str, gates: list[
     footer(
         fig,
         "协议：llama.cpp b10666 · c=512，b=512 · 五个固定 64 KiB 切片：wiki_test、wiki_valid、中文、代码、agent_chat。"
-        "三族均由同一 eval-v1 实现测量，APEX 使用本模型自身的 imatrix。仅为本协议观测，不代表通用质量保证。"
+        "三族均由同一 eval-v1 实现测量；APEX 为 I- 变体（同一配方 + 多样 imatrix：代码/工具调用/推理/对话，无 Wikipedia）。仅为本协议观测，不代表通用质量保证。"
         if zh
         else "Protocol: llama.cpp b10666 · c=512, b=512 · five fixed 64 KiB slices: wiki_test, wiki_valid, Chinese, code, agent_chat. "
-        "All three families measured by the same eval-v1 implementation; APEX uses this model's own imatrix. "
+        "All three families measured by the same eval-v1 implementation; APEX is the I-variant (same recipe plus a diverse imatrix: code, tool-calling, reasoning, chat -- no Wikipedia). "
         "Observations, not a universal quality guarantee.",
     )
 
