@@ -103,6 +103,22 @@ def _make_bundle(tmp_path: Path, observations: list[dict], tiers: dict) -> Path:
     return cfg.out_dir
 
 
+def _append_to_curve(bundle: Path, points: list[dict]) -> None:
+    """Append points the way a standalone search does — with artifact digests.
+
+    ``write_seed_material`` reads ``artifact_sha256`` off every curve point, so a
+    point without one is not a point the bundle can carry.
+    """
+    with (bundle / "curve-points.jsonl").open("a", encoding="utf-8") as handle:
+        for obs in points:
+            row = {
+                **obs,
+                "artifact_sha256": obs.get("artifact_sha256")
+                or hashlib.sha256(obs["point_id"].encode()).hexdigest(),
+            }
+            handle.write(json.dumps(row, sort_keys=True) + "\n")
+
+
 # ----------------------------------------------------------------- predicates
 def test_passes_gates_on_kl_alone():
     assert passes(_obs("a", 0.0463, 0.9225, 10), 0.05)
@@ -223,15 +239,12 @@ def test_reseal_refreshes_derived_digests_and_keeps_the_bundle_admissible(tmp_pa
     assert record_before["process"]["curve_points"] == 2
 
     # A standalone search appends to the curve AFTER stage_emit hashed it.
-    appended = OCCAMY_QUALITY[2:]
-    with (bundle / "curve-points.jsonl").open("a", encoding="utf-8") as handle:
-        for obs in appended:
-            handle.write(json.dumps(obs, sort_keys=True) + "\n")
+    _append_to_curve(bundle, OCCAMY_QUALITY[2:])
     # Without the reseal the record's curve digest is stale — the exact hole the
     # standalone path would otherwise leave behind.
     assert json.loads((bundle / "calibration-record.json").read_text()) == record_before
 
-    reseal_bundle(bundle)
+    reseal_bundle(bundle, CONTRACT)
 
     record = json.loads((bundle / "calibration-record.json").read_text())
     assert record["process"]["curve_points"] == 4
@@ -250,7 +263,7 @@ def test_reseal_does_not_touch_the_guard_profile_or_the_floors(tmp_path):
     bundle = _make_bundle(tmp_path, OCCAMY_QUALITY[:2], QUALITY_TIERS)
     guard_before = (bundle / "guard-profile.yaml").read_bytes()
     record_before = json.loads((bundle / "calibration-record.json").read_text())
-    reseal_bundle(bundle)
+    reseal_bundle(bundle, CONTRACT)
     # Floors were frozen before the search ran: the artifacts it selected must
     # not feed back into the floor they are judged against.
     assert (bundle / "guard-profile.yaml").read_bytes() == guard_before
@@ -261,7 +274,7 @@ def test_reseal_does_not_touch_the_guard_profile_or_the_floors(tmp_path):
 
 def test_reseal_sha256sums_excludes_itself(tmp_path):
     bundle = _make_bundle(tmp_path, OCCAMY_QUALITY[:2], QUALITY_TIERS)
-    reseal_bundle(bundle)
+    reseal_bundle(bundle, CONTRACT)
     names = [
         line.split("  ", 1)[1]
         for line in (bundle / "SHA256SUMS").read_text().splitlines()
@@ -270,6 +283,38 @@ def test_reseal_sha256sums_excludes_itself(tmp_path):
     assert "SHA256SUMS" not in names
     assert "curve-points.jsonl" in names
     assert "registry-entry.json" in names
+
+
+def test_reseal_refreshes_the_ladder_seed_material(tmp_path):
+    """The standalone path never runs stage_emit, so the seed files must be re-derived.
+
+    Without this the bundle would ship a size manifest and provenance sidecar
+    describing a curve that no longer exists, and `fit fidelity-search` could not
+    reuse a single point the search just paid a five-domain eval for.
+    """
+    bundle = _make_bundle(tmp_path, OCCAMY_QUALITY[:2], QUALITY_TIERS)
+    assert "tier-quality-s2" not in (bundle / "state-artifact-manifest.txt").read_text()
+
+    _append_to_curve(bundle, OCCAMY_QUALITY[2:])
+    reseal_bundle(bundle, CONTRACT)
+
+    manifest = (bundle / "state-artifact-manifest.txt").read_text()
+    assert "tier-quality-s2" in manifest
+    assert "Q4_K_M" in manifest
+    provenance = {
+        row["name"]: row
+        for row in (
+            json.loads(line)
+            for line in (bundle / "seed-provenance.jsonl").read_text().splitlines()
+            if line.strip()
+        )
+    }
+    # A preset names itself on both window anchors; a probe names none, which is
+    # what keeps a poison preset from ever anchoring through a probe.
+    assert provenance["Q4_K_M"]["window_lower_preset"] == "Q4_K_M"
+    assert provenance["tier-quality-s2"]["window_lower_preset"] == ""
+    assert provenance["tier-quality-s2"]["window_upper_preset"] == ""
+    assert validate_bundle(bundle)["admissible"] is True
 
 
 @pytest.mark.parametrize("tier", ["quality", "balanced", "compact", "mini"])

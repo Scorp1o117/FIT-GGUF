@@ -449,11 +449,13 @@ def _run(args: argparse.Namespace) -> int:
         print(f"tier-search report -> {out}")
 
         if not args.no_reseal:
-            # The search appended to curve-points.jsonl, so the digests
-            # stage_emit recorded for it are now stale. Re-hash all three
-            # (record → registry pin → entry digest) or validate_bundle fails.
-            reseal_bundle(bundle)
-            print("bundle resealed (record + registry entry + SHA256SUMS)")
+            # The search appended to curve-points.jsonl, so everything
+            # stage_emit derived from it is now stale: the record's curve digest
+            # and count, the ladder seed material, the registry entry's record
+            # pin, and the entry's own digest. Reseal moves all of them, or
+            # validate_bundle fails on the first stale pin.
+            reseal_bundle(bundle, contract)
+            print("bundle resealed (record + seed material + registry entry + SHA256SUMS)")
 
         for tier, row in report.items():
             if row.get("status") == "ok":

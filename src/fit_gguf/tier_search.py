@@ -339,7 +339,7 @@ def write_report(bundle: Path, report: dict) -> Path:
     return out
 
 
-def reseal_bundle(bundle: Path) -> None:
+def reseal_bundle(bundle: Path, contract: dict) -> None:
     """Re-hash a bundle after a standalone search appended to its curve.
 
     Only derived digests move.  The guard profile and the floor derivation are
@@ -348,13 +348,31 @@ def reseal_bundle(bundle: Path) -> None:
     against.  Rewriting the record moves its digest, which moves the registry
     entry's pin, which moves the entry digest — all three, or ``validate_bundle``
     fails on the first stale pin.
+
+    The ladder seed material is refreshed for the same reason: the standalone
+    path never went through ``stage_emit``, so ``state-artifact-manifest.txt``
+    and ``seed-provenance.jsonl`` would otherwise describe a curve that no longer
+    exists.  Search probes are admitted exactly as gap probes are — as points
+    that name no window preset, so a poison preset can never anchor through them.
     """
+    from fit_gguf.calibrate import write_seed_material
+    from fit_gguf.eval.contract import contract_digest
+
     bundle = Path(bundle)
     curve_path = bundle / "curve-points.jsonl"
     record_path = bundle / "calibration-record.json"
+    curve = _load_curve_points(bundle)
+
+    write_seed_material(
+        bundle,
+        curve,
+        set(contract["ladder_standard_presets"]),
+        reference_manifest_sha256=sha256_file(bundle / "reference-manifest.json"),
+        evaluator_contract_sha256=contract_digest(),
+    )
 
     record = json.loads(record_path.read_text(encoding="utf-8"))
-    record["process"]["curve_points"] = len(_load_curve_points(bundle))
+    record["process"]["curve_points"] = len(curve)
     record["artifacts"]["curve_points_sha256"] = sha256_file(curve_path)
     record_path.write_text(json.dumps(record, indent=1) + "\n", encoding="utf-8")
 
