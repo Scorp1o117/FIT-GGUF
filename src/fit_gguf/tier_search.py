@@ -423,6 +423,7 @@ def run_tier_search(
                 f"eligible to be the tier's product"
             )
 
+        attempted: set[int] = set()
         for _ in range(budget):
             passing = [o for o in pool if passes(o, anchor)]
             if not passing:
@@ -445,6 +446,20 @@ def run_tier_search(
                 cfg.log(f"tier-search {tier}: bracket under tolerance — stop")
                 break
             target = (lo["size_bytes"] + hi["size_bytes"]) // 2
+            # A target whose plan cannot be written is not a measurement, and the
+            # bracket has not moved — so the same midpoint comes straight back and
+            # burns the rest of the budget on the same failure. Step toward the
+            # passing end instead; if there is nothing left to try, say so.
+            while target in attempted and target < hi["size_bytes"]:
+                target = (target + hi["size_bytes"]) // 2
+            if target in attempted:
+                cfg.log(
+                    f"tier-search {tier}: every target between "
+                    f"{lo['size_bytes'] / 2**30:.2f} and {hi['size_bytes'] / 2**30:.2f} GiB "
+                    f"has been tried and none could be built — stop"
+                )
+                break
+            attempted.add(target)
             pair = bracketing_pair(sizes, target)
             if pair is None:
                 cfg.log(
