@@ -24,6 +24,7 @@ from fit_gguf.floors import (
     _tensor_bytes,
     apply_floors,
     floor_overrides,
+    floor_policy_id,
 )
 
 
@@ -269,3 +270,39 @@ def test_the_two_lifted_floors_cost_almost_nothing():
     assert 0 < gate < 8 * 1024 * 1024
     # 30 hybrid layers carry both.
     assert (alpha + gate) * 30 < 192 * 1024 * 1024
+
+
+def test_a_floor_is_skipped_where_the_candidate_set_can_already_reach():
+    """The table exists for blindness, so it applies only where the blindness is.
+
+    Where the candidate set can already reach a tensor, a floor is not a
+    guarantee — it is a constraint on an optimizer that could spend there by
+    itself. Measured on occamy: the low-tier windows reach 5 of the 10 floored
+    roles and the floors are worth -20.8% macro KL; the high-tier windows reach 9
+    of 10 and the same floors cost about 1.2 GiB for nothing.
+    """
+    recipe, layout = make_inputs({"blk.0.ffn_gate_shexp.weight": ("iq3_s", SHAPE)})
+    assert len(floor_overrides(recipe, layout, {}, FLOORS)) == 1
+    # Same tensor, same floor — but the window can already upgrade it.
+    assert floor_overrides(
+        recipe, layout, {}, FLOORS, {"blk.0.ffn_gate_shexp.weight"}
+    ) == []
+    # A tensor outside the reachable set is still floored.
+    assert len(floor_overrides(recipe, layout, {}, FLOORS, {"blk.9.other.weight"})) == 1
+
+
+def test_the_policy_id_moves_when_the_semantics_do():
+    """A point planned under different floor rules is not comparable."""
+    import hashlib
+    import json as _json
+
+    from fit_gguf.floors import ALWAYS_ACTIVE_FLOORS, FLOOR_SEMANTICS_VERSION
+
+    payload = _json.dumps(
+        {"version": FLOOR_SEMANTICS_VERSION,
+         "floors": [list(pair) for pair in ALWAYS_ACTIVE_FLOORS]},
+        sort_keys=True,
+    )
+    assert floor_policy_id() == hashlib.sha256(payload.encode()).hexdigest()[:16]
+    # Version 3 is the palette-aware semantics; anything else is a different policy.
+    assert FLOOR_SEMANTICS_VERSION == 3

@@ -93,9 +93,10 @@ def _bpw(qtype: str) -> float:
 # Bumped when the MEANING of the table changes, not its contents. 1 = a floor was
 # appended to the optimizer's selection; 2 = a floor replaces it (llama.cpp
 # resolves a tensor-type file by first match, so an appended duplicate silently
-# lost the tie). A curve point planned under either is not comparable to the
-# other, and nothing about the point's own numbers would say so.
-FLOOR_SEMANTICS_VERSION = 2
+# lost the tie); 3 = a floor applies only where the candidate set cannot reach the
+# tensor. A curve point planned under any of these is not comparable to the
+# others, and nothing about the point's own numbers would say so.
+FLOOR_SEMANTICS_VERSION = 3
 
 
 def floor_policy_id() -> str:
@@ -148,6 +149,7 @@ def floor_overrides(
     layout: GGUFLayout,
     existing: dict[str, str],
     floors: tuple[tuple[str, str], ...] = ALWAYS_ACTIVE_FLOORS,
+    reachable: set[str] | None = None,
 ) -> list[UpgradeCandidate]:
     """Every tensor below its floor, as an upgrade candidate.
 
@@ -161,6 +163,15 @@ def floor_overrides(
     out: list[UpgradeCandidate] = []
     for name, shape in shapes.items():
         if name not in current:
+            continue
+        # The table exists because the candidate set is BLIND: a tensor both
+        # bracketing presets type identically never becomes a candidate. Where the
+        # set can already reach the tensor the floor is not a guarantee, it is a
+        # constraint on an optimizer that can spend there by itself — and a
+        # measured one: on occamy the low-tier windows reach 5 of the 10 floored
+        # roles and the floors are worth -20.8% KL, while the high-tier windows
+        # reach 9 of 10 and the floors cost about 1.2 GiB for nothing.
+        if reachable is not None and name in reachable:
             continue
         target_qtype = None
         for pattern, minimum in floors:
@@ -200,7 +211,13 @@ def floor_overrides(
     return out
 
 
-def apply_floors(plan, lower_recipe, layout: GGUFLayout, floors=ALWAYS_ACTIVE_FLOORS):
+def apply_floors(
+    plan,
+    lower_recipe,
+    layout: GGUFLayout,
+    floors=ALWAYS_ACTIVE_FLOORS,
+    reachable: set[str] | None = None,
+):
     """Return ``plan`` with every below-floor tensor raised, cost billed.
 
     The returned plan is what the oracle dry-run measures, so the floors compete
@@ -220,7 +237,7 @@ def apply_floors(plan, lower_recipe, layout: GGUFLayout, floors=ALWAYS_ACTIVE_FL
     if not floors:
         return plan
     chosen = {candidate.tensor: candidate.to_qtype for candidate in plan.selected}
-    extra = floor_overrides(lower_recipe, layout, chosen, floors)
+    extra = floor_overrides(lower_recipe, layout, chosen, floors, reachable)
     if not extra:
         return plan
     replaced = {candidate.tensor for candidate in extra}

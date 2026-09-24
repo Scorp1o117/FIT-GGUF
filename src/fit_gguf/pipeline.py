@@ -679,7 +679,10 @@ def plan(
             # the floors compete for the same budget rather than adding to it.
             from fit_gguf.floors import apply_floors, floor_policy_id
 
-            optimization = apply_floors(optimization, lower_recipe, layout)
+            optimization = apply_floors(
+                optimization, lower_recipe, layout,
+                reachable={candidate.tensor for candidate in candidate_set.candidates},
+            )
         return optimization
 
     optimization = select(target)
