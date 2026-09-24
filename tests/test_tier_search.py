@@ -500,3 +500,31 @@ def test_selection_is_not_filtered_by_policy_only_bracketing_is():
     # A restart still forgets the tier's own history — but only its own.
     restarted = eligible_points(curve, "mini", restart_tiers={"mini"})
     assert [o["point_id"] for o in restarted] == ["IQ3_M"]
+
+
+def test_the_bracket_is_seeded_with_what_the_tier_could_already_ship():
+    """Otherwise the search probes ABOVE a size it has already beaten.
+
+    With the selection/bracketing split, a policy-filtered pool can hold nothing
+    smaller than a passing artifact that is nevertheless eligible — occamy's
+    quality bracket sat at 18.38-18.71 GiB while a 17.50 GiB passing artifact was
+    eligible and would win the tier. `min(passing eligible)` is the upper end.
+    """
+    from fit_gguf.tier_search import passes
+
+    curve = [
+        {"point_id": "tier-quality-s5", "size_bytes": 17_500, "macro_kl": 0.0463,
+         "same_top": 0.92},
+        {"point_id": "tier-quality-s9", "size_bytes": 18_380, "macro_kl": 0.0510,
+         "same_top": 0.91},
+        {"point_id": "tier-quality-s10", "size_bytes": 18_710, "macro_kl": 0.0475,
+         "same_top": 0.92},
+    ]
+    eligible = [o for o in curve]
+    seeded = eligible + [min((o for o in eligible if passes(o, 0.05)),
+                             key=lambda o: o["size_bytes"])]
+    hi = min((o for o in seeded if passes(o, 0.05)), key=lambda o: o["size_bytes"])
+    assert hi["point_id"] == "tier-quality-s5"
+    # And that bracket is already under tolerance: nothing left to probe.
+    below = [o for o in seeded if not passes(o, 0.05) and o["size_bytes"] < hi["size_bytes"]]
+    assert below == []

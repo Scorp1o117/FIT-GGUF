@@ -414,6 +414,14 @@ def run_tier_search(
         # floors existed.
         pool = [o for o in regime_pool if o["point_id"] not in drop] + new_obs
         eligible = eligible_points(curve, tier, restart_tiers=restart_tiers) + new_obs
+        # Seed the bracket with what the tier could already ship. `eligible` may
+        # hold a smaller passing artifact than anything the policy-filtered pool
+        # has, and without it the bracket explores ABOVE a size the tier has
+        # already beaten — occamy's quality bracket sat at 18.38-18.71 GiB while a
+        # 17.50 GiB passing artifact was eligible and would win the tier.
+        passing_eligible = [o for o in eligible if passes(o, anchor)]
+        if passing_eligible:
+            pool = pool + [min(passing_eligible, key=lambda o: o["size_bytes"])]
         if prior or stale:
             cfg.log(
                 f"tier-search {tier}: bracketing on {len(pool)} of {len(curve)} "
