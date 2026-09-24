@@ -275,11 +275,24 @@ def main() -> int:
         emitted.append(entry)
         _log(f"[emit] {tier}: {name}  {size / 2**30:.2f} GiB")
 
+    # Merged, never replaced — the same rule `tier-search` uses for its own
+    # report. Re-emitting one tier is a normal operation (a tier was re-solved,
+    # or one artifact was rebuilt), and overwriting the file would erase the
+    # tiers this run did not touch.
     out = dest / "emit-report.json"
+    merged: dict[str, dict] = {}
+    if out.is_file():
+        try:
+            previous = json.loads(out.read_text(encoding="utf-8"))
+            merged = {row["tier"]: row for row in previous.get("tiers", [])}
+        except (OSError, json.JSONDecodeError):
+            merged = {}
+    for row in emitted + preset_rows:
+        merged[row["tier"]] = row
     out.write_text(json.dumps({
         "model_id": model_id,
         "bundle": str(bundle),
-        "tiers": sorted(emitted + preset_rows, key=lambda e: e["size_bytes"]),
+        "tiers": sorted(merged.values(), key=lambda e: e["size_bytes"]),
     }, indent=1) + "\n", encoding="utf-8")
 
     _log(f"\n[emit] {len(emitted)} artifacts -> {dest}"
