@@ -49,8 +49,26 @@ search-time KL exactly.
   sha256 `b77f117553d1106e56fd14cbc95f6a92022f98bb0bd385735805412ef8f78856`
 - Calibration contract: `fidelity-calibration-v1`; evaluator: `eval-v1`
 - imatrix: `occamy-1.0-abliterated-BF16-imatrix.gguf`, 500 chunks, 510 entries
-- Precision floors: **on** for every tier; the same-top floors of the four
-  calibrated tiers are the reference values above, not gates
+- Precision floors: **requested for every tier, and defeated in four of them.**
+  `llama-quantize` resolves a tensor-type file by *first match*, and the floor
+  application appended its raise instead of replacing the optimizer's pick, so
+  where the optimizer had also chosen a tensor the floor's line came second and
+  was ignored. Measured against the recipes that ship:
+
+  | Tier | tensors where the floor lost | shipped instead of |
+  | --- | --- | --- |
+  | Reference | 0 | — |
+  | Quality | 100 | `ffn_*_shexp` at `q4_k` instead of `q6_k` |
+  | Balanced | 85 | `ffn_*_shexp` at `iq3_s` instead of `q6_k` |
+  | Compact | 258 | `shexp`/`attn_gate`/`ssm_alpha` at `iq3_s` |
+  | Mini | 260 | `shexp`/`attn_gate` at `iq3_xxs` |
+
+  **The measured KL above is unaffected** — every artifact was evaluated on the
+  bytes that ship, so the numbers describe these files exactly. What was wrong is
+  the *policy* description, not the measurement. The bug is fixed (a floor now
+  replaces the pick, and the writer deduplicates); a re-solve with the fix in
+  place is the next step, and at a fixed 14.10 GiB the working floors measure
+  **0.0856 against 0.1081 without them**.
 
 | Tier | sha256 | Recipe point |
 | --- | --- | --- |
