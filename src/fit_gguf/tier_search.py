@@ -306,9 +306,24 @@ def _fresh_tag(bundle: Path, tier: str) -> str:
 
 
 def _summarise(
-    tier: str, pool: list[dict], anchor: float, floor: float | None, presets: set[str]
+    tier: str,
+    pool: list[dict],
+    anchor: float,
+    floor: float | None,
+    presets: set[str],
+    tolerance: int = 1024 * 1024,
 ) -> dict:
     """Smallest observed PASS for one tier, with its gain over the best passing preset.
+
+    "Smallest" is resolved to within a megabyte, and only then by KL.  Below that
+    the size difference is rounding noise and a strict ordering would ship the
+    worse file to win nothing: occamy's quality tier had a passing point 295 KiB
+    under its incumbent at 1.7% worse macro KL, and a pure size ordering picked it.
+
+    The window is deliberately far below the bisection tolerance (128 MiB): that
+    gap is the search's own resolution, and a tie window that wide would quietly
+    overturn the tier's definition — on occamy's mini tier it would have traded
+    113 MiB (1% of the file) for 2% of KL, which is a size decision, not noise.
 
     ``floor`` is carried through as a reference, not a gate: ``clears_floor``
     records whether the selected artifact also clears the model's calibrated
@@ -317,7 +332,9 @@ def _summarise(
     passing = [o for o in pool if passes(o, anchor)]
     if not passing:
         return {"tier": tier, "status": "no_pass", "anchor": anchor}
-    best = min(passing, key=lambda o: o["size_bytes"])
+    smallest = min(o["size_bytes"] for o in passing)
+    tied = [o for o in passing if o["size_bytes"] - smallest <= tolerance]
+    best = min(tied, key=lambda o: (o["macro_kl"], o["size_bytes"]))
     preset = min(
         (o for o in pool if o["point_id"] in presets and passes(o, anchor)),
         key=lambda o: o["size_bytes"],

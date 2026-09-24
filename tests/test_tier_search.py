@@ -528,3 +528,29 @@ def test_the_bracket_is_seeded_with_what_the_tier_could_already_ship():
     # And that bracket is already under tolerance: nothing left to probe.
     below = [o for o in seeded if not passes(o, 0.05) and o["size_bytes"] < hi["size_bytes"]]
     assert below == []
+
+
+def test_a_sub_megabyte_size_difference_is_noise_not_a_product_decision():
+    """295 KiB under the incumbent, 1.7% worse KL — the size ordering picked it.
+
+    The tie window is a megabyte, and deliberately not the bisection tolerance:
+    at 128 MiB it would have overturned the mini tier's real 113 MiB / 1% size
+    difference for 2% of KL, which is a product decision, not rounding.
+    """
+    from fit_gguf.tier_search import _summarise
+
+    curve = [
+        {"point_id": "incumbent", "size_bytes": 18_790_029_312, "macro_kl": 0.046384,
+         "same_top": 0.92},
+        {"point_id": "noise-smaller", "size_bytes": 18_789_734_400, "macro_kl": 0.047165,
+         "same_top": 0.92},
+    ]
+    assert _summarise("quality", curve, 0.05, None, set())["best_point"] == "incumbent"
+
+    real = [
+        {"point_id": "small", "size_bytes": 12_100_000_000, "macro_kl": 0.1892, "same_top": 0.83},
+        {"point_id": "bigger-better-kl", "size_bytes": 12_218_765_312, "macro_kl": 0.1853,
+         "same_top": 0.84},
+    ]
+    # 113 MiB apart: a real difference, so the smaller file still wins.
+    assert _summarise("mini", real, 0.20, None, set())["best_point"] == "small"
