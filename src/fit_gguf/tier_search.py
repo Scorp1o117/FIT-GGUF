@@ -269,6 +269,30 @@ def reusable_points(
     return [o for o in curve if o["point_id"] not in drop], dropped
 
 
+def eligible_points(
+    curve: list[dict], tier: str, *, restart_tiers: set[str] | None = None
+) -> list[dict]:
+    """Every point that may be a tier's PRODUCT.
+
+    The whole ledger, minus the tier's own history when the operator asked to
+    forget it.  **Policy is deliberately not consulted.**  A product is an
+    artifact: the smallest thing that reaches the anchor and can be rebuilt from
+    the bundle, and it does not matter which planning policy produced it.
+    Filtering this set by policy silently discarded smaller passing artifacts —
+    occamy's mini and compact tiers were both reported 0.2 GiB larger than a
+    passing artifact already sitting in the ledger, purely because that artifact
+    had been planned before the floors existed.
+
+    The bracket is the other question and gets the other answer: it predicts where
+    the next probe lands, and points planned by different rules do not share a
+    curve.  See ``reusable_points``.
+    """
+    if restart_tiers and tier in restart_tiers:
+        drop = prior_points_for_tier(curve, tier)
+        return [o for o in curve if o["point_id"] not in drop]
+    return list(curve)
+
+
 def _fresh_tag(bundle: Path, tier: str) -> str:
     """First unused ``tier-<tier>-s<N>`` probe tag.
 
@@ -375,13 +399,28 @@ def run_tier_search(
             restart_tiers and tier in restart_tiers
         ) else set()
         drop = prior | set(stale)
+        # TWO pools, because they answer different questions.
+        #
+        # `pool` brackets: it must not mix policies, because a bracket predicts
+        # where the next probe lands and points planned by different rules do not
+        # share a curve. So it is regime- and policy-filtered.
+        #
+        # `eligible` selects: a tier's product is the smallest artifact that
+        # reaches its anchor and can be rebuilt from the bundle, and that artifact
+        # does not care which policy produced it. Filtering selection by policy
+        # silently discarded smaller passing artifacts — occamy's mini and compact
+        # tiers were both reported 0.2 GiB larger than a passing artifact already
+        # in the ledger, purely because that artifact had been planned before the
+        # floors existed.
         pool = [o for o in regime_pool if o["point_id"] not in drop] + new_obs
+        eligible = eligible_points(curve, tier, restart_tiers=restart_tiers) + new_obs
         if prior or stale:
             cfg.log(
-                f"tier-search {tier}: ignoring {len(drop)} of {len(curve)} curve "
-                f"point(s) — {len(prior - set(stale))} restarted, "
+                f"tier-search {tier}: bracketing on {len(pool)} of {len(curve)} "
+                f"curve point(s) — {len(prior - set(stale))} restarted, "
                 f"{len(stale)} planned under a different policy "
-                f"(floor regime or floor table)"
+                f"(floor regime or floor table); all {len(eligible)} remain "
+                f"eligible to be the tier's product"
             )
 
         for _ in range(budget):
@@ -478,11 +517,13 @@ def run_tier_search(
                 f"{'PASS' if passes(obs, anchor) else 'FAIL'}"
             )
 
-        # `pool` is already regime-filtered and restart-filtered, so the summary
-        # reads the same population the search just searched.  Re-reading the raw
-        # curve here is what let a stale point win a tier it had never been
-        # measured for.
-        report[tier] = _summarise(tier, pool, anchor, floor, presets)
+        # Selection reads `eligible`, not `pool`: the product is the smallest
+        # artifact that passes and can be rebuilt, whichever policy planned it.
+        # The bracket above stays policy-filtered. `prior` is still honoured here
+        # because `--restart-tiers` means "forget this tier", and forgetting it
+        # only for bracketing would leave the point it was meant to drop in the
+        # running.
+        report[tier] = _summarise(tier, eligible, anchor, floor, presets)
         best = report[tier]
         if best["status"] == "ok":
             cfg.log(

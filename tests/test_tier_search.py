@@ -475,3 +475,28 @@ def test_a_point_from_another_floor_policy_is_not_reusable():
     )
     assert [o["point_id"] for o in pool] == ["IQ3_M", "new-14G"]
     assert dropped == ["old-14G"]
+
+
+def test_selection_is_not_filtered_by_policy_only_bracketing_is():
+    """A product is an artifact, not a plan.
+
+    `eligible_points` deliberately ignores the floor regime and the floor policy,
+    because a tier's product is the smallest thing that reaches the anchor and can
+    be rebuilt — whichever policy planned it. Filtering this by policy reported
+    occamy's mini at 11.18 GiB and compact at 12.78 GiB while passing artifacts of
+    10.94 GiB and 12.76 GiB sat in the ledger, both merely planned before the
+    floors existed. The bracket keeps the filter; selection must not.
+    """
+    from fit_gguf.tier_search import eligible_points
+
+    curve = [
+        {"point_id": "IQ3_M", "size_bytes": 1, "macro_kl": 0.11, "same_top": 0.9},
+        {"point_id": "tier-mini-s3", "size_bytes": 2, "macro_kl": 0.199,
+         "same_top": 0.83, "always_active_floors": False},
+        {"point_id": "tier-mini-s5", "size_bytes": 3, "macro_kl": 0.199,
+         "same_top": 0.83, "always_active_floors": True, "floor_policy": "aaaa"},
+    ]
+    assert len(eligible_points(curve, "mini")) == 3
+    # A restart still forgets the tier's own history — but only its own.
+    restarted = eligible_points(curve, "mini", restart_tiers={"mini"})
+    assert [o["point_id"] for o in restarted] == ["IQ3_M"]
