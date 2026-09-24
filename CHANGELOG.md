@@ -165,6 +165,45 @@ All notable changes to FIT-GGUF. Format follows
   ledger did not notice, and because the search ranks by size a stale point did
   not add noise — it won.
 
+- **A precision floor applies only where the candidate set cannot reach.**
+
+  The table exists because the candidate set is *blind*: a tensor both bracketing
+  presets type identically never becomes a candidate, so no budget can move it.
+  Where the set **can** reach the tensor, a floor is not a guarantee — it is a
+  constraint on an optimizer that could have spent there by itself.
+
+  Measured on occamy by counting which floored roles each window's candidate set
+  covers:
+
+  | window | floored roles reached | what the floors were worth |
+  | --- | --- | --- |
+  | `IQ3_XS`–`IQ3_M` | 5 of 10 | **−20.8% macro KL** at a fixed 14.10 GiB |
+  | `Q3_K_M`–`Q4_K_M` | 9 of 10 | about **+1.2 GiB**, no gain |
+  | `IQ4_XS`–`Q4_K_M` | 9 of 10 | about **+1.2 GiB**, no gain |
+
+  The same table was rescuing the low tiers and taxing the high ones.
+  `floor_overrides` now skips a tensor the candidate set already covers, and
+  `FLOOR_SEMANTICS_VERSION` moves to 3 so every point planned under the old
+  semantics stops being reusable — which is exactly what the policy id is for.
+
+- **"Smallest" is resolved to within a megabyte before KL is consulted.**
+
+  A pure size ordering is not stable at the resolution the search decides at. The
+  quality tier had a passing point **295 KiB** (0.0016%) under its incumbent at
+  **1.7% worse macro KL**, and size alone picked it.
+
+  The window is deliberately far below the bisection tolerance (128 MiB): that gap
+  is the search's own resolution, and a tie window that wide would quietly
+  overturn a tier's definition — on the mini tier it would have traded 113 MiB
+  (1% of the file) for 2% of KL, which is a product decision wearing the clothes
+  of rounding.
+
+- **`emit_tier_artifacts.py` merges its report instead of replacing it.**
+  Re-emitting one tier is a normal operation — a tier was re-solved, or a single
+  artifact was rebuilt — and overwriting `emit-report.json` would erase the tiers
+  the run did not touch. This mirrors the merge `fit tier-search` already does for
+  its own report, for the same reason.
+
 - **A precision floor could be silently defeated by the plan it was correcting.**
 
   `llama-quantize` resolves a tensor-type file by **first match**: a second line

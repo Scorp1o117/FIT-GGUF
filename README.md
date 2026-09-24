@@ -229,7 +229,7 @@ On `occamy-1.0-abliterated` the window heuristic probed **above** `IQ4_XS`
 artifact with a *worse* KL, and the tier fell back to the `Q4_K_M` preset.
 Solving the bracket instead landed the same tier at **17.50 GiB, KL 0.0464** —
 2.21 GiB under that preset. Across five tiers the difference against the smallest
-passing preset in each is **11.08 GiB (12.3%)**.
+passing preset in each is **11.34 GiB (12.6%)**.
 
 **A window is a palette, not a bracket.** `generate_upgrade_candidates` emits one
 transition per tensor — lower type to upper type — so a window can only express
@@ -243,6 +243,15 @@ role) reached **23.55 GiB @ 0.0195** in a single probe: 3.00 GiB under the
 preset, and ahead of the external `APEX-I-Balanced` recipe (23.60 GiB @ 0.0197)
 whose palette had prompted the question. Choosing a tier's window is choosing
 what that tier can be.
+
+**A precision floor applies only where the candidate set cannot reach.** The same
+blindness that motivates the floor table also bounds it: where the candidate set
+*can* reach a tensor, a floor is not a guarantee, it is a constraint on an
+optimizer that could have spent there by itself. Counting which floored roles each
+window's candidate set covers on occamy: `IQ3_XS`–`IQ3_M` reaches 5 of 10 and the
+floors are worth **−20.8% macro KL** at a fixed size, while `Q3_K_M`–`Q4_K_M` and
+`IQ4_XS`–`Q4_K_M` reach 9 of 10 and the same floors cost about **1.2 GiB** for no
+gain. One table was rescuing the low tiers and taxing the high ones.
 
 The stage runs *before* the bundle is emitted — it appends to
 `curve-points.jsonl`, whose digest the record pins — and *after* the floors are

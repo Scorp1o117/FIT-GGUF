@@ -30,30 +30,30 @@
  "compact": {
   "tier": "compact",
   "status": "ok",
-  "best_point": "tier-compact-s4",
-  "best_bytes": 13721600000,
-  "macro_kl": 0.1406318,
-  "same_top": 0.8570920000000001,
+  "best_point": "tier-compact-s1",
+  "best_bytes": 13699375104,
+  "macro_kl": 0.135793,
+  "same_top": 0.861546,
   "anchor": 0.15,
   "same_top_reference": 0.8442,
   "clears_floor": true,
   "preset_baseline": "IQ3_XS",
   "preset_bytes": 14484144128,
-  "saved_bytes": 762544128
+  "saved_bytes": 784769024
  },
  "mini": {
   "tier": "mini",
   "status": "ok",
-  "best_point": "tier-mini-s5",
-  "best_bytes": 12007288832,
-  "macro_kl": 0.1989502,
-  "same_top": 0.8321580000000001,
+  "best_point": "tier-mini-s3",
+  "best_bytes": 11749003296,
+  "macro_kl": 0.199182,
+  "same_top": 0.8318080000000001,
   "anchor": 0.2,
   "same_top_reference": 0.8356,
   "clears_floor": false,
   "preset_baseline": "IQ3_XXS",
   "preset_bytes": 13623758848,
-  "saved_bytes": 1616470016
+  "saved_bytes": 1874755552
  },
  "reference": {
   "tier": "reference",
