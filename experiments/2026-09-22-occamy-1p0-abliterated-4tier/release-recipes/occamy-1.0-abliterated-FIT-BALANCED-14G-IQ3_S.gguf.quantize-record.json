@@ -1,0 +1,27 @@
+{
+  "analysis_imatrix_arg": "/run/media/s117/OS/Models/occamy-1.0-abliterated-GGUF/occamy-1.0-abliterated-BF16-imatrix.gguf",
+  "analysis_path": "experiments/2026-09-22-occamy-1p0-abliterated-4tier/calibration/analysis/IQ3_XS-IQ3_M/analysis.json",
+  "command": [
+    "tools/llama-b10666-rocm/llama-quantize",
+    "--imatrix",
+    "/run/media/s117/OS/Models/occamy-1.0-abliterated-GGUF/occamy-1.0-abliterated-BF16-imatrix.gguf",
+    "--tensor-type-file",
+    "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-22-occamy-1p0-abliterated-4tier/calibration/probes/floor5-13.8G-tensor-types.txt",
+    "/run/media/s117/OS/Models/occamy-1.0-abliterated-GGUF/occamy-1.0-abliterated-BF16.gguf",
+    "/run/media/s117/OS/Models/occamy-1.0-abliterated-FIT/.work/balanced.gguf",
+    "IQ3_XS"
+  ],
+  "expect_bytes": null,
+  "imatrix_arg": "/run/media/s117/OS/Models/occamy-1.0-abliterated-GGUF/occamy-1.0-abliterated-BF16-imatrix.gguf",
+  "output_path": "/run/media/s117/OS/Models/occamy-1.0-abliterated-FIT/.work/balanced.gguf",
+  "refinalized_expected_bytes": 14815721472,
+  "returncode": 0,
+  "schema_version": 1,
+  "sha256": "80a512a7bad6b7acc75207e961f20dc68cf7ff6e20aff86efe127519804dd7ce",
+  "size_bytes": 14815721472,
+  "size_matches_expectation": true,
+  "size_matches_refinalization": true,
+  "stderr_tail": "              - [  2048,    512,      1,      1], type =   bf16, converting to q4_K .. size =     2.00 MiB ->     0.56 MiB\n[ 725/ 733] blk.39.ffn_down_exps.weight          - [   512,   2048,    256,      1], type =   bf16, converting to iq3_s .. size =   512.00 MiB ->   110.00 MiB\n[ 726/ 733] blk.39.ffn_down_shexp.weight         - [   512,   2048,      1,      1], type =   bf16, converting to q6_K .. size =     2.00 MiB ->     0.82 MiB\n[ 727/ 733] blk.39.ffn_gate_exps.weight          - [  2048,    512,    256,      1], type =   bf16, converting to iq3_s .. size =   512.00 MiB ->   110.00 MiB\n[ 728/ 733] blk.39.ffn_gate_inp.weight           - [  2048,    256,      1,      1], type =    f32, size =    2.000 MiB\n[ 729/ 733] blk.39.ffn_gate_inp_shexp.weight     - [  2048,      1,      1,      1], type =    f32, size =    0.008 MiB\n[ 730/ 733] blk.39.ffn_gate_shexp.weight         - [  2048,    512,      1,      1], type =   bf16, converting to q6_K .. size =     2.00 MiB ->     0.82 MiB\n[ 731/ 733] blk.39.ffn_up_exps.weight            - [  2048,    512,    256,      1], type =   bf16, converting to iq3_s .. size =   512.00 MiB ->   110.00 MiB\n[ 732/ 733] blk.39.ffn_up_shexp.weight           - [  2048,    512,      1,      1], type =   bf16, converting to q6_K .. size =     2.00 MiB ->     0.82 MiB\n[ 733/ 733] blk.39.post_attention_norm.weight    - [  2048,      1,      1,      1], type =    f32, size =    0.008 MiB\nllama_model_quantize_impl: model size  = 66152.24 MiB (16.01 BPW)\nllama_model_quantize_impl: quant size  = 14118.89 MiB (3.42 BPW)\nload_imatrix: imatrix datasets=['/run/media/s117/OS/FIT-GGUF/test-Models/imatrix-calibration/APEX-imatrix-Small.txt']\nload_imatrix: loaded 510 importance matrix entries from /run/media/s117/OS/Models/occamy-1.0-abliterated-GGUF/occamy-1.0-abliterated-BF16-imatrix.gguf computed on 500 chunks\nprepare_imatrix: have 510 importance matrix entries\n\nllama_quantize: quantize time = 484386.98 ms\nllama_quantize:    total time = 484386.98 ms\n",
+  "tensor_types_path": "/run/media/s117/OS/FIT-GGUF/experiments/2026-09-22-occamy-1p0-abliterated-4tier/calibration/probes/floor5-13.8G-tensor-types.txt",
+  "tensor_types_sha256": "971c2eb3471bf78b7b04e8fd7b5b8f7cf19b19cc07cee38623c9984d5fc3b077"
+}
