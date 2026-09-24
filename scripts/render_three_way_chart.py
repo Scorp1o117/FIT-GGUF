@@ -225,14 +225,14 @@ def render(native, fit, apex, model: str, out_dir: Path, lang: str, gates: list[
         else "Five-domain macro KL divergence · lower is better",
     )
     ax.legend(loc="upper right", frameon=False, fontsize=13, labelcolor=INK)
+    # One short line, like the house reference chart. The APEX-variant
+    # explanation belongs in the model card, not in a footer: a second sentence
+    # here stretches the figure and buys nothing a reader of the chart needs.
     footer(
         fig,
-        "协议：llama.cpp b10666 · c=512，b=512 · 五个固定 64 KiB 切片：wiki_test、wiki_valid、中文、代码、agent_chat。"
-        "三族均由同一 eval-v1 实现测量；APEX 为 I- 变体（同一配方 + 多样 imatrix：代码/工具调用/推理/对话，无 Wikipedia）。仅为本协议观测，不代表通用质量保证。"
+        "协议：llama.cpp b10666 · c=512，b=512 · 五个固定 64 KiB 切片：wiki_test、wiki_valid、中文、代码、agent_chat · 仅为本协议观测。"
         if zh
-        else "Protocol: llama.cpp b10666 · c=512, b=512 · five fixed 64 KiB slices: wiki_test, wiki_valid, Chinese, code, agent_chat. "
-        "All three families measured by the same eval-v1 implementation; APEX is the I-variant (same recipe plus a diverse imatrix: code, tool-calling, reasoning, chat -- no Wikipedia). "
-        "Observations, not a universal quality guarantee.",
+        else "Protocol: llama.cpp b10666 · c=512, b=512 · five fixed 64 KiB slices: wiki_test, wiki_valid, Chinese, code, agent_chat · observations only.",
     )
 
     out_dir.mkdir(parents=True, exist_ok=True)
