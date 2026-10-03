@@ -244,6 +244,10 @@ $('#targetBytes').addEventListener('input',e=> {
   if(Number.isFinite(bytes)&&bytes>0)$('#desiredGiB').value=Number((bytes/GIB).toFixed(6));
 });
 $('#loadAnalysis').addEventListener('click',()=>loadAnalysis().catch(e=>error(e.message)));
+$('#qualityForm').addEventListener('invalid',event=> {
+  const references=event.target.closest('details');
+  if(references)references.open=true;
+},true);
 document.addEventListener('click',async event=> {
   const button=event.target.closest('[data-copy-path]');
   if(!button)return;

@@ -37,6 +37,7 @@ _FIXED_VALUE_SIZES = {
 # tests/test_gguf_traits_source.py re-parses that file to keep this table honest.
 GGML_TYPE_TRAITS: dict[str, tuple[int, int]] = {
     "f32": (1, 4),
+    "f16": (1, 2),
     "bf16": (1, 2),
     "iq1_s": (256, 50),
     "iq1_m": (256, 56),

@@ -7,7 +7,7 @@ llmfit 1.1.16. Hardware: RTX 5080 Laptop GPU (16,303 MiB reported VRAM),
 ## Automated checks
 
 - Full Python suite after the two-entry redesign and desktop runtime fixes:
-  **317 passed, 1 skipped**.
+  **318 passed, 1 skipped**.
   Upstream b10666 header tests were enabled by downloading the two headers to
   the ignored reference directory.
 - JavaScript syntax check: `node --check src/fit_gguf/studio/static/app.js`.
@@ -40,6 +40,9 @@ completed analyze → plan → quantize with Q4_K_M / Q8_0 endpoints:
 All produced the same SHA-256:
 `3b54e056a348b6c70dd7718e9df30078505db174c798d71450d073f97c9faf91`.
 The resulting GGUF loaded in `llama-cli` and generated 32 tokens on CPU.
+An F16 source converted from the same fixture also passed the complete volume
+workflow with the same predicted and actual file size. Preserved F16 tensors
+have an explicit payload/alignment regression test.
 This establishes file compatibility and exact-size behavior on this small
 fixture; it is **not** a quality evaluation or a performance benchmark.
 The small tensor shapes required quantizer fallback for three tensors.

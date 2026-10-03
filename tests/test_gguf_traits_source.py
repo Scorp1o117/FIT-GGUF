@@ -87,7 +87,7 @@ def test_traits_match_pinned_static_asserts():
         found[BLOCK_TO_QTYPE[name]] = (BLOCK_CONSTANTS[block], size)
 
     assert set(found) == {
-        qtype for qtype in GGML_TYPE_TRAITS if qtype not in ("f32", "bf16")
+        qtype for qtype in GGML_TYPE_TRAITS if qtype not in ("f32", "f16", "bf16")
     }
     for qtype, traits in found.items():
         assert GGML_TYPE_TRAITS[qtype] == traits, qtype

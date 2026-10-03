@@ -27,6 +27,8 @@ All notable changes to FIT-GGUF. Format follows
 
 - Small-model quantizer fallback to Q4_0/Q4_1 is now supported by the exact
   GGUF size predictor, with traits checked against upstream b10666 headers.
+- Preserved F16 tensors are accepted by the size predictor, with half-precision
+  payload and alignment coverage.
 - CLI/package/persisted-record versions now share one version source. The
   previous CLI still reported 0.3.3 while package metadata was 0.4.0.
 - Absolute imatrix paths survive independent worker directories; task history

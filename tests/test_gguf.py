@@ -44,7 +44,7 @@ def _tensor(name: str, shape: tuple[int, ...], type_id: int, offset: int) -> byt
     )
 
 
-def _write_fixture(path: Path) -> None:
+def _write_fixture(path: Path, *, norm_type: int = 0) -> None:
     fields = [
         _field_u32("general.alignment", 32),
         _field_u32("general.file_type", 32),
@@ -52,7 +52,7 @@ def _write_fixture(path: Path) -> None:
     ]
     tensors = [
         _tensor("blk.0.attn_q.weight", (256, 2), 30, 0),
-        _tensor("output_norm.weight", (3,), 0, 448),
+        _tensor("output_norm.weight", (3,), norm_type, 448),
     ]
     body = b"GGUF" + struct.pack("<IQQ", 3, len(tensors), len(fields))
     body += b"".join(fields) + b"".join(tensors)
@@ -178,6 +178,18 @@ def test_prediction_rejects_unknown_qtype(tmp_path: Path):
 
     with pytest.raises(GGUFError, match="Unsupported destination qtype"):
         predict_quantized_size(layout, recipe, QuantizationMetadata(file_type=26))
+
+
+def test_prediction_preserves_half_precision_tensor_and_alignment(tmp_path):
+    path = tmp_path / "source.gguf"
+    _write_fixture(path, norm_type=1)
+    recipe = _recipe()
+    half = replace(recipe.tensors[1], src_type="f16", dst_type="f16", orig_bytes=6, new_bytes=6)
+    result = predict_quantized_size(read_gguf_layout(path), replace(recipe, tensors=(recipe.tensors[0], half)),
+                                    QuantizationMetadata(file_type=26))
+    assert [tensor.payload_bytes for tensor in result.tensors] == [220, 6]
+    assert result.tensor_payload_bytes == 226
+    assert result.total_bytes == result.metadata_bytes + 224 + 32
 
 
 def test_rejects_bad_magic(tmp_path: Path):
