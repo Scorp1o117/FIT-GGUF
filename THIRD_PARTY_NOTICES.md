@@ -13,6 +13,14 @@ and their dependencies. Their installed package license metadata is copied
 into `dist/FIT-Studio/licenses/` by the build script. The application runs in
 the installed Microsoft Edge WebView2 runtime; that runtime is not bundled.
 
+The bundled PyInstaller bootloader license and its distribution exception are
+included under `licenses/PyInstaller/`. Runtime DLL notices from the build's
+Conda packages are retained under `licenses/runtime-*/`. Only the liblzma
+library from XZ is bundled; its license is 0BSD. The proxy-tools 0.1.0 wheel
+omits its MIT license file, so the build supplies the upstream file from
+https://github.com/jtushman/proxy_tools/blob/master/LICENSE.txt
+(Git blob `078411c7399fbc0454f36cbe8c8cdbaaba7ebc95`).
+
 ## llmfit — MIT License
 
 Copyright (c) 2026 Alex Jones

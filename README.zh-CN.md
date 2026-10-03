@@ -33,6 +33,18 @@ FIT-GGUF v0.1 有两条刻意分开的结论：
 
 **v0.2 把体积滑块升级为质量旋钮：选择你要的保真度，FIT 找到能安全满足它的最小、经过验证的 GGUF。** 见下文[保真档位](#v02保真档位)。
 
+## v0.5：FIT Studio 图形化应用
+
+两个主要入口：**指定体积**，规划并校验目标字节预算；**指定质量档位**，
+按冻结的五域参考搜索，最终产物再次实测。硬件预算、llmfit 模型适配和任务记录作为辅助工具。
+
+![FIT Studio 双入口首页](docs/assets/fit-studio.png)
+
+[下载 Windows 应用](https://github.com/Scorp1o117/FIT-GGUF/releases/latest)，
+完整解压后运行，无需另外安装 Python。模型、imatrix 和兼容的 llama.cpp 运行时需自行准备。
+详见 [Windows 使用说明](docs/studio-windows.md) 与 [验证范围](docs/studio-validation.md)。
+源码安装可运行 `fit desktop` 或 `fit gui`；默认源模型限制为 5B 参数。
+
 ## 首发批次：Qwen3.8-27B-Uncensored
 
 首批公开发布包含 **14 个 FIT 档位（7 GiB 至 13.5 GiB，每 0.5 GiB 一档）**，基模型为

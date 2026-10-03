@@ -33,6 +33,11 @@ All notable changes to FIT-GGUF. Format follows
   sorts by creation time and persists interrupted status across reopening.
 - Failed llmfit detection is reported as a local fallback. A file budget below
   the analysis interval is not silently increased.
+- UTF-8 quality logs are read consistently under legacy Windows locales;
+  runtime paths use the target platform's separators.
+- Desktop quantization/evaluation subprocesses stay hidden and isolate their
+  DLL search from the frozen Python runtime. Starting a job clears stale
+  results; both workflows offer a copyable artifact path.
 
 ## [0.4.0] — 2026-09-24
 

@@ -40,6 +40,21 @@ it does not pretend that every byte target is exactly representable.
 FIT finds the smallest verified GGUF that safely meets it.** See
 [Fidelity tiers](#v02-fidelity-tiers) below.
 
+## v0.5: FIT Studio
+
+Choose **file size** to plan and verify an exact byte budget, or **quality tier**
+to search against frozen five-domain references and re-evaluate the result.
+Hardware budgets, llmfit model suggestions and task history support both paths.
+
+![FIT Studio two-entry home screen](docs/assets/fit-studio.png)
+
+[Download the Windows application](https://github.com/Scorp1o117/FIT-GGUF/releases/latest)
+and unpack the complete archive; no separate Python installation is required.
+Models, imatrix and a compatible llama.cpp runtime are supplied separately.
+See the [Windows guide](docs/studio-windows.md) and
+[tested scope](docs/studio-validation.md). Source installations can run
+`fit desktop` or `fit gui`; the default model guard is 5B parameters.
+
 ## First release: Qwen3.8-27B-Uncensored
 
 The first public batch contains **14 FIT tiers from 7 GiB to 13.5 GiB in

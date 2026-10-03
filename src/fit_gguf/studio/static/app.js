@@ -9,6 +9,7 @@ const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;',
 const giB = value => value == null ? '—' : (Number(value)/GIB).toFixed(Number(value)/GIB<.1?4:2);
 const num = value => Number(value).toLocaleString('zh-CN');
 const detail = (key,value) => `<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`;
+const artifactPath = path => `<div class="artifact-location"><div class="result-artifact">${esc(path)}</div><button type="button" class="text-button" data-copy-path="${esc(path)}">复制路径</button></div>`;
 function precisionChart(shares) {
   const rows=Object.entries(shares||{}).filter(([,value])=>Number.isFinite(value)&&value>0).sort((a,b)=>b[1]-a[1]);
   const colors=['#a6f0d0','#a69df5','#76aace','#edc181','#e3a2b3','#7bb8a5'];
@@ -123,7 +124,7 @@ function renderResult(job) {
     if(!job.result) return;
     const r=job.result, metrics=r.artifact?.verified_metrics, delivered=job.status==='succeeded'&&r.status==='verified_pass'&&r.artifact;
     $('#qualityResult').classList.remove('empty');
-    $('#qualityResult').innerHTML=`<div class="result-stats"><div class="result-stat"><small>交付状态</small><strong>${delivered?'验证通过':'未交付'}</strong></div><div class="result-stat"><small>最终文件体积</small><strong>${delivered?giB(r.artifact.size_bytes)+' GiB':'—'}</strong></div></div><dl class="result-details">${detail('搜索状态',r.product_status||r.status)}${detail('最终实测 macro KL',metrics?.macro_kl==null?'—':Number(metrics.macro_kl).toFixed(6))}${detail('最终实测 Same-top',metrics?.same_top_pct==null?'—':Number(metrics.same_top_pct).toFixed(2)+'% · 参考指标')}${detail('新搜索评测',`${r.fresh_evals??'—'} / ${r.budget??'—'}`)}${detail('停止条件',r.active_constraint||'—')}</dl>${delivered?`<div class="result-artifact">${esc(r.artifact.path)}</div>`:''}<p class="caption">${esc(r.note||'KL 是档位门槛；Same-top 仅作参考。仅在搜索窗口和预算内寻找通过验证的更小产物。')}</p>`;
+    $('#qualityResult').innerHTML=`<div class="result-stats"><div class="result-stat"><small>交付状态</small><strong>${delivered?'验证通过':'未交付'}</strong></div><div class="result-stat"><small>最终文件体积</small><strong>${delivered?giB(r.artifact.size_bytes)+' GiB':'—'}</strong></div></div><dl class="result-details">${detail('搜索状态',r.product_status||r.status)}${detail('最终实测 macro KL',metrics?.macro_kl==null?'—':Number(metrics.macro_kl).toFixed(6))}${detail('最终实测 Same-top',metrics?.same_top_pct==null?'—':Number(metrics.same_top_pct).toFixed(2)+'% · 参考指标')}${detail('新搜索评测',`${r.fresh_evals??'—'} / ${r.budget??'—'}`)}${detail('停止条件',r.active_constraint||'—')}</dl>${delivered?`${artifactPath(r.artifact.path)}`:''}<p class="caption">${esc(r.note||'KL 是档位门槛；Same-top 仅作参考。仅在搜索窗口和预算内寻找通过验证的更小产物。')}</p>`;
     return;
   }
   $('#resultStatus').textContent=statuses[job.status]||job.status;
@@ -133,15 +134,15 @@ function renderResult(job) {
   if(job.action==='analyze') {
     acceptAnalysis(a.analysis,r);
     sizeStep('planForm');
-    $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>下界文件大小</small><strong>${giB(r.presets.lower.predicted_size_bytes)} GiB</strong></div><div class="result-stat"><small>上界文件大小</small><strong>${giB(r.presets.upper.predicted_size_bytes)} GiB</strong></div></div><dl class="result-details">${detail('候选张量升级',num(r.candidate_count))}${detail('预设区间',r.presets.lower.name+' → '+r.presets.upper.name)}${detail('可分配差值',num(r.net_preset_gap_bytes)+' bytes')}</dl><div class="result-artifact">${esc(a.analysis)}</div>`;
+    $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>下界文件大小</small><strong>${giB(r.presets.lower.predicted_size_bytes)} GiB</strong></div><div class="result-stat"><small>上界文件大小</small><strong>${giB(r.presets.upper.predicted_size_bytes)} GiB</strong></div></div><dl class="result-details">${detail('候选张量升级',num(r.candidate_count))}${detail('预设区间',r.presets.lower.name+' → '+r.presets.upper.name)}${detail('可分配差值',num(r.net_preset_gap_bytes)+' bytes')}</dl>${artifactPath(a.analysis)}`;
   } else if(job.action==='plan') {
     sizeStep('quantizeForm');
     $('#planPath').value=a.plan; $('#analysisPath').value=r.analysis_path;
-    $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>目标预算</small><strong>${giB(r.target_bytes)} GiB</strong></div><div class="result-stat"><small>预测文件大小</small><strong>${giB(r.predicted_size_bytes)} GiB</strong></div></div>${precisionChart(r.qtype_parameter_shares)}<dl class="result-details">${detail('预测字节数',num(r.predicted_size_bytes))}${detail('预算剩余',num(r.unused_bytes)+' bytes')}${detail('已选择升级',num(r.selected_count)+' 个')}${detail('主要量化类型',String(r.dominant_qtype||'—').toUpperCase())}${detail('分配策略',r.policy)}${detail('运行时确认轮次',r.oracle_iterations)}</dl><div class="result-artifact">${esc(a.plan)}</div><p class="caption">这是大小方案，不代表通过了量化质量评测。</p>`;
+    $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>目标预算</small><strong>${giB(r.target_bytes)} GiB</strong></div><div class="result-stat"><small>预测文件大小</small><strong>${giB(r.predicted_size_bytes)} GiB</strong></div></div>${precisionChart(r.qtype_parameter_shares)}<dl class="result-details">${detail('预测字节数',num(r.predicted_size_bytes))}${detail('预算剩余',num(r.unused_bytes)+' bytes')}${detail('已选择升级',num(r.selected_count)+' 个')}${detail('主要量化类型',String(r.dominant_qtype||'—').toUpperCase())}${detail('分配策略',r.policy)}${detail('运行时确认轮次',r.oracle_iterations)}</dl>${artifactPath(a.plan)}<p class="caption">这是大小方案，不代表通过了量化质量评测。</p>`;
   } else {
     $('#analysisPath').value=r.analysis_path;
     const pass=r.size_matches_refinalization&&r.size_matches_expectation;
-    $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>实际文件大小</small><strong>${giB(r.size_bytes)} GiB</strong></div><div class="result-stat"><small>字节校验</small><strong>${pass?'PASS':'FAIL'}</strong></div></div><dl class="result-details">${detail('实际字节数',num(r.size_bytes))}${detail('实际与预测差值',num(r.size_bytes-r.refinalized_expected_bytes)+' bytes')}${detail('SHA-256',r.sha256)}</dl><div class="result-artifact">${esc(a.model)}</div><p class="caption">文件大小校验通过不代表量化质量已评测。质量评测使用 FIT 的校准与保真度流程。</p>`;
+    $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>实际文件大小</small><strong>${giB(r.size_bytes)} GiB</strong></div><div class="result-stat"><small>字节校验</small><strong>${pass?'PASS':'FAIL'}</strong></div></div><dl class="result-details">${detail('实际字节数',num(r.size_bytes))}${detail('实际与预测差值',num(r.size_bytes-r.refinalized_expected_bytes)+' bytes')}${detail('SHA-256',r.sha256)}</dl>${artifactPath(a.model)}<p class="caption">文件大小校验通过不代表量化质量已评测。质量评测使用 FIT 的校准与保真度流程。</p>`;
   }
 }
 async function watchJob(id) {
@@ -227,6 +228,12 @@ $('#useBudget').addEventListener('click',()=> {
 $('#targetSlider').addEventListener('input',e=>setTarget(Number(e.target.value)));
 $('#targetBytes').addEventListener('input',e=> { $('#targetLabel').textContent=giB(Number(e.target.value)); $('#targetSlider').value=e.target.value; });
 $('#loadAnalysis').addEventListener('click',()=>loadAnalysis().catch(e=>error(e.message)));
+document.addEventListener('click',async event=> {
+  const button=event.target.closest('[data-copy-path]');
+  if(!button)return;
+  try {await navigator.clipboard.writeText(button.dataset.copyPath);toast('已复制产物路径。');}
+  catch {error('无法访问剪贴板，请直接选择并复制显示的路径。');}
+});
 for(const [selector,action] of [['#analyzeForm','analyze'],['#planForm','plan'],['#quantizeForm','quantize'],['#qualityForm','quality']]) $(selector).addEventListener('submit',event=>{ event.preventDefault(); submit(event.target,action).catch(e=>error(e.message)); });
 $('#modelsForm').addEventListener('submit',event=> { event.preventDefault(); loadModels().catch(e=> {error(e.message);$('#modelsNote').textContent='读取失败，可重试或检查 llmfit 安装。';}); });
 $('#modelSearch').addEventListener('input',()=>{state.modelLimit=40;renderModels();});
@@ -236,7 +243,13 @@ $('#cancelJob').addEventListener('click',()=> { if(state.active) api(`/api/jobs/
 $('#cancelQuality').addEventListener('click',()=> { if(state.active) api(`/api/jobs/${state.active}/cancel`,{}).then(()=>toast('已请求取消质量搜索。')).catch(e=>error(e.message)); });
 document.querySelectorAll('.pick').forEach(button=>button.addEventListener('click',async()=> {
   if(!window.pywebview?.api) {toast('浏览器版请粘贴完整路径；桌面版支持文件选择。');return;}
-  try {const path=await window.pywebview.api.pick_path(button.dataset.kind);if(path)button.parentElement.querySelector('input').value=path;}catch(e){error(e.message);}
+  try {
+    const path=await window.pywebview.api.pick_path(button.dataset.kind);
+    if(path) {
+      const input=button.parentElement.querySelector('input');
+      input.value=path; input.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+  } catch(e) {error(e.message);}
 }));
 async function init() {
   const info=await api('/api/info'); $('#workspacePath').textContent=info.workspace;
