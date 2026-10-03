@@ -46,6 +46,9 @@ __pycache__/
 /promo-video/
 /V0.2_PROGRESS.md
 build/
+dist/
+*.spec
+/work-llmfit-temp.json
 *.egg-info/
 
 # Local-only refine profiles (guard profiles ship inside the package now)

@@ -22,6 +22,8 @@ dependencies = [
 fit = "fit_gguf.cli:main"
 
 [project.optional-dependencies]
+desktop = ["pywebview>=6.2", "psutil>=5.9"]
+hardware = ["llmfit>=1.1.16", "psutil>=5.9"]
 test = [
     "pytest>=8.0",
     # test_clean_wheel_registry_verify builds a wheel with
@@ -40,4 +42,4 @@ pythonpath = ["src"]
 addopts = "-p no:cacheprovider"
 
 [tool.setuptools.package-data]
-fit_gguf = ["registry/**/*.json", "profiles/guard/*.yaml", "contracts/*.json"]
+fit_gguf = ["registry/**/*.json", "profiles/guard/*.yaml", "contracts/*.json", "studio/static/*"]

@@ -27,6 +27,14 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--version", action="version", version=f"fit {FIT_GGUF_VERSION}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    for name in ("gui", "desktop"):
+        studio = subparsers.add_parser(name, help="Open FIT Studio in a browser or desktop window")
+        studio.add_argument("--port", type=int, default=0, help="Loopback port (0 = automatic)")
+        studio.add_argument("--workspace", default="work/studio", help="Output and job-history directory")
+        studio.add_argument("--llmfit", default=None, help="Optional llmfit executable path")
+        studio.add_argument("--max-model-params", type=float, default=5, help="Source-model limit in billions (default: 5)")
+        studio.add_argument("--no-open", action="store_true", help="Serve without opening a window")
+
     analyze_parser = subparsers.add_parser(
         "analyze", help="Profile a source/imatrix pair and freeze the candidate set"
     )
@@ -338,6 +346,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _run(args: argparse.Namespace) -> int:
+    if args.command in ("gui", "desktop"):
+        from fit_gguf.studio.server import launch
+        return launch(args)
     if args.command == "calibrate":
         from fit_gguf.calibrate import CalibrateConfig, run_calibrate
 

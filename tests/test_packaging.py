@@ -25,7 +25,7 @@ PKG = REPO / "src" / "fit_gguf"
 # Asset paths the runtime resolves relative to the package directory. Keep in
 # sync with `fit_gguf.calibration.default_contract_path`,
 # `fit_gguf.registry.default_guard_registry` and `fit_gguf.registry.find_package_dir`.
-RUNTIME_ASSET_DIRS = ("contracts/*.json", "profiles/guard/*.yaml", "registry/**/*.json")
+RUNTIME_ASSET_DIRS = ("contracts/*.json", "profiles/guard/*.yaml", "registry/**/*.json", "studio/static/*")
 
 
 def _declared_globs() -> list[str]:
@@ -69,6 +69,9 @@ def test_critical_assets_are_declared_individually():
         "registry/fidelity-registry-v1.json",
         "profiles/guard/guard-orcarouter-qwen3.8-27b-uncensored-exact-v1.yaml",
         "profiles/guard/guard-spark-x25-4b-abliterated-exact-v1.yaml",
+        "studio/static/index.html",
+        "studio/static/style.css",
+        "studio/static/app.js",
     }
     covered = _covered()
     missing = sorted(required - covered)

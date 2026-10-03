@@ -181,6 +181,13 @@ fit registry validate out/MyModel    # 校验一个 Calibration Bundle
 
 ## 安装
 
+### 图形化应用 — FIT Studio
+
+安装 `pip install -e '.[desktop,hardware]'` 后运行 `fit desktop`，即可打开本地图形工作台：
+实时硬件预算、llmfit 模型适配建议，以及分析 → 规划 → 量化 → 字节校验的完整流程。
+`fit gui` 使用同一套浏览器界面。默认实验上限为 5B 参数。
+Windows 应用打包、文件选择、资源估算边界与验证步骤见 [Studio 使用说明](docs/studio.md)。
+
 FIT-GGUF 需要 Python 3.11+ 和一个包含 `llama-quantize` 的兼容 llama.cpp 运行时。
 
 ```bash
