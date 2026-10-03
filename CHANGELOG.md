@@ -38,6 +38,9 @@ All notable changes to FIT-GGUF. Format follows
 - Desktop quantization/evaluation subprocesses stay hidden and isolate their
   DLL search from the frozen Python runtime. Starting a job clears stale
   results; both workflows offer a copyable artifact path.
+- The two entries restore their last successful settings independently.
+  Quality cancellation stays accessible outside the collapsed log panel;
+  cancelled/failed tasks show a clear non-delivery state.
 
 ## [0.4.0] — 2026-09-24
 

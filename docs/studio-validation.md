@@ -53,6 +53,10 @@ are excluded from Git and the application archive.
 Browser controls exercised against the running local application: hardware
 overview, model recommendation/search, analyze, plan, quantize, history,
 precision distribution and restoration of the previous successful run.
+Both workflows restore their own last successful inputs and results. An actual
+quality task was cancelled through the UI; its Python/llama.cpp process tree
+terminated and the UI showed cancelled with no delivered result. An invalid
+FREEZE document failed before quantization and also showed no delivered result.
 Screenshots are retained locally at `work/studio-overview.png` and
 `work/studio-workspace.png`.
 

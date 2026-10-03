@@ -88,7 +88,7 @@ async function loadAnalysis() {
   const data=await api('/api/analysis',{path:$('#analysisPath').value});
   acceptAnalysis(data.path,data.result); toast('已读取分析记录。');
 }
-async function restoreJob(job) {
+async function restoreJob(job, syncInputs=true) {
   if(job.action==='quality') {
     for(const field of ['source','imatrix','runtime','refs_dir','eval_data_dir','freeze','reference_manifest','threads']) {
       const flag='--'+field.replaceAll('_','-'), index=job.command.indexOf(flag);
@@ -96,14 +96,17 @@ async function restoreJob(job) {
     }
     const tierIndex=job.command.indexOf('--tier');
     if(tierIndex>=0) $('#qualityForm').querySelector(`[value=${job.command[tierIndex+1]}]`).checked=true;
-    syncModelFields($('#qualityForm'));renderResult(job);return;
+    const references=$('#qualityForm .quality-inputs');
+    references.open=false;
+    references.querySelector('summary').textContent='已恢复评测参考 · 展开修改';
+    if(syncInputs)syncModelFields($('#qualityForm'));renderResult(job);return;
   }
   const path=job.action==='analyze'?job.artifacts.analysis:job.result?.analysis_path;
   if(job.status==='succeeded'&&path) {
     const analysis=await api('/api/analysis',{path}); acceptAnalysis(analysis.path,analysis.result);
     for(const field of ['source','imatrix']) $('#analyzeForm').querySelector(`[name=${field}]`).value=analysis.result[field].path;
     $('#analyzeForm').querySelector('[name=runtime]').value=analysis.result.runtime.dir;
-    syncModelFields($('#analyzeForm'));
+    if(syncInputs)syncModelFields($('#analyzeForm'));
     $('#lowerPreset').value=analysis.result.presets.lower.name; $('#upperPreset').value=analysis.result.presets.upper.name;
     if(job.action==='plan') {setTarget(job.result.target_bytes);$('#planForm').querySelector('[name=policy]').value=job.result.policy;}
     if(job.action==='quantize') {
@@ -119,6 +122,15 @@ async function restoreJob(job) {
   renderResult(job);
 }
 function renderResult(job) {
+  const quality=job.action==='quality';
+  $(quality?'#qualityStatus':'#resultStatus').textContent=statuses[job.status]||job.status;
+  if(!job.result) {
+    const result=$(quality?'#qualityResult':'#resultSummary');
+    const running=['queued','running','cancelling'].includes(job.status);
+    result.classList.add('empty');
+    result.innerHTML=`<h3>${running?'正在处理当前任务':'本次任务未交付结果'}</h3><p>${esc(running?'完成校验后会显示本次结果。':job.error||'请查看任务状态和日志；未校验的部分文件保留在任务目录中。')}</p>`;
+    return;
+  }
   if(job.action==='quality') {
     $('#qualityStatus').textContent=statuses[job.status]||job.status;
     if(!job.result) return;
@@ -158,7 +170,7 @@ async function watchJob(id) {
     if(state.lastResult!==id) {
       state.lastResult=id;
       if(job.status==='succeeded') { renderResult(job); toast(`${actions[job.action]}完成。`); }
-      else if(job.status==='failed') {if(quality) renderResult(job);error(job.error||'任务未能交付产物，请查看结果和日志。');}
+      else {renderResult(job);if(job.status==='failed')error(job.error||'任务未能交付产物，请查看结果和日志。');}
     }
   }
   setBusy(Boolean(state.active));
@@ -226,7 +238,11 @@ $('#useBudget').addEventListener('click',()=> {
   setTarget(target); go('workspace'); toast(target===state.budget.target_bytes?'已带入文件预算；完成分析后会限制到可规划区间。':'硬件预算超出当前预设区间，已限制到区间内；可重新选择预设分析。');
 });
 $('#targetSlider').addEventListener('input',e=>setTarget(Number(e.target.value)));
-$('#targetBytes').addEventListener('input',e=> { $('#targetLabel').textContent=giB(Number(e.target.value)); $('#targetSlider').value=e.target.value; });
+$('#targetBytes').addEventListener('input',e=> {
+  const bytes=Number(e.target.value);
+  $('#targetLabel').textContent=giB(bytes); $('#targetSlider').value=e.target.value;
+  if(Number.isFinite(bytes)&&bytes>0)$('#desiredGiB').value=Number((bytes/GIB).toFixed(6));
+});
 $('#loadAnalysis').addEventListener('click',()=>loadAnalysis().catch(e=>error(e.message)));
 document.addEventListener('click',async event=> {
   const button=event.target.closest('[data-copy-path]');
@@ -260,11 +276,13 @@ async function init() {
   $('#lowerPreset').value='IQ3_M'; $('#upperPreset').value='IQ4_XS';
   refreshHardware().catch(e=>error(e.message));
   await refreshJobs();
-  const last=state.jobs.find(job=>job.status==='succeeded');
-  if(last) {
+  const completed=state.jobs.filter(job=>job.status==='succeeded');
+  for(const last of [completed.find(job=>job.action!=='quality'),completed.find(job=>job.action==='quality')].filter(Boolean)) {
     const job=await api(`/api/jobs/${last.id}`);
-    await restoreJob(job); $('#liveLog').textContent=job.log_text||'已恢复上次完成的任务。'; state.lastResult=last.id;
+    await restoreJob(job,false);
+    $(job.action==='quality'?'#qualityLog':'#liveLog').textContent=job.log_text||'已恢复上次完成的任务。';
   }
+  state.lastResult=completed[0]?.id||null;
   if(state.active) await watchJob(state.active);
 }
 setInterval(async()=> { if(state.polling||!state.active)return; state.polling=true;try{await watchJob(state.active);await refreshJobs();}catch(e){error(e.message);}finally{state.polling=false;} },1500);
