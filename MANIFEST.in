@@ -1,0 +1,4 @@
+include LICENSE THIRD_PARTY_NOTICES.md Start-FIT-Studio.ps1
+recursive-include docs *.md
+recursive-include tools *.py *.ps1
+recursive-include src/fit_gguf/studio/static *.html *.css *.js

@@ -16,6 +16,7 @@ import webbrowser
 
 from fit_gguf.studio.hardware import LlmfitAdapter, memory_budget
 from fit_gguf.studio.jobs import JobManager, input_path, summarize_analysis
+from fit_gguf.version import __version__
 
 
 class StudioServer(ThreadingHTTPServer):
@@ -97,6 +98,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if split.path == "/api/info":
                 self._json(200, {"workspace": str(self.server.jobs.workspace),
+                                 "version": __version__,
                                  "max_model_params": self.server.jobs.limit,
                                  "presets": list(__import__("fit_gguf.pipeline", fromlist=["PRESET_FILE_TYPES"]).PRESET_FILE_TYPES)})
             elif split.path == "/api/system":

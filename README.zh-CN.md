@@ -184,7 +184,7 @@ fit registry validate out/MyModel    # 校验一个 Calibration Bundle
 ### 图形化应用 — FIT Studio
 
 安装 `pip install -e '.[desktop,hardware]'` 后运行 `fit desktop`，即可打开本地图形工作台：
-实时硬件预算、llmfit 模型适配建议，以及分析 → 规划 → 量化 → 字节校验的完整流程。
+两个主入口：**指定体积**（分析 → 规划 → 量化 → 字节校验），以及**指定质量档位**（冻结参考下的真实质量搜索与最终复测）。硬件预算、llmfit 模型适配和任务历史作为辅助工具。
 `fit gui` 使用同一套浏览器界面。默认实验上限为 5B 参数。
 Windows 应用打包、文件选择、资源估算边界与验证步骤见 [Studio 使用说明](docs/studio.md)。
 

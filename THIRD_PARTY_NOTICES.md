@@ -7,7 +7,8 @@ installed llmfit executable when present in the build environment.
 
 Upstream: https://github.com/AlexsJones/llmfit
 
-The Windows build also uses PyWebView, pythonnet, clr-loader, psutil, PyYAML,
+The Windows build bundles the Python runtime; its PSF license text accompanies
+the build under `licenses/python/`. It also uses PyWebView, pythonnet, clr-loader, psutil, PyYAML,
 and their dependencies. Their installed package license metadata is copied
 into `dist/FIT-Studio/licenses/` by the build script. The application runs in
 the installed Microsoft Edge WebView2 runtime; that runtime is not bundled.

@@ -1,9 +1,9 @@
 # FIT Studio
 
-FIT Studio puts FIT's **analyze → plan → quantize** workflow in a local graphical
-application. The same UI runs in a normal browser and an optional PyWebView
-desktop window. It adds live hardware budgets and optional llmfit model-fit
-recommendations without changing FIT's allocation or exact-size gates.
+FIT Studio offers two main entries: **specify file size** and **specify quality
+tier**. The same UI runs in a normal browser and an optional PyWebView desktop
+window. Hardware budgets, optional llmfit recommendations, task history and
+registry evidence are supporting tools.
 
 ## Start from source
 
@@ -36,7 +36,7 @@ commands remain usable without any GUI dependency.
 
 ## Workflow
 
-1. **Overview:** inspect current free VRAM, available RAM and CPU cores. Choose
+1. **Hardware and budget:** inspect current free VRAM, available RAM and CPU cores. Choose
    one GPU or CPU/RAM, reserve memory for other applications, and estimate KV
    and compute overhead. Bring the resulting file budget into the workspace.
 2. **Analyze:** select a source floating-point GGUF, imatrix GGUF and compatible
@@ -56,6 +56,31 @@ commands remain usable without any GUI dependency.
    one at a time, can be cancelled, and are cancelled when the server closes.
    A task left running by a crashed process becomes `interrupted` on reopening.
    Partial output is retained for inspection, never labelled successful.
+
+The size entry shows one step at a time. Set the requested GiB budget, analyze
+the model, plan, then execute. A requested budget below the preset interval is
+not silently raised: select lower presets or explicitly change the budget.
+
+## Specify a quality tier
+
+Choose Mini, Compact, Balanced, Quality or Reference. The global macro KL
+thresholds are respectively 0.20, 0.15, 0.10, 0.05 and 0.02. Studio invokes the
+real `fit fidelity-search` product flow, not a preset renamed as a quality tier.
+
+Supply the source GGUF, its imatrix and llama.cpp runtime, then the five-domain
+reference KLD directory, fixed evaluation corpus directory, eval-v1 `FREEZE.json`
+and the source-bound `reference-manifest.json`. A `fit calibrate` reference
+bundle can provide the references and manifest. FIT verifies the source,
+reference/corpus hashes and frozen evaluator contract before expensive work.
+
+The Studio execution profile uses CPU evaluation, four threads by default
+(configurable from 1 to 16), the normal search budget of eight fresh evaluations,
+and final evaluation of the delivered artifact. Every run has independent
+scratch, logs, manifest and output paths; input reference directories stay
+read-only. A failed/no-pass search exposes its report without claiming a
+successful artifact. The default search tolerance is 128 MiB, so the result is
+the smallest verified PASS found within that bracket and budget, not a proof of
+the global minimum. Same-top is informational; KL decides the tier.
 
 The default source-model safety limit is **5B tensor parameters**. Change it
 deliberately with `fit desktop --max-model-params 3` (or a larger limit on
@@ -86,9 +111,9 @@ independent cards. Unified memory is one pool. CPU budgets use available RAM.
 llmfit scores and throughput figures are **estimates**. A recommendation is not
 an existing FIT calibration, an exact size prediction, a guaranteed compatible
 download, or a measured benchmark. Registry entries are shown separately,
-bound to exact source hashes. FIT's existing `calibrate`, `fidelity-search`
-and `tier-search` remain CLI operations in this first version. Size
-verification alone does not establish quantization quality.
+bound to exact source hashes. `calibrate` and bundle `tier-search` remain CLI
+operations; Studio's quality entry executes `fidelity-search`. Size verification
+alone does not establish quantization quality.
 
 ## Build a Windows application
 

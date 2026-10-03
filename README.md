@@ -293,8 +293,10 @@ the ones the references came from is refused rather than measured.
 ### Graphical application — FIT Studio
 
 `pip install -e '.[desktop,hardware]'` then `fit desktop` opens a local graphical
-workspace with hardware budgets, llmfit recommendations and the complete
-analyze/plan/quantize workflow. `fit gui` opens the same UI in a browser.
+workspace with two main entries: **specify file size** (analyze/plan/quantize)
+and **specify quality tier** (real frozen-reference fidelity search and final
+artifact verification). Hardware budgets and llmfit recommendations are
+supporting tools. `fit gui` opens the same UI in a browser.
 The default experiment guard is <=5B parameters. See [Studio guide](docs/studio.md)
 for Windows builds, native file selection, resource estimates and validation.
 

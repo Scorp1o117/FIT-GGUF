@@ -7,6 +7,15 @@ import sys
 destination = Path(sys.argv[1])
 destination.mkdir(parents=True, exist_ok=True)
 report = []
+python_license = next((Path(sys.base_prefix) / name for name in ("LICENSE_PYTHON.txt", "LICENSE.txt", "LICENSE")
+                       if (Path(sys.base_prefix) / name).is_file()), None)
+if python_license is None:
+    raise RuntimeError("Python runtime license was not found; do not distribute this build")
+python_target = destination / "python" / python_license.name
+python_target.parent.mkdir(parents=True, exist_ok=True)
+python_target.write_bytes(python_license.read_bytes())
+report.append({"name": "Python", "version": sys.version.split()[0],
+               "licenses": [str(python_target.relative_to(destination))]})
 for name in ("fit-gguf", "llmfit", "pywebview", "pythonnet", "clr-loader", "psutil",
              "PyYAML", "bottle", "proxy-tools", "cffi", "pycparser", "typing-extensions",
              "setuptools", "packaging"):

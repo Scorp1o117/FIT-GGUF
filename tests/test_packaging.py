@@ -91,3 +91,11 @@ def test_runtime_resolvers_point_inside_the_package():
 
     guards = sorted(default_guard_registry().glob("*.yaml"))
     assert guards, "no Guard Profiles resolved from the package directory"
+
+
+def test_release_version_is_shared_by_metadata_cli_and_records():
+    from fit_gguf.pipeline import FIT_GGUF_VERSION
+    from fit_gguf.version import __version__
+    data = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
+    assert data["tool"]["setuptools"]["dynamic"]["version"]["attr"] == "fit_gguf.version.__version__"
+    assert FIT_GGUF_VERSION == __version__

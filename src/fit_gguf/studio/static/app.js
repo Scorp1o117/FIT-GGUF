@@ -2,9 +2,9 @@
 const $ = selector => document.querySelector(selector);
 const GIB = 1024 ** 3;
 const state = {system:null, budget:null, analysis:null, jobs:[], models:[], modelLimit:40, active:null, lastResult:null, polling:false};
-const labels = {overview:'总览',workspace:'量化工作台',models:'模型适配',jobs:'任务记录',registry:'校准注册表'};
+const labels = {start:'开始',overview:'硬件与预算',workspace:'指定体积',quality:'指定质量档位',models:'模型适配',jobs:'任务记录',registry:'校准注册表'};
 const statuses = {queued:'等待启动',running:'运行中',succeeded:'已完成',failed:'失败',cancelled:'已取消',cancelling:'正在取消',interrupted:'已中断'};
-const actions = {analyze:'分析模型',plan:'规划精度',quantize:'量化校验'};
+const actions = {analyze:'分析模型',plan:'规划精度',quantize:'量化校验',quality:'质量档位搜索'};
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const giB = value => value == null ? '—' : (Number(value)/GIB).toFixed(Number(value)/GIB<.1?4:2);
 const num = value => Number(value).toLocaleString('zh-CN');
@@ -23,7 +23,17 @@ async function api(path, payload) {
 }
 function error(message) { $('#globalError').textContent=message; $('#globalError').classList.remove('hidden'); }
 function clearError() { $('#globalError').classList.add('hidden'); }
-function setBusy(busy) { for(const selector of ['#analyzeForm','#planForm','#quantizeForm']) $(selector).querySelector('button[type=submit]').disabled=busy; }
+function setBusy(busy) { for(const selector of ['#analyzeForm','#planForm','#quantizeForm','#qualityForm']) $(selector).querySelector('button[type=submit]').disabled=busy; }
+function sizeStep(id) {
+  for(const form of ['analyzeForm','planForm','quantizeForm']) $('#'+form).classList.toggle('hidden',form!==id);
+  document.querySelectorAll('[data-size-step]').forEach(button=>button.classList.toggle('selected',button.dataset.sizeStep===id));
+}
+function syncModelFields(form) {
+  for(const field of ['source','imatrix','runtime']) {
+    const value=form.querySelector(`[name=${field}]`).value;
+    for(const other of ['#analyzeForm','#qualityForm']) $(other).querySelector(`[name=${field}]`).value=value;
+  }
+}
 let toastTimer;
 function toast(message) { $('#toast').textContent=message; $('#toast').classList.remove('hidden'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>$('#toast').classList.add('hidden'),3500); }
 function go(page) {
@@ -58,6 +68,7 @@ async function updateBudget() {
 }
 function setTarget(value) {
   $('#targetBytes').value=Math.round(value);
+  $('#desiredGiB').value=Number((value/GIB).toFixed(6));
   $('#targetLabel').textContent=giB(value);
   if (state.analysis) $('#targetSlider').value=value;
 }
@@ -69,18 +80,29 @@ function acceptAnalysis(path,result) {
   $('#interval').textContent=`${result.presets.lower.name} (${giB(lower)} GiB) → ${result.presets.upper.name} (${giB(upper)} GiB) · ${num(lower)}–${num(upper)} bytes`;
   $('#targetBytes').min=lower; $('#targetBytes').max=upper;
   const candidate=Number($('#targetBytes').value)||Math.round((lower+upper)/2);
-  setTarget(Math.max(lower,Math.min(upper,candidate)));
+  setTarget(Math.min(upper,candidate));
+  if(candidate<lower) error(`目标体积低于当前区间下限 ${giB(lower)} GiB。请选择更低的预设重新分析，或主动调整预算。`);
 }
 async function loadAnalysis() {
   const data=await api('/api/analysis',{path:$('#analysisPath').value});
   acceptAnalysis(data.path,data.result); toast('已读取分析记录。');
 }
 async function restoreJob(job) {
+  if(job.action==='quality') {
+    for(const field of ['source','imatrix','runtime','refs_dir','eval_data_dir','freeze','reference_manifest','threads']) {
+      const flag='--'+field.replaceAll('_','-'), index=job.command.indexOf(flag);
+      if(index>=0) $('#qualityForm').querySelector(`[name=${field}]`).value=job.command[index+1];
+    }
+    const tierIndex=job.command.indexOf('--tier');
+    if(tierIndex>=0) $('#qualityForm').querySelector(`[value=${job.command[tierIndex+1]}]`).checked=true;
+    syncModelFields($('#qualityForm'));renderResult(job);return;
+  }
   const path=job.action==='analyze'?job.artifacts.analysis:job.result?.analysis_path;
   if(job.status==='succeeded'&&path) {
     const analysis=await api('/api/analysis',{path}); acceptAnalysis(analysis.path,analysis.result);
     for(const field of ['source','imatrix']) $('#analyzeForm').querySelector(`[name=${field}]`).value=analysis.result[field].path;
     $('#analyzeForm').querySelector('[name=runtime]').value=analysis.result.runtime.dir;
+    syncModelFields($('#analyzeForm'));
     $('#lowerPreset').value=analysis.result.presets.lower.name; $('#upperPreset').value=analysis.result.presets.upper.name;
     if(job.action==='plan') {setTarget(job.result.target_bytes);$('#planForm').querySelector('[name=policy]').value=job.result.policy;}
     if(job.action==='quantize') {
@@ -96,14 +118,24 @@ async function restoreJob(job) {
   renderResult(job);
 }
 function renderResult(job) {
+  if(job.action==='quality') {
+    $('#qualityStatus').textContent=statuses[job.status]||job.status;
+    if(!job.result) return;
+    const r=job.result, metrics=r.artifact?.verified_metrics, delivered=job.status==='succeeded'&&r.status==='verified_pass'&&r.artifact;
+    $('#qualityResult').classList.remove('empty');
+    $('#qualityResult').innerHTML=`<div class="result-stats"><div class="result-stat"><small>交付状态</small><strong>${delivered?'验证通过':'未交付'}</strong></div><div class="result-stat"><small>最终文件体积</small><strong>${delivered?giB(r.artifact.size_bytes)+' GiB':'—'}</strong></div></div><dl class="result-details">${detail('搜索状态',r.product_status||r.status)}${detail('最终实测 macro KL',metrics?.macro_kl==null?'—':Number(metrics.macro_kl).toFixed(6))}${detail('最终实测 Same-top',metrics?.same_top_pct==null?'—':Number(metrics.same_top_pct).toFixed(2)+'% · 参考指标')}${detail('新搜索评测',`${r.fresh_evals??'—'} / ${r.budget??'—'}`)}${detail('停止条件',r.active_constraint||'—')}</dl>${delivered?`<div class="result-artifact">${esc(r.artifact.path)}</div>`:''}<p class="caption">${esc(r.note||'KL 是档位门槛；Same-top 仅作参考。仅在搜索窗口和预算内寻找通过验证的更小产物。')}</p>`;
+    return;
+  }
   $('#resultStatus').textContent=statuses[job.status]||job.status;
   if (!job.result) return;
   $('#resultSummary').classList.remove('empty');
   const r=job.result, a=job.artifacts;
   if(job.action==='analyze') {
     acceptAnalysis(a.analysis,r);
+    sizeStep('planForm');
     $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>下界文件大小</small><strong>${giB(r.presets.lower.predicted_size_bytes)} GiB</strong></div><div class="result-stat"><small>上界文件大小</small><strong>${giB(r.presets.upper.predicted_size_bytes)} GiB</strong></div></div><dl class="result-details">${detail('候选张量升级',num(r.candidate_count))}${detail('预设区间',r.presets.lower.name+' → '+r.presets.upper.name)}${detail('可分配差值',num(r.net_preset_gap_bytes)+' bytes')}</dl><div class="result-artifact">${esc(a.analysis)}</div>`;
   } else if(job.action==='plan') {
+    sizeStep('quantizeForm');
     $('#planPath').value=a.plan; $('#analysisPath').value=r.analysis_path;
     $('#resultSummary').innerHTML=`<div class="result-stats"><div class="result-stat"><small>目标预算</small><strong>${giB(r.target_bytes)} GiB</strong></div><div class="result-stat"><small>预测文件大小</small><strong>${giB(r.predicted_size_bytes)} GiB</strong></div></div>${precisionChart(r.qtype_parameter_shares)}<dl class="result-details">${detail('预测字节数',num(r.predicted_size_bytes))}${detail('预算剩余',num(r.unused_bytes)+' bytes')}${detail('已选择升级',num(r.selected_count)+' 个')}${detail('主要量化类型',String(r.dominant_qtype||'—').toUpperCase())}${detail('分配策略',r.policy)}${detail('运行时确认轮次',r.oracle_iterations)}</dl><div class="result-artifact">${esc(a.plan)}</div><p class="caption">这是大小方案，不代表通过了量化质量评测。</p>`;
   } else {
@@ -114,16 +146,18 @@ function renderResult(job) {
 }
 async function watchJob(id) {
   const job=await api(`/api/jobs/${id}`);
-  $('#liveLog').textContent=job.log_text||job.error||'任务运行中。底层量化日志可能在当前步骤结束后写入。';
-  $('#resultStatus').textContent=statuses[job.status]||job.status;
+  const quality=job.action==='quality';
+  $(quality?'#qualityLog':'#liveLog').textContent=job.log_text||job.error||'任务运行中。底层量化日志可能在当前步骤结束后写入。';
+  $(quality?'#qualityStatus':'#resultStatus').textContent=statuses[job.status]||job.status;
   const running=['queued','running','cancelling'].includes(job.status);
-  $('#cancelJob').classList.toggle('hidden',!running);
+  $('#cancelJob').classList.toggle('hidden',!running||quality);
+  $('#cancelQuality').classList.toggle('hidden',!running||!quality);
   if (!running) {
     if(state.active===id) state.active=null;
     if(state.lastResult!==id) {
       state.lastResult=id;
       if(job.status==='succeeded') { renderResult(job); toast(`${actions[job.action]}完成。`); }
-      else if(job.status==='failed') error(job.error||'任务失败，请查看任务日志。');
+      else if(job.status==='failed') {if(quality) renderResult(job);error(job.error||'任务未能交付产物，请查看结果和日志。');}
     }
   }
   setBusy(Boolean(state.active));
@@ -135,10 +169,12 @@ async function submit(form,action) {
   try {
     const data=Object.fromEntries(new FormData(form)); data.action=action;
     if(action==='plan') data.target_bytes=Number(data.target_bytes);
+    if(action==='quality') {data.threads=Number(data.threads);syncModelFields(form);}
+    if(action==='analyze') syncModelFields(form);
     if(action==='quantize') data.analysis=$('#analysisPath').value;
     const job=await api('/api/jobs',data);
     state.active=job.id; state.lastResult=null;
-    $('#liveLog').textContent='任务正在启动…'; $('#resultStatus').textContent='等待启动';
+    $(action==='quality'?'#qualityLog':'#liveLog').textContent='任务正在启动…'; $(action==='quality'?'#qualityStatus':'#resultStatus').textContent='等待启动';
     await refreshJobs(); await watchJob(job.id);
     toast('任务已启动。');
   } finally { setBusy(Boolean(state.active)); }
@@ -172,28 +208,36 @@ async function loadRegistry() {
 }
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+document.querySelectorAll('[data-size-step]').forEach(b=>b.addEventListener('click',()=>sizeStep(b.dataset.sizeStep)));
+$('#desiredGiB').addEventListener('change',event=>{const bytes=Number(event.target.value)*GIB;if(Number.isFinite(bytes)&&bytes>0)setTarget(bytes);});
+for(const form of ['#analyzeForm','#qualityForm']) for(const field of ['source','imatrix','runtime']) $(form).querySelector(`[name=${field}]`).addEventListener('change',()=>syncModelFields($(form)));
 $('#refresh').addEventListener('click',()=>refreshHardware().catch(e=>error(e.message)));
 for(const selector of ['#reserve','#overhead','#runMode']) $(selector).addEventListener('change',()=>updateBudget().catch(e=>error(e.message)));
 $('#useBudget').addEventListener('click',()=> {
   let target=state.budget.target_bytes;
-  if(state.analysis) target=Math.max(state.analysis.presets.lower.predicted_size_bytes,Math.min(state.analysis.presets.upper.predicted_size_bytes,target));
+  if(state.analysis) {
+    if(target<state.analysis.presets.lower.predicted_size_bytes) {error('硬件预算低于当前预设区间，请选择更低的预设重新分析。');go('workspace');return;}
+    target=Math.min(state.analysis.presets.upper.predicted_size_bytes,target);
+  }
   setTarget(target); go('workspace'); toast(target===state.budget.target_bytes?'已带入文件预算；完成分析后会限制到可规划区间。':'硬件预算超出当前预设区间，已限制到区间内；可重新选择预设分析。');
 });
 $('#targetSlider').addEventListener('input',e=>setTarget(Number(e.target.value)));
 $('#targetBytes').addEventListener('input',e=> { $('#targetLabel').textContent=giB(Number(e.target.value)); $('#targetSlider').value=e.target.value; });
 $('#loadAnalysis').addEventListener('click',()=>loadAnalysis().catch(e=>error(e.message)));
-for(const [selector,action] of [['#analyzeForm','analyze'],['#planForm','plan'],['#quantizeForm','quantize']]) $(selector).addEventListener('submit',event=>{ event.preventDefault(); submit(event.target,action).catch(e=>error(e.message)); });
+for(const [selector,action] of [['#analyzeForm','analyze'],['#planForm','plan'],['#quantizeForm','quantize'],['#qualityForm','quality']]) $(selector).addEventListener('submit',event=>{ event.preventDefault(); submit(event.target,action).catch(e=>error(e.message)); });
 $('#modelsForm').addEventListener('submit',event=> { event.preventDefault(); loadModels().catch(e=> {error(e.message);$('#modelsNote').textContent='读取失败，可重试或检查 llmfit 安装。';}); });
 $('#modelSearch').addEventListener('input',()=>{state.modelLimit=40;renderModels();});
 $('#modelRows').addEventListener('click',event=>{if(event.target.id==='moreModels'){state.modelLimit+=40;renderModels();}});
-$('#jobsList').addEventListener('click',event=> { const button=event.target.closest('[data-job]'); if(button) {go('workspace'); watchJob(button.dataset.job).then(async job=> {await restoreJob(job);if(['running','queued','cancelling'].includes(job.status))state.active=job.id;}).catch(e=>error(e.message));} });
+$('#jobsList').addEventListener('click',event=> { const button=event.target.closest('[data-job]'); if(button) {const row=state.jobs.find(j=>j.id===button.dataset.job);go(row?.action==='quality'?'quality':'workspace'); watchJob(button.dataset.job).then(async job=> {await restoreJob(job);if(['running','queued','cancelling'].includes(job.status))state.active=job.id;}).catch(e=>error(e.message));} });
 $('#cancelJob').addEventListener('click',()=> { if(state.active) api(`/api/jobs/${state.active}/cancel`,{}).then(()=>toast('已请求取消任务。')).catch(e=>error(e.message)); });
+$('#cancelQuality').addEventListener('click',()=> { if(state.active) api(`/api/jobs/${state.active}/cancel`,{}).then(()=>toast('已请求取消质量搜索。')).catch(e=>error(e.message)); });
 document.querySelectorAll('.pick').forEach(button=>button.addEventListener('click',async()=> {
   if(!window.pywebview?.api) {toast('浏览器版请粘贴完整路径；桌面版支持文件选择。');return;}
   try {const path=await window.pywebview.api.pick_path(button.dataset.kind);if(path)button.parentElement.querySelector('input').value=path;}catch(e){error(e.message);}
 }));
 async function init() {
   const info=await api('/api/info'); $('#workspacePath').textContent=info.workspace;
+  $('.version').textContent=`FIT-GGUF ${info.version} · LOCAL STUDIO`;
   $('#modelLimit').textContent=`源模型上限 ${info.max_model_params}B`;
   $('#maxParams').max=info.max_model_params; $('#maxParams').value=Math.min(5,info.max_model_params);
   for(const selector of ['#lowerPreset','#upperPreset']) $(selector).innerHTML=info.presets.map(p=>`<option>${esc(p)}</option>`).join('');

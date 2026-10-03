@@ -59,6 +59,21 @@ def test_adapter_filters_unknown_large_and_non_gguf_models(monkeypatch):
     assert [row["name"] for row in adapter.models()["models"]] == ["small"]
 
 
+def test_broken_llmfit_reports_fallback_instead_of_connected(monkeypatch):
+    adapter = LlmfitAdapter()
+    adapter.executable = "broken-llmfit"
+    local = {"available_ram_gb": 8, "gpus": []}
+    monkeypatch.setattr("fit_gguf.studio.hardware.live_system", lambda: local)
+    def failed(*_args, **_kwargs):
+        raise ValueError("unsupported system JSON")
+    monkeypatch.setattr("fit_gguf.studio.hardware.run_json", failed)
+    result = adapter.system()
+    assert result["system"] == local
+    assert not result["llmfit_available"]
+    assert result["provider"] == "local"
+    assert result["warnings"]
+
+
 @pytest.fixture()
 def server(tmp_path, monkeypatch):
     instance = StudioServer(tmp_path / "studio")
@@ -205,4 +220,48 @@ def test_cancel_terminates_running_subprocess(tmp_path, monkeypatch):
         time.sleep(.02)
     assert manager.snapshot(job["id"])["status"] == "cancelled"
     assert process.poll() is not None
+
+
+def test_quality_entry_routes_to_real_search_and_refuses_unverified_reference(e2e):
+    manager = JobManager(e2e["tmp"] / "quality-studio")
+    refs = e2e["tmp"] / "references"
+    refs.mkdir()
+    freeze = e2e["tmp"] / "FREEZE.json"
+    freeze.write_text('{}')
+    manifest = e2e["tmp"] / "reference-manifest.json"
+    manifest.write_text('{}')
+    payload = {"source": str(e2e["source"]), "imatrix": str(e2e["imatrix"]),
+               "runtime": str(e2e["runtime"]), "refs_dir": str(refs),
+               "eval_data_dir": str(refs), "freeze": str(freeze),
+               "reference_manifest": str(manifest), "tier": "balanced", "threads": 4}
+    with pytest.raises(ValueError, match="quality tier"):
+        manager.submit("quality", payload | {"tier": "unknown"})
+    with pytest.raises(ValueError, match="threads"):
+        manager.submit("quality", payload | {"threads": 32})
+    job = manager.submit("quality", payload)
+    command = job["command"]
+    assert "fidelity-search" in command and "quality" not in command
+    assert command[command.index("--n-gpu-layers") + 1] == "0"
+    assert command[command.index("--refs-dir") + 1] == str(refs.resolve())
+    assert str(manager.workspace) in command[command.index("--out-dir") + 1]
+    deadline = time.monotonic() + 10
+    while manager.active and time.monotonic() < deadline:
+        time.sleep(.02)
+    result = manager.snapshot(job["id"])
+    assert result["status"] == "failed"
+    assert result["exit_code"] != 0
+    assert "eval-v1" in result["log_text"] or "frozen" in result["log_text"].lower()
+    assert not list(manager.workspace.rglob("*.gguf"))
+
+
+def test_failed_quality_report_is_visible_without_claiming_success(tmp_path):
+    manager = JobManager(tmp_path)
+    report = tmp_path / "quality.json"
+    report.write_text(json.dumps({"status": "no_pass", "artifact": None, "fresh_evals": 8}))
+    manager.jobs["failed"] = {"id": "failed", "action": "quality", "status": "failed",
+                              "log": str(tmp_path / "log"), "artifacts": {"quality": str(report)}}
+    snapshot = manager.snapshot("failed")
+    assert snapshot["status"] == "failed"
+    assert snapshot["result"]["status"] == "no_pass"
+    assert snapshot["result"]["artifact"] is None
 

@@ -143,8 +143,35 @@ class JobManager:
             arguments += ["--analysis", str(analysis), "--tensor-types", str(types),
                           "--expect-bytes", str(expected), "--out", str(output)]
             artifacts.update(model=str(output), quantize=str(output) + ".quantize-record.json")
+        elif action == "quality":
+            source = input_path(payload.get("source"))
+            self._check_source(source)
+            imatrix = input_path(payload.get("imatrix"))
+            runtime = input_path(payload.get("runtime"), directory=True)
+            refs = input_path(payload.get("refs_dir"), directory=True)
+            corpus = input_path(payload.get("eval_data_dir"), directory=True)
+            freeze = input_path(payload.get("freeze"))
+            manifest = input_path(payload.get("reference_manifest"))
+            from fit_gguf.fidelity import KL_ANCHORS
+            tier = payload.get("tier", "balanced")
+            if tier not in KL_ANCHORS:
+                raise ValueError("Select a supported quality tier")
+            threads = payload.get("threads", 4)
+            if isinstance(threads, bool) or not isinstance(threads, int) or not 1 <= threads <= 16:
+                raise ValueError("Evaluator threads must be an integer between 1 and 16")
+            # Keep user reference/corpus directories read-only. Every plan,
+            # probe, log and delivered model belongs to this independent run.
+            arguments[-1] = "fidelity-search"
+            arguments += ["--source", str(source), "--imatrix", str(imatrix), "--runtime", str(runtime),
+                          "--refs-dir", str(refs), "--eval-data-dir", str(corpus), "--freeze", str(freeze),
+                          "--reference-manifest", str(manifest), "--tier", tier,
+                          "--preset-ladder", "IQ2_XXS,IQ3_XXS,IQ3_M,IQ4_XS,Q4_K_M,Q5_K_M,Q6_K,Q8_0",
+                          "--out-dir", str(folder / "quality"), "--work-dir", str(folder / "scratch"),
+                          "--logs-dir", str(folder / "logs"), "--manifest", str(folder / "artifacts.sha256"),
+                          "--threads", str(threads), "--n-gpu-layers", "0", "--profile", "normal"]
+            artifacts["quality"] = str(folder / "quality" / f"fidelity-search-{tier}-product.json")
         else:
-            raise ValueError("Unsupported task; choose analyze, plan or quantize")
+            raise ValueError("Unsupported task; choose analyze, plan, quantize or quality")
         return arguments, artifacts
 
     def submit(self, action: str, payload: dict) -> dict:
@@ -155,6 +182,10 @@ class JobManager:
             folder = self.workspace / "runs" / identifier
             command, artifacts = self._command(action, payload, folder)
             folder.mkdir(parents=True)
+            if action == "quality":
+                for name in ("quality", "scratch", "logs"):
+                    (folder / name).mkdir()
+                (folder / "artifacts.sha256").touch()
             job = {"id": identifier, "action": action, "status": "queued", "created_at": now(),
                    "command": command, "artifacts": artifacts, "log": str(folder / "task.log")}
             self.jobs[identifier] = job
@@ -226,8 +257,10 @@ class JobManager:
                     with log_path.open("rb") as stream:
                         stream.seek(max(0, log_path.stat().st_size - 65536))
                         job["log_text"] = stream.read().decode("utf-8", errors="replace")
-                if job["status"] == "succeeded":
-                    for name in ("analysis", "plan", "quantize"):
+                if job["status"] in ("succeeded", "failed"):
+                    for name in ("analysis", "plan", "quantize", "quality"):
+                        if job["status"] != "succeeded" and name != "quality":
+                            continue
                         if name in job["artifacts"]:
                             path = Path(job["artifacts"][name])
                             if path.is_file():

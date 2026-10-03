@@ -10,8 +10,11 @@
     <a class="brand" href="/" aria-label="FIT Studio 首页"><span class="brand-mark">f<span>i</span>t</span><span>FIT Studio<small>GGUF QUANTIZATION</small></span></a>
     <div class="nav-label">工作空间</div>
     <nav aria-label="主导航">
-      <button class="nav active" data-page="overview"><span>◈</span>总览</button>
-      <button class="nav" data-page="workspace"><span>◫</span>量化工作台</button>
+      <button class="nav active" data-page="start"><span>◈</span>开始</button>
+      <button class="nav" data-page="workspace"><span>◫</span>指定体积</button>
+      <button class="nav" data-page="quality"><span>◇</span>指定质量档位</button>
+      <div class="nav-divider">辅助工具</div>
+      <button class="nav" data-page="overview"><span>◎</span>硬件与预算</button>
       <button class="nav" data-page="models"><span>⌘</span>模型适配</button>
       <button class="nav" data-page="jobs"><span>≡</span>任务记录<span id="jobCount" class="count">0</span></button>
       <button class="nav" data-page="registry"><span>◇</span>校准注册表</button>
@@ -19,17 +22,26 @@
     <div class="sidebar-bottom"><div class="online"><i></i>本地运行</div><p>模型文件留在你的机器上。<br>按预算规划，以实际产物校验。</p><span class="version">FIT-GGUF · LOCAL STUDIO</span></div>
   </aside>
   <main>
-    <header class="topbar"><div><span class="breadcrumb">工作空间 / </span><span id="pageName">总览</span></div><div class="top-actions"><span id="integration" class="pill">正在检测硬件…</span><button id="refresh" class="icon-button" title="刷新硬件" aria-label="刷新硬件">↻</button></div></header>
+    <header class="topbar"><div><span class="breadcrumb">工作空间 / </span><span id="pageName">开始</span></div><div class="top-actions"><span id="integration" class="pill">正在检测硬件…</span><button id="refresh" class="icon-button" title="刷新硬件" aria-label="刷新硬件">↻</button></div></header>
     <div id="globalError" role="alert" class="error hidden"></div>
-    <section id="overview" class="page">
+    <section id="start" class="page">
+      <div class="start-heading"><div class="eyebrow">FIT STUDIO</div><h1>你想控制什么？</h1><p>选一种目标，剩下的交给 FIT。</p></div>
+      <div class="entry-grid">
+        <button class="entry-card" data-go="workspace"><span class="entry-icon">◫</span><h2>指定体积</h2><p>给定文件预算，分配每个张量的精度。</p><div class="entry-example">例如：生成不超过 8 GiB 的 GGUF</div><span class="entry-action">按体积量化 →</span></button>
+        <button class="entry-card quality-entry" data-go="quality"><span class="entry-icon">◇</span><h2>指定质量档位</h2><p>选定质量目标，搜索通过评测的更小文件。</p><div class="entry-example">例如：满足 Balanced 档位的 KL 门槛</div><span class="entry-action">按质量搜索 →</span></button>
+      </div>
+      <p class="start-note">体积流程校验实际字节；质量流程按冻结的 eval-v1 协议评测。两种结果分别记录。</p>
+    </section>
+    <section id="overview" class="page hidden">
       <div class="hero"><div><div class="eyebrow">MAKE EVERY BYTE COUNT</div><h1>为你的硬件，<br>找到刚刚好的模型。</h1><p>把文件预算变成可复现的量化方案。<br>从硬件适配，到每一个张量的精度分配。</p><button class="primary" data-go="workspace">开始量化 <span>↗</span></button></div><div class="hero-art" aria-hidden="true"><div class="orb"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="artifact-card"><span class="artifact-symbol">◈</span><span>YOUR MODEL<small>FIT · EXACT BYTES</small></span><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="float-label">precision, within budget.</div></div></div>
       <div class="section-heading"><h2>这台机器的资源</h2><span id="hardwareSource" class="muted">实时可用资源</span></div>
       <div id="hardwareCards" class="stats-grid"><div class="stat skeleton">正在读取硬件…</div></div>
       <div class="two-column"><article class="panel budget-panel"><div class="panel-heading"><div><span class="eyebrow">HARDWARE → FILE BUDGET</span><h2>留出余量，再装模型</h2></div><span class="mini-icon">◎</span></div><p class="muted">先预留系统资源和运行开销，再估算 GGUF 文件预算。</p><div class="field-row"><label>运行方式<select id="runMode"><option value="gpu">单 GPU</option><option value="cpu">CPU / RAM</option></select></label><label>资源预留 / GiB<input id="reserve" type="number" min="0" step="0.5" value="2"></label><label>KV 与计算开销 / GiB<input id="overhead" type="number" min="0" step="0.5" value="1"></label></div><div class="budget-value"><strong id="budgetValue">—</strong><span>GiB 文件预算估算</span></div><div class="budget-track"><i id="budgetFill"></i></div><p class="caption">这是估算。上下文长度、KV 精度和运行时会改变实际内存需求；文件大小不等于显存占用。</p><button id="useBudget" class="secondary">将预算带入工作台 →</button></article><article class="panel steps-panel"><span class="eyebrow">A REPRODUCIBLE WORKFLOW</span><h2>三个步骤，结果可追溯</h2><div class="workflow-step"><span>01</span><div><h3>分析源模型</h3><p>读取源 GGUF 和重要性矩阵，固定两个预设之间的候选集。</p></div></div><div class="workflow-step"><span>02</span><div><h3>分配文件预算</h3><p>拖动预算滑块，生成方案、配方与张量类型清单。</p></div></div><div class="workflow-step"><span>03</span><div><h3>量化并校验</h3><p>由 llama.cpp 执行，核对真实字节数并记录 SHA-256。</p></div></div></article></div>
     </section>
     <section id="workspace" class="page hidden">
-      <div class="page-heading"><div><div class="eyebrow">QUANTIZATION WORKSPACE</div><h1>从预算，到 GGUF。</h1><p>分析、规划、执行。每一步都保存输入、日志和结果。</p></div><span id="modelLimit" class="pill"></span></div>
-      <div class="stepper"><span class="selected">01 分析</span><i></i><span>02 规划</span><i></i><span>03 校验</span></div>
+      <div class="page-heading"><div><div class="eyebrow">SIZE TARGET</div><h1>指定体积</h1><p>给定预算，生成可复现的量化方案。</p></div><span id="modelLimit" class="pill"></span></div>
+      <div class="size-target"><label>目标文件体积 / GiB<input id="desiredGiB" type="number" min="0.000001" step="any" placeholder="例如 8"></label><p>先填预算并分析源模型，FIT 会显示这个预设区间能达到的体积。</p></div>
+      <div class="stepper"><button type="button" class="selected" data-size-step="analyzeForm">01 模型与分析</button><i></i><button type="button" data-size-step="planForm">02 规划</button><i></i><button type="button" data-size-step="quantizeForm">03 执行与校验</button></div>
       <div class="two-column workspace-grid"><div>
         <form id="analyzeForm" class="panel"><div class="panel-heading"><h2><span class="step-number">01</span> 分析模型</h2><span class="tag">输入</span></div><p class="muted">需要源模型 GGUF、重要性矩阵，以及支持 dry-run 的 llama.cpp。</p>
           <label>源模型 GGUF<div class="path-field"><input name="source" placeholder="D:\Models\model-BF16.gguf" required><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label>
@@ -37,13 +49,36 @@
           <label>llama.cpp 运行时目录<div class="path-field"><input name="runtime" placeholder="D:\llama.cpp\bin" required><button type="button" class="pick" data-kind="folder" title="桌面版选择目录">…</button></div></label>
           <div class="field-row"><label>下界预设<select name="lower" id="lowerPreset"></select></label><label>上界预设<select name="upper" id="upperPreset"></select></label></div><button class="primary" type="submit">分析候选集 <span>→</span></button>
         </form>
-        <form id="planForm" class="panel"><div class="panel-heading"><h2><span class="step-number">02</span> 规划精度分配</h2><span class="tag">确定性</span></div>
+        <form id="planForm" class="panel hidden"><div class="panel-heading"><h2><span class="step-number">02</span> 规划精度分配</h2><span class="tag">确定性</span></div>
           <label>分析记录<div class="path-field"><input name="analysis" id="analysisPath" placeholder="分析完成后自动填入；也可载入已有 analysis.json" required><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label><button id="loadAnalysis" type="button" class="text-button">读取已有分析 →</button>
           <div id="interval" class="interval muted">先完成分析，查看可规划的预算区间。</div><div class="target-display"><strong id="targetLabel">—</strong><span>GiB 目标文件大小</span></div><input id="targetSlider" aria-label="目标字节预算" type="range" min="1" max="2" value="1" disabled>
           <div class="field-row"><label>精确目标 / bytes<input name="target_bytes" id="targetBytes" type="number" min="1" step="1" required></label><label>分配策略<select name="policy"><option value="balanced">Balanced · 按区块均衡</option><option value="original">Original · 贪心分配</option></select></label></div><p class="caption">预算必须位于所选预设区间内。张量升级是离散的，最终文件可能略小于目标。</p><button class="primary" type="submit">生成量化方案 <span>→</span></button>
         </form>
-        <form id="quantizeForm" class="panel"><div class="panel-heading"><h2><span class="step-number">03</span> 执行并校验</h2><span class="tag">实际产物</span></div><label>方案记录<div class="path-field"><input name="plan" id="planPath" placeholder="规划完成后自动填入；也可选择已有 FIT-plan.json" required><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label><p class="caption">将执行 llama-quantize。每次任务写入独立目录，成功必须通过字节校验。</p><button class="primary" type="submit">量化并验证 <span>↗</span></button></form>
+        <form id="quantizeForm" class="panel hidden"><div class="panel-heading"><h2><span class="step-number">03</span> 执行并校验</h2><span class="tag">实际产物</span></div><label>方案记录<div class="path-field"><input name="plan" id="planPath" placeholder="规划完成后自动填入；也可选择已有 FIT-plan.json" required><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label><p class="caption">将执行 llama-quantize。每次任务写入独立目录，成功必须通过字节校验。</p><button class="primary" type="submit">量化并验证 <span>↗</span></button></form>
       </div><aside class="workspace-detail"><article class="panel"><div class="panel-heading"><h2>当前结果</h2><span id="resultStatus" class="tag">等待任务</span></div><div id="resultSummary" class="empty"><span>◈</span><h3>还没有量化方案</h3><p>先分析你的源模型。完成后，区间、方案和实际校验结果会显示在这里。</p></div></article><article class="panel log-panel"><div class="panel-heading"><h2>任务日志</h2><button id="cancelJob" class="danger hidden" type="button">取消任务</button></div><pre id="liveLog" aria-live="polite">任务启动后会显示日志。</pre></article><article class="panel compact"><span class="eyebrow">OUTPUT LOCATION</span><p id="workspacePath" class="mono muted"></p><p class="caption">按顺序运行一个任务；历史记录与产物都保存在本地。</p></article></aside></div>
+    </section>
+    <section id="quality" class="page hidden">
+      <div class="page-heading"><div><div class="eyebrow">QUALITY TARGET</div><h1>指定质量档位</h1><p>固定 KL 目标，在评测通过的候选中搜索更小的 GGUF。</p></div></div>
+      <form id="qualityForm"><fieldset class="tier-options"><legend>选择质量档位</legend>
+        <label><input type="radio" name="tier" value="mini"><strong>Mini</strong><span>KL ≤ 0.20</span></label>
+        <label><input type="radio" name="tier" value="compact"><strong>Compact</strong><span>KL ≤ 0.15</span></label>
+        <label><input type="radio" name="tier" value="balanced" checked><strong>Balanced</strong><span>KL ≤ 0.10</span></label>
+        <label><input type="radio" name="tier" value="quality"><strong>Quality</strong><span>KL ≤ 0.05</span></label>
+        <label><input type="radio" name="tier" value="reference"><strong>Reference</strong><span>KL ≤ 0.02</span></label>
+      </fieldset>
+      <div class="two-column quality-grid"><div class="panel"><h2>模型与参考</h2>
+        <label>源模型 GGUF<div class="path-field"><input name="source" required placeholder="源浮点 GGUF"><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label>
+        <label>重要性矩阵 GGUF<div class="path-field"><input name="imatrix" required placeholder="对应的 imatrix GGUF"><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label>
+        <label>llama.cpp 运行时目录<div class="path-field"><input name="runtime" required placeholder="包含 llama-quantize 和 llama-perplexity"><button type="button" class="pick" data-kind="folder" title="桌面版选择目录">…</button></div></label>
+        <details class="quality-inputs" open><summary>评测参考文件</summary><p class="caption">质量评测需要与源权重对应的五域参考。可以使用 fit calibrate 生成的参考与清单。</p>
+          <label>参考 KLD 目录<div class="path-field"><input name="refs_dir" required placeholder="包含 bf16-&lt;domain&gt;.kld"><button type="button" class="pick" data-kind="folder" title="桌面版选择目录">…</button></div></label>
+          <label>评测语料目录<div class="path-field"><input name="eval_data_dir" required placeholder="包含五域 kl-eval 文本"><button type="button" class="pick" data-kind="folder" title="桌面版选择目录">…</button></div></label>
+          <label>冻结协议 FREEZE.json<div class="path-field"><input name="freeze" required placeholder="eval-v1 FREEZE.json"><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label>
+          <label>参考清单 reference-manifest.json<div class="path-field"><input name="reference_manifest" required placeholder="绑定源权重、参考和语料哈希"><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label>
+        </details><label>CPU 评测线程<input name="threads" type="number" min="1" max="16" value="4" required></label>
+        <p class="caption">默认 CPU 评测、单任务执行；最多 8 次新搜索评测，最终产物另行复测。源模型仍受 5B 上限约束。</p>
+        <button type="submit" class="primary">搜索并验证质量档位 →</button>
+      </div><aside><article class="panel"><div class="panel-heading"><h2>质量搜索结果</h2><span id="qualityStatus" class="tag">等待任务</span></div><div id="qualityResult" class="empty"><h3>先选择你要的档位</h3><p>只有通过实际 KL 评测并复测的文件才会作为产物交付。</p></div></article><details class="panel"><summary>任务日志 <button id="cancelQuality" class="danger hidden" type="button">取消任务</button></summary><pre id="qualityLog">搜索启动后显示日志。</pre></details></aside></div></form>
     </section>
     <section id="models" class="page hidden"><div class="page-heading"><div><div class="eyebrow">POWERED BY LLMFIT</div><h1>看看什么模型适合你。</h1><p>按本机硬件评估量化格式、上下文和内存需求。数值为估算。</p></div><span class="pill">只读 · 不下载模型</span></div><div class="panel"><form id="modelsForm" class="model-filters"><label class="search-field">搜索模型<input id="modelSearch" placeholder="模型名称、用途或提供者…"></label><label>参数上限 / B<input id="maxParams" type="number" min="0.01" max="5" step="0.01" value="5"></label><label>上下文 / tokens<select id="context"><option>2048</option><option selected>4096</option><option>8192</option><option>16384</option></select></label><button class="primary" type="submit">获取适配建议</button></form></div><p id="modelsNote" class="muted">点击获取建议，读取 llmfit 的模型适配结果。</p><div id="modelRows" class="model-grid"></div></section>
     <section id="jobs" class="page hidden"><div class="page-heading"><div><div class="eyebrow">EVERY RUN, RECORDED</div><h1>任务记录</h1><p>查看状态、命令、日志与产物路径。退出应用时会取消正在运行的任务。</p></div></div><div class="panel"><div id="jobsList" class="empty">还没有任务。去工作台创建第一个分析任务。</div></div></section>

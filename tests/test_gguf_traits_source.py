@@ -20,6 +20,8 @@ LLAMA_H = REPO / "third_party/llama.cpp/include/llama.h"
 BLOCK_CONSTANTS = {
     "QK_K": 256,
     "QK4_NL": 32,
+    "QK4_0": 32,
+    "QK4_1": 32,
     "QK5_0": 32,
     "QK5_1": 32,
     "QK8_0": 32,
@@ -47,6 +49,8 @@ BLOCK_TO_QTYPE = {
     "block_q2_K": "q2_k",
     "block_q3_K": "q3_k",
     "block_q4_K": "q4_k",
+    "block_q4_0": "q4_0",
+    "block_q4_1": "q4_1",
     "block_q5_0": "q5_0",
     "block_q5_1": "q5_1",
     "block_q5_K": "q5_k",
@@ -57,6 +61,8 @@ BLOCK_TO_QTYPE = {
 # ggml blck_size constant per block struct, from ggml.c type_traits table.
 BLOCK_ELEMENTS = {
     "block_iq4_nl": "QK4_NL",
+    "block_q4_0": "QK4_0",
+    "block_q4_1": "QK4_1",
     "block_q5_0": "QK5_0",
     "block_q5_1": "QK5_1",
     "block_q8_0": "QK8_0",

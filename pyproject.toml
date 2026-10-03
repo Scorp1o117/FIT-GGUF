@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fit-gguf"
-version = "0.4.0"
+dynamic = ["version"]
 description = "Fit-to-Size Intelligent Tensor Quantization for GGUF"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -43,3 +43,6 @@ addopts = "-p no:cacheprovider"
 
 [tool.setuptools.package-data]
 fit_gguf = ["registry/**/*.json", "profiles/guard/*.yaml", "contracts/*.json", "studio/static/*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "fit_gguf.version.__version__"}

@@ -6,7 +6,9 @@ llmfit 1.1.16. Hardware: RTX 5080 Laptop GPU (16,303 MiB reported VRAM),
 
 ## Automated checks
 
-- Full Python suite: **307 passed, 3 skipped**.
+- Full Python suite after the two-entry redesign: **315 passed, 1 skipped**.
+  Upstream b10666 header tests were enabled by downloading the two headers to
+  the ignored reference directory.
 - JavaScript syntax check: `node --check src/fit_gguf/studio/static/app.js`.
 - `git diff --check` passed.
 - Wheel inspected for Studio Python modules and all three static assets.
@@ -57,5 +59,31 @@ window for clicks, so native picker clicks were not verified end to end.
 The picker bridge has an automated API test. Browser interaction checks and
 the packaged worker smoke are separate from this native interaction limit.
 
-This is an unsigned local build. Calibration, fidelity search and tier search
-remain CLI workflows in the first Studio version.
+## Real quality entry
+
+Generated all five reference KLD files with the same TinyStories source using
+the frozen 512-context evaluation protocol, CPU four threads. References occupy
+approximately 2.97 GB of disk and were processed sequentially.
+
+The Studio worker and the actual browser quality-entry submission both ran the
+real fidelity-search product chain. Balanced was selected (macro KL ≤ 0.10).
+Seven fresh search evaluations followed by re-evaluation of the final file
+delivered:
+
+- actual size **26,239,616 bytes**, with **zero** G2 prediction delta;
+- final macro KL **0.018522**, Same-top **88.6446%** (reference metric);
+- SHA-256 `a4ec8f09956db1e6095d45c0d91e254570ccf261ab50640955635ef1a9d1e8dd`.
+
+This is a real workflow smoke using a small F32 source, not a recommendation or
+quality benchmark for this model. The default 128 MiB tolerance is wider than
+this tiny model's search bracket; it does not establish the global minimum
+size. Reports are under `work/quality-real-smoke` and
+`work/studio/runs/eef4d3fc9f36493f93d0cbd30bb6e644`; UI evidence is at
+`work/studio-two-entries.png` and `work/studio-quality-verified.png`.
+
+The experiment exposed and fixed missing Q4_0/Q4_1 destination traits when
+llama.cpp falls back on small tensor shapes. The type sizes were checked
+against the official b10666 `ggml-common.h` static assertions.
+
+This is an unsigned local build. Calibration and calibration-bundle tier search
+remain CLI workflows; the quality entry now invokes real fidelity search.

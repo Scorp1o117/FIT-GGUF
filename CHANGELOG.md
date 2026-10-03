@@ -4,6 +4,36 @@ All notable changes to FIT-GGUF. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use
 [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] — 2026-10-04
+
+### Added
+
+- **FIT Studio**, a local browser or Windows desktop application with two
+  primary entries: specify file size, or specify a quality tier. The size
+  workflow exposes analyze, plan and quantize one step at a time, including
+  precision distribution, actual-byte checks, hashes and persisted history.
+- **Quality tier search in the UI** calls the real `fit fidelity-search`
+  product flow with source-bound frozen five-domain references, a bounded
+  search budget and final artifact re-evaluation. No-pass reports remain
+  visible without being presented as successful deliveries.
+- Optional **llmfit** integration through its executable JSON API, live free
+  NVIDIA VRAM and available RAM budgets. Single-card GPU budgets do not add
+  system RAM or sum independent GPUs. Default source experiments are limited
+  to 5B tensor parameters; recommendations filter total MoE parameters.
+- Windows application builder with a bundled Python worker, llmfit and license
+  notices; real source/frozen worker smoke tools; Windows/Linux test matrix.
+
+### Fixed
+
+- Small-model quantizer fallback to Q4_0/Q4_1 is now supported by the exact
+  GGUF size predictor, with traits checked against upstream b10666 headers.
+- CLI/package/persisted-record versions now share one version source. The
+  previous CLI still reported 0.3.3 while package metadata was 0.4.0.
+- Absolute imatrix paths survive independent worker directories; task history
+  sorts by creation time and persists interrupted status across reopening.
+- Failed llmfit detection is reported as a local fallback. A file budget below
+  the analysis interval is not silently increased.
+
 ## [0.4.0] — 2026-09-24
 
 ### Added

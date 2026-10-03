@@ -127,6 +127,7 @@ class LlmfitAdapter:
         local = live_system()
         warnings = []
         provider = "local"
+        connected = False
         if self.executable:
             try:
                 remote = run_json([self.executable, "system", "--json"])["system"]
@@ -139,9 +140,10 @@ class LlmfitAdapter:
                     remote["gpus"] = local["gpus"]
                 local = remote
                 provider = "llmfit + live telemetry"
+                connected = True
             except (OSError, ValueError, KeyError, subprocess.TimeoutExpired) as error:
                 warnings.append(f"llmfit unavailable; local detection used: {error}")
-        return {"system": local, "provider": provider, "llmfit_available": bool(self.executable),
+        return {"system": local, "provider": provider, "llmfit_available": connected,
                 "warnings": warnings, "budget": memory_budget(local)}
 
     def models(self, max_params: float = 5, context: int = 4096) -> dict:

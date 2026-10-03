@@ -1,6 +1,7 @@
 """Tests for the minimal GGUF layout reader and exact size predictor."""
 
 from decimal import Decimal
+from dataclasses import replace
 from pathlib import Path
 import struct
 
@@ -144,6 +145,17 @@ def test_prediction_rejects_shape_mismatch(tmp_path: Path):
 
     with pytest.raises(GGUFError, match="Shape mismatch"):
         predict_quantized_size(layout, bad, QuantizationMetadata(file_type=26))
+
+
+@pytest.mark.parametrize(("qtype", "block_bytes"), [("q4_0", 18), ("q4_1", 20)])
+def test_small_tensor_fallback_q4_predictions(tmp_path, qtype, block_bytes):
+    path = tmp_path / "source.gguf"
+    _write_fixture(path)
+    recipe = _recipe()
+    assignment = replace(recipe.tensors[0], dst_type=qtype, new_bytes=16 * block_bytes)
+    fallback = replace(recipe, tensors=(assignment, recipe.tensors[1]))
+    result = predict_quantized_size(read_gguf_layout(path), fallback, QuantizationMetadata(file_type=26))
+    assert result.tensors[0].payload_bytes == 16 * block_bytes
 
 
 def test_prediction_rejects_unknown_qtype(tmp_path: Path):
