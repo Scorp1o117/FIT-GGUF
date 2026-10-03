@@ -32,7 +32,7 @@ from fit_gguf.eval.provenance import EvalProvenance
 from fit_gguf.eval.results import parse_llama_kl_log
 from fit_gguf.fidelity import KL_ANCHORS, GuardProfileError, resolve_guard_profile
 from fit_gguf.fidelity_search import EvalOutcome, Seed, TierContract, fidelity_search
-from fit_gguf.llama_integration import resolve_runtime_binary, runtime_env
+from fit_gguf.llama_integration import resolve_runtime_binary, runtime_env, run_runtime
 from fit_gguf.pipeline import plan as pipeline_plan
 from fit_gguf.pipeline import quantize as pipeline_quantize
 
@@ -362,7 +362,7 @@ class SearchExecutor:
             slice_file = self.config.eval_data_dir / f"kl-eval-{_SLICE_SUFFIX[domain]}"
             ref_file = self.config.refs_dir / f"bf16-{domain}.kld"
             for attempt in (1, 2, 3):
-                result = subprocess.run(  # noqa: S603 — fixed argv, no shell
+                result = run_runtime(  # noqa: S603 — fixed argv, no shell
                     [
                         str(resolve_runtime_binary(self.config.runtime, "llama-perplexity")),
                         "-m", str(artifact),

@@ -32,6 +32,7 @@ from fit_gguf.gguf import (
 )
 from fit_gguf.imatrix import ImatrixProfile, load_imatrix_profile, write_profile_json
 from fit_gguf.llama_integration import (
+    run_runtime,
     binary_not_found_message,
     resolve_runtime_binary,
     write_tensor_type_file,
@@ -265,7 +266,7 @@ def run_dry_run(
     # Decode with errors="replace": llama.cpp dumps token-array previews that
     # can truncate mid-codepoint (e.g. spark2_5 fullwidth special tokens),
     # producing invalid UTF-8 on stderr; recipe lines are ASCII and unaffected.
-    completed = subprocess.run(command, capture_output=True)
+    completed = run_runtime(command, capture_output=True)
     text = (completed.stderr + completed.stdout).decode("utf-8", errors="replace")
     Path(log_path).write_text(text, encoding="utf-8")
     if completed.returncode != 0:
@@ -905,7 +906,7 @@ def quantize(
         str(output),
         str(lower_preset),
     ]
-    completed = subprocess.run(command, capture_output=True)
+    completed = run_runtime(command, capture_output=True)
     # errors="replace": model-loader token previews can truncate mid-codepoint
     # (spark2_5 fullwidth special tokens) and emit invalid UTF-8 on stderr.
     quantize_log = (completed.stderr + completed.stdout).decode("utf-8", errors="replace")

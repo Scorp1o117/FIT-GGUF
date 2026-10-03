@@ -31,7 +31,7 @@ from fit_gguf.calibration import CalibrationError
 from fit_gguf.eval.contract import DOMAINS
 from fit_gguf.eval.provenance import sha256_file
 from fit_gguf.eval.results import parse_llama_kl_log
-from fit_gguf.llama_integration import resolve_runtime_binary, runtime_env
+from fit_gguf.llama_integration import resolve_runtime_binary, runtime_env, run_runtime
 from fit_gguf.registry import (
     REGISTRY_SCHEMA,
     canonical_json_bytes,
@@ -99,7 +99,7 @@ def _runtime_env(runtime_dir: Path) -> dict:
 def _run(runtime: Path, cmd: list[str], log_path: Path, env: dict) -> int:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("wb") as handle:
-        proc = subprocess.run(cmd, stdout=handle, stderr=subprocess.STDOUT, env=env)
+        proc = run_runtime(cmd, stdout=handle, stderr=subprocess.STDOUT, env=env)
     return proc.returncode
 
 

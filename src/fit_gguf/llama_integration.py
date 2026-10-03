@@ -3,6 +3,8 @@
 import os
 from pathlib import Path
 import re
+import subprocess
+import sys
 
 from fit_gguf.candidates import GGML_TYPE_TRAITS
 from fit_gguf.optimizer import OptimizationPlan
@@ -20,6 +22,29 @@ NATIVE_WINDOWS_SUFFIXES = (".exe", ".cmd", ".bat")
 def _is_windows() -> bool:
     """Platform probe, isolated so both candidate orders are testable anywhere."""
     return os.name == "nt"
+
+
+def run_runtime(command, **kwargs):
+    """Run an external llama.cpp process without desktop console flashes.
+
+    Frozen Windows applications alter the DLL search directory. External
+    runtimes must load their own libraries, then the application's directory
+    is restored for subsequent Python extension imports.
+    """
+    if os.name != "nt":
+        return subprocess.run(command, **kwargs)
+    kwargs["creationflags"] = kwargs.get("creationflags", 0) | subprocess.CREATE_NO_WINDOW
+    if not getattr(sys, "frozen", False):
+        return subprocess.run(command, **kwargs)
+    import ctypes
+    kernel = ctypes.windll.kernel32
+    previous = ctypes.create_unicode_buffer(32768)
+    kernel.GetDllDirectoryW(len(previous), previous)
+    kernel.SetDllDirectoryW(None)
+    try:
+        return subprocess.run(command, **kwargs)
+    finally:
+        kernel.SetDllDirectoryW(previous.value or None)
 
 
 def binary_candidate_names(name: str) -> tuple[str, ...]:

@@ -115,11 +115,11 @@ def test_load_seeds_groups_domains_maps_sizes_and_filters(tmp_path):
 
     domains = ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat")
     for domain in domains:
-        (logs / f"eval-orcarouter-GOOD-{domain}.log").write_text(_make_log(0.10, 92.0))
-        (logs / f"eval-orcarouter-Q3_K_S-art-{domain}.log").write_text(_make_log(0.21, 80.0))
-        (logs / f"eval-orcarouter-NOSIZE-{domain}.log").write_text(_make_log(0.10, 92.0))
+        (logs / f"eval-orcarouter-GOOD-{domain}.log").write_text(_make_log(0.10, 92.0), encoding="utf-8")
+        (logs / f"eval-orcarouter-Q3_K_S-art-{domain}.log").write_text(_make_log(0.21, 80.0), encoding="utf-8")
+        (logs / f"eval-orcarouter-NOSIZE-{domain}.log").write_text(_make_log(0.10, 92.0), encoding="utf-8")
         if domain != "agent_chat":  # PARTIAL is missing one domain
-            (logs / f"eval-orcarouter-PARTIAL-{domain}.log").write_text(_make_log(0.10, 92.0))
+            (logs / f"eval-orcarouter-PARTIAL-{domain}.log").write_text(_make_log(0.10, 92.0), encoding="utf-8")
 
     manifest.write_text(
         "orcarouter-GOOD  12000000000  aa\n"
@@ -147,8 +147,8 @@ def test_poison_taint_propagates_via_provenance(tmp_path):
     from fit_gguf.fidelity_runner import _provenance_view
 
     for domain in ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat"):
-        (logs / f"eval-orcarouter-CLEAN-{domain}.log").write_text(_make_log(0.10, 92.0))
-        (logs / f"eval-orcarouter-TAINTED-{domain}.log").write_text(_make_log(0.159, 89.0))
+        (logs / f"eval-orcarouter-CLEAN-{domain}.log").write_text(_make_log(0.10, 92.0), encoding="utf-8")
+        (logs / f"eval-orcarouter-TAINTED-{domain}.log").write_text(_make_log(0.159, 89.0), encoding="utf-8")
 
     provenance = tmp_path / "seed-provenance.jsonl"
     provenance.write_text(

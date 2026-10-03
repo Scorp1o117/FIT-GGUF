@@ -540,7 +540,7 @@ def _seed_sidecar(tmp_path, manifest_sha, *, contract=None):
     for domain in ("wiki_test", "wiki_valid", "chinese", "code", "agent_chat"):
         (logs / f"eval-orcarouter-SEED-{domain}.log").write_text(
             "====== KL divergence statistics ======\n"
-            "Mean KLD: 0.090000 ± 0.010000\nSame top p: 92.0000 ± 0.1000 %\n"
+            "Mean KLD: 0.090000 ± 0.010000\nSame top p: 92.0000 ± 0.1000 %\n", encoding="utf-8"
         )
     manifest = tmp_path / "manifest.txt"
     manifest.write_text(f"orcarouter-SEED  12000000000  {'0' * 64}\n")

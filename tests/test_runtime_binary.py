@@ -11,6 +11,7 @@ files.
 from __future__ import annotations
 
 import os
+from types import SimpleNamespace
 
 from pathlib import Path
 
@@ -147,3 +148,36 @@ def test_runtime_env_uses_ld_library_path_on_posix(tmp_path, monkeypatch):
     assert env["LD_LIBRARY_PATH"].startswith(str(binaries))
     assert env["LD_LIBRARY_PATH"].endswith("/usr/lib")
     assert "PATH" not in env
+
+
+def test_external_runtime_has_no_console_on_windows(monkeypatch):
+    calls = []
+    monkeypatch.setattr(li, "os", SimpleNamespace(name="nt"))
+    monkeypatch.setattr(li.subprocess, "CREATE_NO_WINDOW", 0x08000000, raising=False)
+    monkeypatch.setattr(li.subprocess, "run", lambda command, **kwargs: calls.append(kwargs))
+    li.run_runtime(["llama-quantize.exe"], capture_output=True)
+    assert calls[0]["creationflags"] & 0x08000000
+    assert calls[0]["capture_output"] is True
+
+
+def test_frozen_runtime_restores_dll_directory_after_failure(monkeypatch):
+    import ctypes
+    changes = []
+
+    def get_directory(length, buffer):
+        buffer.value = r"C:\\FIT-Studio\\_internal"
+        return len(buffer.value)
+
+    kernel = SimpleNamespace(GetDllDirectoryW=get_directory, SetDllDirectoryW=changes.append)
+    monkeypatch.setattr(li, "os", SimpleNamespace(name="nt"))
+    monkeypatch.setattr(li.sys, "frozen", True, raising=False)
+    monkeypatch.setattr(ctypes, "windll", SimpleNamespace(kernel32=kernel), raising=False)
+    monkeypatch.setattr(li.subprocess, "CREATE_NO_WINDOW", 0x08000000, raising=False)
+
+    def fail(*args, **kwargs):
+        raise OSError("runtime failed")
+
+    monkeypatch.setattr(li.subprocess, "run", fail)
+    with pytest.raises(OSError, match="runtime failed"):
+        li.run_runtime(["llama-quantize.exe"])
+    assert changes == [None, r"C:\\FIT-Studio\\_internal"]
