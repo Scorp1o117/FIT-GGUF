@@ -16,4 +16,4 @@
 
 应用只监听 `127.0.0.1`，模型和分析文件在本地处理。点击源模型链接才会打开 Hugging Face 页面。
 
-许可证见 `LICENSE`、`THIRD_PARTY_NOTICES.md` 与 `licenses/`。此包为本地开发验证构建，未签名，也未发布为正式发行版。
+许可证见 `LICENSE`、`THIRD_PARTY_NOTICES.md` 与 `licenses/`。此发行包未签名；验证范围见项目的 `docs/studio-validation.md`。

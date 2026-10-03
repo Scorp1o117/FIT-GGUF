@@ -6,7 +6,8 @@ llmfit 1.1.16. Hardware: RTX 5080 Laptop GPU (16,303 MiB reported VRAM),
 
 ## Automated checks
 
-- Full Python suite after the two-entry redesign: **315 passed, 1 skipped**.
+- Full Python suite after the two-entry redesign and desktop runtime fixes:
+  **317 passed, 1 skipped**.
   Upstream b10666 header tests were enabled by downloading the two headers to
   the ignored reference directory.
 - JavaScript syntax check: `node --check src/fit_gguf/studio/static/app.js`.
@@ -14,6 +15,10 @@ llmfit 1.1.16. Hardware: RTX 5080 Laptop GPU (16,303 MiB reported VRAM),
 - Wheel inspected for Studio Python modules and all three static assets.
 - Windows directory build contains its own Python runtime, worker entry point,
   llmfit binary, static assets and dependency license notices.
+- GitHub Actions passed on Windows and Ubuntu with Python 3.11 and 3.13.
+  UTF-8 log admission is also checked under a simulated legacy Windows locale.
+  External runtime processes suppress Windows console creation, and frozen
+  workers restore their DLL directory even if a subprocess fails.
 
 ## Real model smoke
 
@@ -65,7 +70,7 @@ Generated all five reference KLD files with the same TinyStories source using
 the frozen 512-context evaluation protocol, CPU four threads. References occupy
 approximately 2.97 GB of disk and were processed sequentially.
 
-The Studio worker and the actual browser quality-entry submission both ran the
+The source worker, packaged executable worker and browser quality-entry submission ran the
 real fidelity-search product chain. Balanced was selected (macro KL ≤ 0.10).
 Seven fresh search evaluations followed by re-evaluation of the final file
 delivered:

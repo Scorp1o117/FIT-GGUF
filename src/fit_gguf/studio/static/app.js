@@ -174,6 +174,9 @@ async function submit(form,action) {
     if(action==='quantize') data.analysis=$('#analysisPath').value;
     const job=await api('/api/jobs',data);
     state.active=job.id; state.lastResult=null;
+    const result=$(action==='quality'?'#qualityResult':'#resultSummary');
+    result.classList.add('empty');
+    result.innerHTML='<h3>正在处理当前任务</h3><p>完成校验后会显示本次结果。</p>';
     $(action==='quality'?'#qualityLog':'#liveLog').textContent='任务正在启动…'; $(action==='quality'?'#qualityStatus':'#resultStatus').textContent='等待启动';
     await refreshJobs(); await watchJob(job.id);
     toast('任务已启动。');
