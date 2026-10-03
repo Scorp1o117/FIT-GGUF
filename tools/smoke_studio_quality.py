@@ -23,9 +23,10 @@ def main():
     for key in ("source", "imatrix", "runtime", "eval-data", "freeze", "workspace"):
         parser.add_argument("--" + key, required=True, type=Path)
     parser.add_argument("--tier", default="balanced")
+    parser.add_argument("--worker-executable", type=Path, help="Test a frozen FIT-Studio executable worker")
     args = parser.parse_args()
     args.workspace.mkdir(parents=True, exist_ok=True)
-    manager = JobManager(args.workspace, 5)
+    manager = JobManager(args.workspace, 5, args.worker_executable)
     manager._check_source(args.source)
     if shutil.disk_usage(args.workspace).free < 12 * 1024**3:
         raise RuntimeError("Real reference smoke requires at least 12 GiB free disk")

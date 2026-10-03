@@ -331,7 +331,7 @@ def _observation(point_id, size, sha, kl):
     }
 
 
-def test_calibration_bundle_feeds_the_search_as_seeds(tmp_path):
+def test_calibration_bundle_feeds_the_search_as_seeds(tmp_path, monkeypatch):
     """The end-to-end point of the seed material: a ladder arrives as evidence.
 
     `fit calibrate` spends five-domain evals on every ladder preset. This test
@@ -368,6 +368,15 @@ def test_calibration_bundle_feeds_the_search_as_seeds(tmp_path):
         evaluator_contract_sha256=contract_digest(),
     )
 
+    # Exercise a legacy Windows locale even on UTF-8 hosts. The statistics
+    # contain ±, which becomes mojibake if the reader uses the locale default.
+    original_read_text = Path.read_text
+
+    def legacy_locale_read(path, *args, **kwargs):
+        kwargs.setdefault("encoding", "cp1252")
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", legacy_locale_read)
     seeds = load_seeds(
         bundle / "state-artifact-manifest.txt",
         logs,

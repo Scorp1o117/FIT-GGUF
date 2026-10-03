@@ -89,12 +89,14 @@ def runtime_env(runtime_dir: str | Path, base: dict | None = None) -> dict:
     """
     directory = Path(runtime_dir)
     ordered = [directory, *cuda_runtime_siblings(directory)]
-    prefix = os.pathsep.join(str(entry) for entry in ordered)
+    windows = _is_windows()
+    separator = ";" if windows else ":"
+    prefix = separator.join(str(entry) for entry in ordered)
     env = dict(os.environ if base is None else base)
-    if _is_windows():
-        env["PATH"] = prefix + os.pathsep + env.get("PATH", "")
+    if windows:
+        env["PATH"] = prefix + separator + env.get("PATH", "")
     else:
-        env["LD_LIBRARY_PATH"] = prefix + os.pathsep + env.get("LD_LIBRARY_PATH", "")
+        env["LD_LIBRARY_PATH"] = prefix + separator + env.get("LD_LIBRARY_PATH", "")
     return env
 
 

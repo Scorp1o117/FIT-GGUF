@@ -125,7 +125,7 @@ def discover_windows(analysis_dirs: list[str | Path]) -> list[Window]:
         analysis_file = path / "analysis.json" if path.is_dir() else path
         if not analysis_file.is_file():
             raise FidelityRunnerError(f"analysis not found: {analysis_file}")
-        payload = json.loads(analysis_file.read_text())
+        payload = json.loads(analysis_file.read_text(encoding="utf-8"))
         lower = payload["presets"]["lower"]
         upper = payload["presets"]["upper"]
         windows.append(
@@ -217,13 +217,13 @@ def load_seeds(
         if not point:
             continue
         try:
-            metrics = parse_llama_kl_log(entry.read_text(errors="replace"))
+            metrics = parse_llama_kl_log(entry.read_text(encoding="utf-8", errors="replace"))
         except Exception:  # noqa: BLE001 — unparsable logs are simply not seeds
             continue
         by_point.setdefault(point, {})[domain_match.group(1)] = metrics
 
     sizes: dict[str, int] = {}
-    for line in manifest.read_text().splitlines():
+    for line in manifest.read_text(encoding="utf-8").splitlines():
         parts = line.split()
         if len(parts) == 3 and parts[0].startswith(model_prefix):
             sizes[parts[0][len(model_prefix):]] = int(parts[1])
@@ -485,7 +485,7 @@ _SLICE_SUFFIX = {
 def _manifest_has(manifest_path: Path, name: str) -> bool:
     if not manifest_path.is_file():
         return False
-    return any(line.split()[:1] == [name] for line in manifest_path.read_text().splitlines())
+    return any(line.split()[:1] == [name] for line in manifest_path.read_text(encoding="utf-8").splitlines())
 
 
 def _record_provenance_impl(
@@ -541,7 +541,7 @@ def _provenance_view(
     stale: set[str] = set()
     attested: set[str] = set()
     manifest_by_name: dict[str, str] = {}
-    for line in Path(provenance_path).read_text().splitlines():
+    for line in Path(provenance_path).read_text(encoding="utf-8").splitlines():
         try:
             record = json.loads(line)
         except json.JSONDecodeError:

@@ -133,7 +133,7 @@ def test_no_cudart_sibling_is_not_an_error(tmp_path):
 def test_runtime_env_puts_bin_and_cudart_on_the_loader_path(tmp_path, as_windows):
     binaries = _runtime_tree(tmp_path, cudart=True)
     env = li.runtime_env(binaries, base={"PATH": "C:\\existing"})
-    parts = env["PATH"].split(os.pathsep)
+    parts = env["PATH"].split(";")
     assert parts[0] == str(binaries)
     assert parts[1] == str(binaries.parent / "cudart-llama-bin-win-cuda-13.3-x64")
     # the caller's own search path is preserved, not replaced

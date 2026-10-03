@@ -246,7 +246,7 @@ def eval_artifact(
                 "--kl-divergence", "--kl-divergence-base", str(ref),
             ]
             rc = _run(cfg.runtime_dir, cmd, log, env)
-            combined = log.read_text(errors="replace")
+            combined = log.read_text(encoding="utf-8", errors="replace")
             try:
                 parsed = parse_llama_kl_log(combined)
             except Exception:
@@ -856,10 +856,10 @@ def replay_existing(cfg: CalibrateConfig, observations_path: Path,
                     manifest_path: Path) -> dict:
     """Gate P2-A: zero-eval re-derivation from recorded observations."""
     contract, contract_sha = cal.load_contract(cfg.contract_path)
-    payload = json.loads(observations_path.read_text())
+    payload = json.loads(observations_path.read_text(encoding="utf-8"))
     points = payload["points"] if isinstance(payload, dict) else payload
     shas = {}
-    for line in Path(manifest_path).read_text().splitlines():
+    for line in Path(manifest_path).read_text(encoding="utf-8").splitlines():
         parts = line.split()
         if len(parts) == 3 and parts[0].startswith(cfg.model_id + "-"):
             shas[parts[0][len(cfg.model_id) + 1:]] = parts[2]
