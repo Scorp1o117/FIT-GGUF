@@ -100,3 +100,20 @@ against the official b10666 `ggml-common.h` static assertions.
 
 This is an unsigned local build. Calibration and calibration-bundle tier search
 remain CLI workflows; the quality entry now invokes real fidelity search.
+# Post-v0.5.0 draft and usability validation (2026-10-04)
+
+- Full Python suite: **328 passed, 1 skipped**. Draft/Studio subset: **33 passed**.
+- Draft API requires the same local session as other Studio APIs. Tests cover
+  Unicode paths, restart-independent workspace persistence, clear without task
+  submission, malformed values preserving the old draft, concurrent atomic
+  writes, temporary-file cleanup and recovery from corrupt JSON.
+- Browser input/reload check: `0.023456789` GiB remains intact and corresponds
+  to **25,186,535 bytes**; both survive reload alongside source paths, presets
+  and the Quality tier. Size and quality source fields synchronize during input.
+- Clear removes the saved file while retaining visible inputs. A deliberately
+  overlong path caused a refused save; replacing it and using the retry button
+  produced the saved confirmation. No model job was created by these checks.
+- A 390px viewport produced a 375px document client width and the same scroll
+  width (no horizontal overflow). Temporary viewport override was reset.
+- `node --check` and `git diff --check` pass. Native file picker and frozen
+  Windows packaging were not revalidated in this UI/draft update.

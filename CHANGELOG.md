@@ -4,6 +4,22 @@ All notable changes to FIT-GGUF. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Workspace-local Studio form drafts with automatic save, restart recovery,
+  explicit clear and save failure retry. A draft never starts a task and takes
+  priority over completed-task auto-restoration.
+- Keyboard focus indicators, accessible navigation names/current steps,
+  reduced-motion support and tighter layouts for narrow windows.
+
+### Fixed
+
+- Model paths now synchronize between size and quality entries while typing.
+- Small GiB budgets retain byte precision instead of rounding to six decimal
+  places, and update the exact target field immediately.
+
 ## [0.5.0] — 2026-10-04
 
 ### Added

@@ -5,6 +5,26 @@ tier**. The same UI runs in a normal browser and an optional PyWebView desktop
 window. Hardware budgets, optional llmfit recommendations, task history and
 registry evidence are supporting tools.
 
+## Local form drafts
+
+Studio saves form edits after a short pause to `studio-draft.json` inside the
+selected workspace. Source/runtime/reference paths, exact size budget, quality
+tier and hardware budget settings survive a restart, including a different
+local server port. Paths are stored as plain text locally; model files are not
+copied. Each workspace has one shared draft; the most recent save wins if several
+windows edit it.
+
+A saved draft takes priority over automatically restoring completed tasks.
+Results remain in task history. Restoring a draft never submits a task. An
+analysis path is re-read to restore slider bounds; missing analysis files show
+an actionable error without discarding other inputs. Budget values remain exact
+and still have to pass the normal planning validation before submission.
+
+The save indicator confirms when edits reach disk; wait for it before closing
+the window. Failed saves expose a retry button. **Clear saved draft** removes the
+saved file while keeping current inputs and all task records. Editing again
+creates a new draft. An unreadable draft can also be cleared from this control.
+
 ## Start from source
 
 Python 3.11+, with an activated virtual environment:

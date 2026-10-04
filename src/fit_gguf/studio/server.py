@@ -16,6 +16,7 @@ from urllib.parse import parse_qs, urlsplit
 import webbrowser
 
 from fit_gguf.studio.hardware import LlmfitAdapter, memory_budget
+from fit_gguf.studio.drafts import DraftStore
 from fit_gguf.studio.jobs import JobManager, input_path, summarize_analysis
 from fit_gguf.version import __version__
 
@@ -28,6 +29,7 @@ class StudioServer(ThreadingHTTPServer):
         if not math.isfinite(max_model_params) or not 0 < max_model_params <= 1000:
             raise ValueError("Model parameter limit must be between 0 and 1000B")
         self.jobs = JobManager(workspace, max_model_params)
+        self.drafts = DraftStore(self.jobs.workspace)
         self.adapter = LlmfitAdapter(llmfit)
         self.token = secrets.token_urlsafe(32)
         super().__init__(("127.0.0.1", port), Handler)
@@ -112,6 +114,8 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, load_index(find_package_dir(None)))
             elif split.path == "/api/jobs":
                 self._json(200, self.server.jobs.snapshot())
+            elif split.path == "/api/draft":
+                self._json(200, {"draft": self.server.drafts.load()})
             elif split.path.startswith("/api/jobs/"):
                 self._json(200, self.server.jobs.snapshot(split.path.removeprefix("/api/jobs/")))
             elif split.path in ("/", "/app.js", "/style.css"):
@@ -140,6 +144,12 @@ class Handler(BaseHTTPRequestHandler):
             path = urlsplit(self.path).path
             if path == "/api/jobs":
                 self._json(202, self.server.jobs.submit(payload.get("action"), payload))
+            elif path == "/api/draft":
+                if payload == {"clear": True}:
+                    self.server.drafts.clear()
+                    self._json(200, {"draft": None})
+                else:
+                    self._json(200, {"draft": self.server.drafts.save(payload)})
             elif path.startswith("/api/jobs/") and path.endswith("/cancel"):
                 self._json(200, self.server.jobs.cancel(path.split("/")[3]))
             elif path == "/api/analysis":

@@ -10,6 +10,43 @@ const giB = value => value == null ? '—' : (Number(value)/GIB).toFixed(Number(
 const num = value => Number(value).toLocaleString('zh-CN');
 const detail = (key,value) => `<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`;
 const artifactPath = (path,jobId) => `<div class="artifact-location"><div class="result-artifact">${esc(path)}</div><button type="button" class="text-button" data-copy-path="${esc(path)}">复制路径</button><button type="button" class="text-button open-directory" data-open-job="${esc(jobId)}">打开目录</button></div>`;
+const draftForms=['analyzeForm','planForm','quantizeForm','qualityForm'];
+const draftSettings=['desiredGiB','reserve','overhead','runMode','maxParams','context'];
+let draftReady=false, draftTimer, draftQueue=Promise.resolve();
+function collectDraft() {
+  const fields={};
+  for(const id of draftForms) for(const [name,value] of new FormData($('#'+id))) fields[`${id}.${name}`]=String(value);
+  for(const id of draftSettings) fields[id]=$('#'+id).value;
+  return {fields};
+}
+function applyDraft(draft) {
+  for(const [key,value] of Object.entries(draft.fields||{})) {
+    const [form,name]=key.split('.');
+    const elements=name&&draftForms.includes(form)?$('#'+form).querySelectorAll(`[name="${name}"]`):draftSettings.includes(key)?[$('#'+key)]:[];
+    for(const input of elements) {
+      if(input.type==='radio') input.checked=input.value===value;
+      else if(input.tagName!=='SELECT'||Array.from(input.options).some(option=>option.value===value)) input.value=value;
+    }
+  }
+  $('#maxParams').value=Math.min(Number($('#maxParams').value)||5,Number($('#maxParams').max));
+  $('#targetLabel').textContent=Number($('#targetBytes').value)>0?giB($('#targetBytes').value):'—';
+}
+function saveDraft() {
+  if(!draftReady)return draftQueue;
+  clearTimeout(draftTimer);
+  const draft=collectDraft();
+  $('#retryDraft').classList.add('hidden');
+  $('#draftStatus').textContent='正在保存草稿…';
+  draftQueue=draftQueue.then(()=>api('/api/draft',draft)).then(()=> {
+    $('#draftStatus').textContent='草稿已保存 · 重开后可继续填写';
+  }).catch(()=> {$('#draftStatus').textContent='草稿保存失败 · 请重试';$('#retryDraft').classList.remove('hidden');});
+  return draftQueue;
+}
+function scheduleDraft() {
+  if(!draftReady)return;
+  $('#draftStatus').textContent='有修改，正在等待保存…';
+  clearTimeout(draftTimer); draftTimer=setTimeout(saveDraft,400);
+}
 function precisionChart(shares) {
   const rows=Object.entries(shares||{}).filter(([,value])=>Number.isFinite(value)&&value>0).sort((a,b)=>b[1]-a[1]);
   const colors=['#a6f0d0','#a69df5','#76aace','#edc181','#e3a2b3','#7bb8a5'];
@@ -27,7 +64,7 @@ function clearError() { $('#globalError').classList.add('hidden'); }
 function setBusy(busy) { for(const selector of ['#analyzeForm','#planForm','#quantizeForm','#qualityForm']) $(selector).querySelector('button[type=submit]').disabled=busy; }
 function sizeStep(id) {
   for(const form of ['analyzeForm','planForm','quantizeForm']) $('#'+form).classList.toggle('hidden',form!==id);
-  document.querySelectorAll('[data-size-step]').forEach(button=>button.classList.toggle('selected',button.dataset.sizeStep===id));
+  document.querySelectorAll('[data-size-step]').forEach(button=>{button.classList.toggle('selected',button.dataset.sizeStep===id);button.setAttribute('aria-current',button.dataset.sizeStep===id?'step':'false');});
 }
 function syncModelFields(form) {
   for(const field of ['source','imatrix','runtime']) {
@@ -41,6 +78,7 @@ function go(page) {
   document.querySelectorAll('.page').forEach(node=>node.classList.toggle('hidden',node.id!==page));
   document.querySelectorAll('.nav').forEach(node=>node.classList.toggle('active',node.dataset.page===page));
   $('#pageName').textContent=labels[page];
+  document.querySelectorAll('[data-page]').forEach(button=>button.setAttribute('aria-current',button.dataset.page===page?'page':'false'));
   if (page==='registry') loadRegistry().catch(e=>error(e.message));
   if (page==='jobs') refreshJobs().catch(e=>error(e.message));
   window.scrollTo({top:0,behavior:'smooth'});
@@ -69,9 +107,10 @@ async function updateBudget() {
 }
 function setTarget(value) {
   $('#targetBytes').value=Math.round(value);
-  $('#desiredGiB').value=Number((value/GIB).toFixed(6));
+  $('#desiredGiB').value=String(Math.round(value)/GIB);
   $('#targetLabel').textContent=giB(value);
   if (state.analysis) $('#targetSlider').value=value;
+  scheduleDraft();
 }
 function acceptAnalysis(path,result) {
   if($('#analysisPath').value!==path) $('#planPath').value='';
@@ -169,7 +208,7 @@ async function watchJob(id) {
     if(state.active===id) state.active=null;
     if(state.lastResult!==id) {
       state.lastResult=id;
-      if(job.status==='succeeded') { renderResult(job); toast(`${actions[job.action]}完成。`); }
+      if(job.status==='succeeded') { renderResult(job); scheduleDraft(); toast(`${actions[job.action]}完成。`); }
       else {renderResult(job);if(job.status==='failed')error(job.error||'任务未能交付产物，请查看结果和日志。');}
     }
   }
@@ -185,6 +224,7 @@ async function submit(form,action) {
     if(action==='quality') {data.threads=Number(data.threads);syncModelFields(form);}
     if(action==='analyze') syncModelFields(form);
     if(action==='quantize') data.analysis=$('#analysisPath').value;
+    await saveDraft();
     const job=await api('/api/jobs',data);
     state.active=job.id; state.lastResult=null;
     const result=$(action==='quality'?'#qualityResult':'#resultSummary');
@@ -225,8 +265,27 @@ async function loadRegistry() {
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 document.querySelectorAll('[data-size-step]').forEach(b=>b.addEventListener('click',()=>sizeStep(b.dataset.sizeStep)));
-$('#desiredGiB').addEventListener('change',event=>{const bytes=Number(event.target.value)*GIB;if(Number.isFinite(bytes)&&bytes>0)setTarget(bytes);});
-for(const form of ['#analyzeForm','#qualityForm']) for(const field of ['source','imatrix','runtime']) $(form).querySelector(`[name=${field}]`).addEventListener('change',()=>syncModelFields($(form)));
+document.querySelectorAll('[data-page]').forEach(b=>{b.title=labels[b.dataset.page];b.setAttribute('aria-label',labels[b.dataset.page]);});
+document.addEventListener('input',event=>{if(event.target.matches('input,select'))scheduleDraft();});
+document.addEventListener('change',event=>{if(event.target.matches('input,select'))scheduleDraft();});
+$('#retryDraft').addEventListener('click',()=>saveDraft());
+$('#clearDraft').addEventListener('click',async()=> {
+  clearTimeout(draftTimer);
+  const button=$('#clearDraft');button.disabled=true;
+  // Clear follows all earlier saves so an in-flight request cannot recreate it.
+  draftQueue=draftQueue.then(()=>api('/api/draft',{clear:true})).then(()=> {
+    $('#draftStatus').textContent='已清除草稿 · 当前输入保留，下次修改会重新保存';
+    $('#retryDraft').classList.add('hidden');
+  }).catch(()=> {$('#draftStatus').textContent='清除失败 · 点击按钮重试';});
+  await draftQueue;button.disabled=false;
+});
+$('#desiredGiB').addEventListener('input',event=> {
+  const bytes=Math.round(Number(event.target.value)*GIB);
+  $('#targetBytes').value=Number.isSafeInteger(bytes)&&bytes>0?bytes:'';
+  $('#targetLabel').textContent=bytes>0?giB(bytes):'—';
+  if(state.analysis)$('#targetSlider').value=bytes;
+});
+for(const form of ['#analyzeForm','#qualityForm']) for(const field of ['source','imatrix','runtime']) for(const event of ['input','change']) $(form).querySelector(`[name=${field}]`).addEventListener(event,()=>syncModelFields($(form)));
 $('#refresh').addEventListener('click',()=>refreshHardware().catch(e=>error(e.message)));
 for(const selector of ['#reserve','#overhead','#runMode']) $(selector).addEventListener('change',()=>updateBudget().catch(e=>error(e.message)));
 $('#useBudget').addEventListener('click',()=> {
@@ -241,7 +300,7 @@ $('#targetSlider').addEventListener('input',e=>setTarget(Number(e.target.value))
 $('#targetBytes').addEventListener('input',e=> {
   const bytes=Number(e.target.value);
   $('#targetLabel').textContent=giB(bytes); $('#targetSlider').value=e.target.value;
-  if(Number.isFinite(bytes)&&bytes>0)$('#desiredGiB').value=Number((bytes/GIB).toFixed(6));
+  if(Number.isFinite(bytes)&&bytes>0)$('#desiredGiB').value=String(bytes/GIB);
 });
 $('#loadAnalysis').addEventListener('click',()=>loadAnalysis().catch(e=>error(e.message)));
 $('#qualityForm').addEventListener('invalid',event=> {
@@ -286,16 +345,31 @@ async function init() {
   $('#maxParams').max=info.max_model_params; $('#maxParams').value=Math.min(5,info.max_model_params);
   for(const selector of ['#lowerPreset','#upperPreset']) $(selector).innerHTML=info.presets.map(p=>`<option>${esc(p)}</option>`).join('');
   $('#lowerPreset').value='IQ3_M'; $('#upperPreset').value='IQ4_XS';
+  let draft=null;
+  try {draft=(await api('/api/draft')).draft;}
+  catch {$('#draftStatus').textContent='草稿读取失败 · 任务记录仍可使用';}
+  if(draft) {
+    applyDraft(draft);
+    if($('#analysisPath').value) {
+      try {const data=await api('/api/analysis',{path:$('#analysisPath').value});acceptAnalysis(data.path,data.result);}
+      catch {error('草稿中的分析记录已不可用，请重新分析或载入有效的 analysis.json。');}
+      applyDraft(draft); // Keep the user's exact budget instead of clamping it during restore.
+      if(state.analysis)$('#targetSlider').value=$('#targetBytes').value;
+    }
+    $('#draftStatus').textContent='已恢复上次草稿 · 结果可从任务记录查看';
+  }
   refreshHardware().catch(e=>error(e.message));
   await refreshJobs();
   const completed=state.jobs.filter(job=>job.status==='succeeded');
-  for(const last of [completed.find(job=>job.action!=='quality'),completed.find(job=>job.action==='quality')].filter(Boolean)) {
+  for(const last of (draft?[]:[completed.find(job=>job.action!=='quality'),completed.find(job=>job.action==='quality')].filter(Boolean))) {
     const job=await api(`/api/jobs/${last.id}`);
     await restoreJob(job,false);
     $(job.action==='quality'?'#qualityLog':'#liveLog').textContent=job.log_text||'已恢复上次完成的任务。';
   }
   state.lastResult=completed[0]?.id||null;
   if(state.active) await watchJob(state.active);
+  draftReady=true;
+  go('start');if(draft)sizeStep('analyzeForm');
 }
 setInterval(async()=> { if(state.polling||!state.active)return; state.polling=true;try{await watchJob(state.active);await refreshJobs();}catch(e){error(e.message);}finally{state.polling=false;} },1500);
 init().catch(e=>error(e.message));
