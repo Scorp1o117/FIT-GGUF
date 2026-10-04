@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FIT Studio · 精确量化工作台</title>
-  <link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
+  <link rel="stylesheet" href="/style.css"><script src="/i18n.js" defer></script><script src="/app.js" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -23,6 +23,7 @@
   </aside>
   <main>
     <header class="topbar"><div><span class="breadcrumb">工作空间 / </span><span id="pageName">开始</span></div><div class="top-actions"><span id="integration" class="pill">正在检测硬件…</span><button id="refresh" class="icon-button" title="刷新硬件" aria-label="刷新硬件">↻</button></div></header>
+    <div class="language-bar"><label for="language">语言 / Language</label><select id="language" aria-label="语言 / Language"><option value="zh-CN">简体中文</option><option value="en">English</option></select></div>
     <div id="globalError" role="alert" class="error hidden"></div>
     <div class="draft-bar"><span id="draftStatus" role="status">输入会自动保存到本地工作目录</span><div><button id="retryDraft" class="text-button hidden" type="button">重试保存</button> <button id="clearDraft" class="text-button" type="button">清除已存草稿</button></div></div>
     <section id="start" class="page">
@@ -67,6 +68,7 @@
         <label><input type="radio" name="tier" value="quality"><strong>Quality</strong><span>KL ≤ 0.05</span></label>
         <label><input type="radio" name="tier" value="reference"><strong>Reference</strong><span>KL ≤ 0.02</span></label>
       </fieldset>
+      <div class="tier-help"><strong id="tierHelp"></strong><p>质量门槛越低，允许的分布偏差越小；档位不是通用准确率。</p></div>
       <div class="two-column quality-grid"><div class="panel"><h2>模型与参考</h2>
         <label>源模型 GGUF<div class="path-field"><input name="source" required placeholder="源浮点 GGUF"><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label>
         <label>重要性矩阵 GGUF<div class="path-field"><input name="imatrix" required placeholder="对应的 imatrix GGUF"><button type="button" class="pick" data-kind="file" title="桌面版选择文件">…</button></div></label>

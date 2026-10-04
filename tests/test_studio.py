@@ -119,7 +119,7 @@ def test_budget_and_static_assets(server):
     result = client.open(Request(server.origin + "/api/budget", data=b'{"mode":"gpu"}',
                                 headers={"Content-Type": "application/json"}))
     assert json.loads(result.read())["target_bytes"] == 9 * 1024**3
-    for name in ("app.js", "style.css"):
+    for name in ("app.js", "i18n.js", "style.css"):
         assert len(client.open(server.origin + "/" + name).read()) > 1000
     with pytest.raises(HTTPError):
         client.open(server.origin + "/../../pyproject.toml")
@@ -144,11 +144,20 @@ def test_studio_executes_analyze_plan_quantize_and_preserves_history(e2e, monkey
     analysis = analyzed["artifacts"]["analysis"]
     lower = analyzed["result"]["presets"]["lower"]["predicted_size_bytes"]
     upper = analyzed["result"]["presets"]["upper"]["predicted_size_bytes"]
+    model_context = {key: str(e2e[key]) for key in ("source", "imatrix", "runtime")}
+    model_context.update(lower="IQ3_M", upper="IQ4_XS")
+    with pytest.raises(ValueError, match="presets differ"):
+        manager.submit("plan", {"analysis": analysis, "target_bytes": (lower + upper) // 2,
+                               "model_context": model_context | {"lower": "Q8_0"}})
     planned = wait_job(manager, manager.submit("plan", {
-        "analysis": analysis, "target_bytes": (lower + upper) // 2}))
+        "analysis": analysis, "target_bytes": (lower + upper) // 2, "model_context": model_context}))
+    with pytest.raises(ValueError, match="budget differs"):
+        manager.submit("quantize", {"analysis": analysis, "plan": planned["artifacts"]["plan"],
+            "model_context": model_context, "plan_context": {"target_bytes": 1, "policy": "balanced"}})
     monkeypatch.setenv("STUB_OUT_BYTES", str(planned["result"]["predicted_size_bytes"]))
     quantized = wait_job(manager, manager.submit("quantize", {
-        "analysis": analysis, "plan": planned["artifacts"]["plan"]}))
+        "analysis": analysis, "plan": planned["artifacts"]["plan"], "model_context": model_context,
+        "plan_context": {"target_bytes": (lower + upper) // 2, "policy": "balanced"}}))
     assert quantized["result"]["size_matches_expectation"]
     assert quantized["result"]["size_matches_refinalization"]
     assert len(quantized["result"]["sha256"]) == 64

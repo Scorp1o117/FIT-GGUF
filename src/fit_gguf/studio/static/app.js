@@ -11,7 +11,11 @@ const num = value => Number(value).toLocaleString('zh-CN');
 const detail = (key,value) => `<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`;
 const artifactPath = (path,jobId) => `<div class="artifact-location"><div class="result-artifact">${esc(path)}</div><button type="button" class="text-button" data-copy-path="${esc(path)}">复制路径</button><button type="button" class="text-button open-directory" data-open-job="${esc(jobId)}">打开目录</button></div>`;
 const draftForms=['analyzeForm','planForm','quantizeForm','qualityForm'];
-const draftSettings=['desiredGiB','reserve','overhead','runMode','maxParams','context'];
+const draftSettings=['desiredGiB','reserve','overhead','runMode','maxParams','context','language'];
+function updateTierHelp() {
+  const descriptions={mini:'宽松门槛，允许搜索更多压缩候选。',compact:'偏向压缩，仍需通过冻结评测。',balanced:'默认折中，先从这里比较实际结果。',quality:'更严格的分布偏差门槛。',reference:'最严格门槛，可能需要更大体积。'};
+  $('#tierHelp').textContent=descriptions[$('#qualityForm [name=tier]:checked')?.value]||descriptions.balanced;
+}
 let draftReady=false, draftTimer, draftQueue=Promise.resolve();
 function collectDraft() {
   const fields={};
@@ -30,6 +34,7 @@ function applyDraft(draft) {
   }
   $('#maxParams').value=Math.min(Number($('#maxParams').value)||5,Number($('#maxParams').max));
   $('#targetLabel').textContent=Number($('#targetBytes').value)>0?giB($('#targetBytes').value):'—';
+  updateTierHelp();window.FitI18n.setLanguage($('#language').value);
 }
 function saveDraft() {
   if(!draftReady)return draftQueue;
@@ -71,6 +76,17 @@ function syncModelFields(form) {
     const value=form.querySelector(`[name=${field}]`).value;
     for(const other of ['#analyzeForm','#qualityForm']) $(other).querySelector(`[name=${field}]`).value=value;
   }
+}
+function invalidatePlan() {
+  if($('#planPath').value)$('#resultStatus').textContent='输入已修改 · 请重新规划';
+  $('#planPath').value='';
+}
+function invalidateAnalysis() {
+  state.analysis=null;$('#analysisPath').value='';invalidatePlan();
+  $('#targetSlider').disabled=true;
+  $('#targetBytes').min=1;$('#targetBytes').removeAttribute('max');
+  $('#interval').textContent='模型或预设已修改，请重新分析。历史产物仍保留在任务记录中。';
+  $('#resultStatus').textContent='需要重新分析';
 }
 let toastTimer;
 function toast(message) { $('#toast').textContent=message; $('#toast').classList.remove('hidden'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>$('#toast').classList.add('hidden'),3500); }
@@ -115,6 +131,10 @@ function setTarget(value) {
 function acceptAnalysis(path,result) {
   if($('#analysisPath').value!==path) $('#planPath').value='';
   state.analysis=result; $('#analysisPath').value=path;
+  for(const field of ['source','imatrix']) $('#analyzeForm').querySelector(`[name=${field}]`).value=result[field].path;
+  $('#analyzeForm [name=runtime]').value=result.runtime.dir;
+  $('#lowerPreset').value=result.presets.lower.name;$('#upperPreset').value=result.presets.upper.name;
+  syncModelFields($('#analyzeForm'));
   const lower=result.presets.lower.predicted_size_bytes, upper=result.presets.upper.predicted_size_bytes;
   const slider=$('#targetSlider'); slider.disabled=false; slider.min=lower; slider.max=upper; slider.step=1;
   $('#interval').textContent=`${result.presets.lower.name} (${giB(lower)} GiB) → ${result.presets.upper.name} (${giB(upper)} GiB) · ${num(lower)}–${num(upper)} bytes`;
@@ -125,6 +145,7 @@ function acceptAnalysis(path,result) {
 }
 async function loadAnalysis() {
   const data=await api('/api/analysis',{path:$('#analysisPath').value});
+  invalidatePlan();
   acceptAnalysis(data.path,data.result); toast('已读取分析记录。');
 }
 async function restoreJob(job, syncInputs=true) {
@@ -135,6 +156,7 @@ async function restoreJob(job, syncInputs=true) {
     }
     const tierIndex=job.command.indexOf('--tier');
     if(tierIndex>=0) $('#qualityForm').querySelector(`[value=${job.command[tierIndex+1]}]`).checked=true;
+    updateTierHelp();
     const references=$('#qualityForm .quality-inputs');
     references.open=false;
     references.querySelector('summary').textContent='已恢复评测参考 · 展开修改';
@@ -224,6 +246,10 @@ async function submit(form,action) {
     if(action==='quality') {data.threads=Number(data.threads);syncModelFields(form);}
     if(action==='analyze') syncModelFields(form);
     if(action==='quantize') data.analysis=$('#analysisPath').value;
+    if(['plan','quantize'].includes(action)) {
+      data.model_context=Object.fromEntries(new FormData($('#analyzeForm')));
+      if(action==='quantize') data.plan_context={target_bytes:Number($('#targetBytes').value),policy:$('#planForm [name=policy]').value};
+    }
     await saveDraft();
     const job=await api('/api/jobs',data);
     state.active=job.id; state.lastResult=null;
@@ -269,6 +295,8 @@ document.querySelectorAll('[data-page]').forEach(b=>{b.title=labels[b.dataset.pa
 document.addEventListener('input',event=>{if(event.target.matches('input,select'))scheduleDraft();});
 document.addEventListener('change',event=>{if(event.target.matches('input,select'))scheduleDraft();});
 $('#retryDraft').addEventListener('click',()=>saveDraft());
+$('#language').addEventListener('change',()=>window.FitI18n.setLanguage($('#language').value));
+$('#qualityForm').addEventListener('change',updateTierHelp);
 $('#clearDraft').addEventListener('click',async()=> {
   clearTimeout(draftTimer);
   const button=$('#clearDraft');button.disabled=true;
@@ -280,12 +308,16 @@ $('#clearDraft').addEventListener('click',async()=> {
   await draftQueue;button.disabled=false;
 });
 $('#desiredGiB').addEventListener('input',event=> {
+  invalidatePlan();
   const bytes=Math.round(Number(event.target.value)*GIB);
   $('#targetBytes').value=Number.isSafeInteger(bytes)&&bytes>0?bytes:'';
   $('#targetLabel').textContent=bytes>0?giB(bytes):'—';
   if(state.analysis)$('#targetSlider').value=bytes;
 });
-for(const form of ['#analyzeForm','#qualityForm']) for(const field of ['source','imatrix','runtime']) for(const event of ['input','change']) $(form).querySelector(`[name=${field}]`).addEventListener(event,()=>syncModelFields($(form)));
+for(const form of ['#analyzeForm','#qualityForm']) for(const field of ['source','imatrix','runtime']) for(const event of ['input','change']) $(form).querySelector(`[name=${field}]`).addEventListener(event,()=>{syncModelFields($(form));invalidateAnalysis();});
+for(const selector of ['#lowerPreset','#upperPreset']) $(selector).addEventListener('change',invalidateAnalysis);
+$('#analysisPath').addEventListener('input',()=>{state.analysis=null;invalidatePlan();$('#targetSlider').disabled=true;$('#targetBytes').min=1;$('#targetBytes').removeAttribute('max');});
+$('#planForm [name=policy]').addEventListener('change',invalidatePlan);
 $('#refresh').addEventListener('click',()=>refreshHardware().catch(e=>error(e.message)));
 for(const selector of ['#reserve','#overhead','#runMode']) $(selector).addEventListener('change',()=>updateBudget().catch(e=>error(e.message)));
 $('#useBudget').addEventListener('click',()=> {
@@ -294,10 +326,11 @@ $('#useBudget').addEventListener('click',()=> {
     if(target<state.analysis.presets.lower.predicted_size_bytes) {error('硬件预算低于当前预设区间，请选择更低的预设重新分析。');go('workspace');return;}
     target=Math.min(state.analysis.presets.upper.predicted_size_bytes,target);
   }
-  setTarget(target); go('workspace'); toast(target===state.budget.target_bytes?'已带入文件预算；完成分析后会限制到可规划区间。':'硬件预算超出当前预设区间，已限制到区间内；可重新选择预设分析。');
+  invalidatePlan();setTarget(target); go('workspace'); toast(target===state.budget.target_bytes?'已带入文件预算；完成分析后会限制到可规划区间。':'硬件预算超出当前预设区间，已限制到区间内；可重新选择预设分析。');
 });
-$('#targetSlider').addEventListener('input',e=>setTarget(Number(e.target.value)));
+$('#targetSlider').addEventListener('input',e=>{invalidatePlan();setTarget(Number(e.target.value));});
 $('#targetBytes').addEventListener('input',e=> {
+  invalidatePlan();
   const bytes=Number(e.target.value);
   $('#targetLabel').textContent=giB(bytes); $('#targetSlider').value=e.target.value;
   if(Number.isFinite(bytes)&&bytes>0)$('#desiredGiB').value=String(bytes/GIB);
@@ -369,6 +402,7 @@ async function init() {
   state.lastResult=completed[0]?.id||null;
   if(state.active) await watchJob(state.active);
   draftReady=true;
+  updateTierHelp();window.FitI18n.setLanguage($('#language').value);
   go('start');if(draft)sizeStep('analyzeForm');
 }
 setInterval(async()=> { if(state.polling||!state.active)return; state.polling=true;try{await watchJob(state.active);await refreshJobs();}catch(e){error(e.message);}finally{state.polling=false;} },1500);

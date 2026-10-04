@@ -5,6 +5,28 @@ tier**. The same UI runs in a normal browser and an optional PyWebView desktop
 window. Hardware budgets, optional llmfit recommendations, task history and
 registry evidence are supporting tools.
 
+## Language and workflow guidance
+
+Use **Language** to switch the home page, size/quality forms, navigation and
+common task states between Simplified Chinese and English. The choice is saved
+with the workspace draft. Raw logs, model names, artifact paths and upstream
+errors retain their original text. Auxiliary hardware/model details currently
+have partial English coverage.
+
+The quality entry explains the selected tier's tradeoff. Lower KL thresholds
+allow less distribution divergence against the frozen reference; they are not
+universal accuracy percentages. Every delivered quality artifact still needs
+actual evaluation and final re-evaluation.
+
+Editing source, imatrix, runtime or presets invalidates the current analysis and
+plan references. Editing size or allocation policy invalidates the plan. Existing
+artifacts stay in history, but a new plan is required for the changed inputs.
+Loading an analysis binds the model fields to that record. Planning/quantizing
+requests also send the visible model context; quantization includes the visible
+budget and policy. The server refuses contexts that differ from the saved
+analysis/plan before launching a task. Existing file/hash checks still apply.
+Older API clients that omit context remain supported through those record checks.
+
 ## Local form drafts
 
 Studio saves form edits after a short pause to `studio-draft.json` inside the

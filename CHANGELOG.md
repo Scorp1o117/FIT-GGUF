@@ -8,6 +8,12 @@ All notable changes to FIT-GGUF. Format follows
 
 ### Added
 
+- Chinese/English localization for Studio's primary workflows, common task
+  states and navigation, with language persisted in the workspace draft.
+- Context checks reject plans that differ from the visible source, presets,
+  budget or allocation policy. Form edits invalidate stale record references.
+- Quality-tier guidance describes threshold tradeoffs without treating KL as
+  universal accuracy. Raw logs and artifact paths retain their original text.
 - Workspace-local Studio form drafts with automatic save, restart recovery,
   explicit clear and save failure retry. A draft never starts a task and takes
   priority over completed-task auto-restoration.

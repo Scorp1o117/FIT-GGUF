@@ -118,7 +118,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, {"draft": self.server.drafts.load()})
             elif split.path.startswith("/api/jobs/"):
                 self._json(200, self.server.jobs.snapshot(split.path.removeprefix("/api/jobs/")))
-            elif split.path in ("/", "/app.js", "/style.css"):
+            elif split.path in ("/", "/app.js", "/i18n.js", "/style.css"):
                 name = "index.html" if split.path == "/" else split.path[1:]
                 resource = files("fit_gguf.studio").joinpath("static", name)
                 self._send(200, resource.read_bytes(), mimetypes.guess_type(name)[0] + "; charset=utf-8")

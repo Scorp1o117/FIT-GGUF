@@ -9,6 +9,7 @@
 .open-directory{display:none}.native .open-directory{display:inline-block}
 
 .draft-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 0;color:var(--muted);font-size:11px;border-bottom:1px solid var(--line)}
+.language-bar{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:12px}.language-bar label{margin:0}.language-bar select{width:135px;margin:0;min-height:32px;padding:5px 8px}.tier-help{background:#211f31;border:1px solid #39334f;border-radius:9px;padding:16px 20px;margin-bottom:22px}.tier-help strong{font-size:13px;color:var(--purple)}.tier-help p{font-size:11px;margin:8px 0 0}
 .draft-bar button{white-space:nowrap;min-height:32px}
 button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--mint);outline-offset:4px}
 button:disabled{cursor:wait;opacity:.55}

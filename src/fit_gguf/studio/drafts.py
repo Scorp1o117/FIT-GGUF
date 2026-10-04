@@ -16,7 +16,7 @@ FORM_FIELDS = {
                     "eval_data_dir", "freeze", "reference_manifest", "threads"},
 }
 ALLOWED_FIELDS = {f"{form}.{field}" for form, fields in FORM_FIELDS.items() for field in fields}
-ALLOWED_FIELDS.update({"desiredGiB", "reserve", "overhead", "runMode", "maxParams", "context"})
+ALLOWED_FIELDS.update({"desiredGiB", "reserve", "overhead", "runMode", "maxParams", "context", "language"})
 
 
 def validate_draft(payload):

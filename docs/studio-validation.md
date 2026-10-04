@@ -102,6 +102,27 @@ This is an unsigned local build. Calibration and calibration-bundle tier search
 remain CLI workflows; the quality entry now invokes real fidelity search.
 # Post-v0.5.0 draft and usability validation (2026-10-04)
 
+## Context, guidance and language follow-up
+
+- Full Python suite: **341 passed, 1 skipped**; context/Studio/draft subset:
+  **46 passed**. Four Node tests verify reversible language switching, changed
+  dynamic text, phrase matching and exclusion of raw evidence text.
+- The real TinyStories 15M analysis (Q4_K_M–Q8_0) loaded in the English UI and
+  successfully generated a plan with the new model context attached. No model
+  download or quality search was needed for this follow-up.
+- Browser reload retained English, preset/model fields and the completed plan
+  path. Editing the budget cleared that plan path and showed the replan status.
+  Editing the source cleared the analysis path, disabled the slider and synced
+  the new Unicode path to the quality entry.
+- Chinese → English → Chinese switching preserved input paths and selected
+  Reference tier. The tier explanation updated with the selection. Static assets
+  are served under the existing local session; `i18n.js` is packaged by the
+  existing static asset glob. Auxiliary screens have partial English coverage.
+- Integration tests reject mismatched preset/budget contexts before subprocess
+  execution and verify the normal analyze/plan/quantize path still succeeds.
+- Native Windows dialogs and the frozen release bundle were not rebuilt or
+  revalidated in this source update.
+
 - Full Python suite: **328 passed, 1 skipped**. Draft/Studio subset: **33 passed**.
 - Draft API requires the same local session as other Studio APIs. Tests cover
   Unicode paths, restart-independent workspace persistence, clear without task

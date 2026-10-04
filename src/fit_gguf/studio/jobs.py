@@ -105,6 +105,8 @@ class JobManager:
         elif action == "plan":
             analysis = input_path(payload.get("analysis"))
             record = load_analysis(analysis)
+            from fit_gguf.studio.context import check_model_context
+            check_model_context(payload, record)
             self._check_source(input_path(record["source"]["path"]))
             self._check_analysis_inputs(record)
             target = payload.get("target_bytes")
@@ -125,10 +127,13 @@ class JobManager:
         elif action == "quantize":
             analysis = input_path(payload.get("analysis"))
             record = load_analysis(analysis)
+            from fit_gguf.studio.context import check_model_context, check_plan_context
+            check_model_context(payload, record)
             self._check_source(input_path(record["source"]["path"]))
             self._check_analysis_inputs(record)
             plan_file = input_path(payload.get("plan"))
             plan = read_record(plan_file)
+            check_plan_context(payload, plan)
             if Path(plan["analysis_path"]).resolve() != analysis:
                 raise ValueError("This plan belongs to a different analysis")
             types = input_path(plan["tensor_types_path"])
