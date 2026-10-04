@@ -7,7 +7,7 @@ llmfit 1.1.16. Hardware: RTX 5080 Laptop GPU (16,303 MiB reported VRAM),
 ## Automated checks
 
 - Full Python suite after the two-entry redesign and desktop runtime fixes:
-  **318 passed, 1 skipped**.
+  **320 passed, 1 skipped**.
   Upstream b10666 header tests were enabled by downloading the two headers to
   the ignored reference directory.
 - JavaScript syntax check: `node --check src/fit_gguf/studio/static/app.js`.
@@ -68,7 +68,8 @@ bundled UI and llmfit integration, and restores the shared task history.
 Native content was verified through the accessibility tree. The computer-use
 capture tool returned black native screenshots and could not activate the
 window for clicks, so native picker clicks were not verified end to end.
-The picker bridge has an automated API test. Browser interaction checks and
+Picker and completed-output folder actions have automated bridge tests.
+Native folder-button clicks share the input-tool limit above. Browser checks and
 the packaged worker smoke are separate from this native interaction limit.
 
 ## Real quality entry

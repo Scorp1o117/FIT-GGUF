@@ -43,6 +43,8 @@ All notable changes to FIT-GGUF. Format follows
 - The two entries restore their last successful settings independently.
   Quality cancellation stays accessible outside the collapsed log panel;
   cancelled/failed tasks show a clear non-delivery state.
+- Desktop results can open their completed task's output directory; the bridge
+  accepts a known task identifier rather than an arbitrary file-manager target.
 
 ## [0.4.0] — 2026-09-24
 

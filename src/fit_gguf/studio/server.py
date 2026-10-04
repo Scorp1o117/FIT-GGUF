@@ -7,6 +7,7 @@ from importlib.resources import files
 import json
 import math
 import mimetypes
+import os
 from pathlib import Path
 import secrets
 import sys
@@ -157,8 +158,9 @@ class Handler(BaseHTTPRequestHandler):
 
 
 class DesktopBridge:
-    def __init__(self):
+    def __init__(self, jobs=None):
         self._window = None
+        self._jobs = jobs
 
     def pick_path(self, kind="file"):
         import webview
@@ -166,6 +168,29 @@ class DesktopBridge:
             raise ValueError("Invalid picker kind")
         result = self._window.create_file_dialog(webview.FileDialog.FOLDER if kind == "folder" else webview.FileDialog.OPEN)
         return result[0] if result else None
+
+    def open_output(self, identifier):
+        if self._jobs is None:
+            raise ValueError("No task workspace is attached")
+        job = self._jobs.snapshot(identifier)
+        if job["status"] != "succeeded":
+            raise ValueError("Only completed task outputs can be opened")
+        if job["action"] == "quality":
+            result = job.get("result", {})
+            if result.get("status") != "verified_pass":
+                raise ValueError("This quality search has no verified output")
+            artifact = (result.get("artifact") or {}).get("path")
+        else:
+            key = {"analyze": "analysis", "plan": "plan", "quantize": "model"}.get(job["action"])
+            artifact = job["artifacts"].get(key)
+        directory = input_path(artifact).parent
+        if os.name == "nt":
+            os.startfile(str(directory))
+        else:
+            from fit_gguf.llama_integration import run_runtime
+            run_runtime(["open" if sys.platform == "darwin" else "xdg-open", str(directory)],
+                        check=True, timeout=10)
+        return str(directory)
 
 
 def launch(args) -> int:
@@ -183,7 +208,7 @@ def launch(args) -> int:
                 return 2
             worker = threading.Thread(target=server.serve_forever, daemon=True)
             worker.start()
-            bridge = DesktopBridge()
+            bridge = DesktopBridge(server.jobs)
             bridge._window = webview.create_window("FIT Studio", server.url, js_api=bridge,
                                                   width=1360, height=900, min_size=(960, 680))
             try:

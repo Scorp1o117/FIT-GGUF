@@ -191,14 +191,14 @@ def test_reopened_history_orders_by_creation_time_not_random_uuid(tmp_path):
     assert [row["id"] for row in JobManager(tmp_path).snapshot()] == ["aaaa", "zzzz"]
 
 
-def test_desktop_bridge_exposes_only_picker_not_native_window(monkeypatch):
+def test_desktop_bridge_keeps_native_window_private(monkeypatch):
     import sys
     from types import SimpleNamespace
     monkeypatch.setitem(sys.modules, "webview", SimpleNamespace(FileDialog=SimpleNamespace(FOLDER=1, OPEN=2)))
     bridge = DesktopBridge()
     calls = []
     bridge._window = SimpleNamespace(create_file_dialog=lambda kind: calls.append(kind) or ("C:/模型/test.gguf",))
-    assert [name for name in dir(bridge) if not name.startswith("_")] == ["pick_path"]
+    assert [name for name in dir(bridge) if not name.startswith("_")] == ["open_output", "pick_path"]
     assert bridge.pick_path("file") == "C:/模型/test.gguf"
     assert bridge.pick_path("folder") == "C:/模型/test.gguf"
     assert calls == [2, 1]
@@ -220,6 +220,42 @@ def test_cancel_terminates_running_subprocess(tmp_path, monkeypatch):
         time.sleep(.02)
     assert manager.snapshot(job["id"])["status"] == "cancelled"
     assert process.poll() is not None
+
+
+def test_desktop_output_folder_uses_completed_job_not_an_arbitrary_path(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from fit_gguf.studio import server as module
+    manager = JobManager(tmp_path / "studio")
+    artifact = manager.workspace / "model.gguf"
+    artifact.write_bytes(b"GGUF")
+    manager.jobs["ready"] = {"id": "ready", "action": "quantize", "status": "succeeded",
+                              "log": str(tmp_path / "log"), "artifacts": {"model": str(artifact)}}
+    opened = []
+    monkeypatch.setattr(module, "os", SimpleNamespace(name="nt", startfile=opened.append))
+    bridge = module.DesktopBridge(manager)
+    assert bridge.open_output("ready") == str(artifact.parent)
+    assert opened == [str(artifact.parent)]
+    with pytest.raises(KeyError):
+        bridge.open_output(str(tmp_path))
+    manager.jobs["ready"]["status"] = "cancelled"
+    with pytest.raises(ValueError, match="completed"):
+        bridge.open_output("ready")
+    assert len(opened) == 1
+
+
+def test_desktop_refuses_unverified_quality_output(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from fit_gguf.studio import server as module
+    manager = JobManager(tmp_path)
+    report = tmp_path / "report.json"
+    report.write_text(json.dumps({"status": "no_pass", "artifact": None}))
+    manager.jobs["quality"] = {"id": "quality", "action": "quality", "status": "succeeded",
+                                "log": str(tmp_path / "log"), "artifacts": {"quality": str(report)}}
+    opened = []
+    monkeypatch.setattr(module, "os", SimpleNamespace(name="nt", startfile=opened.append))
+    with pytest.raises(ValueError, match="verified"):
+        module.DesktopBridge(manager).open_output("quality")
+    assert not opened
 
 
 def test_quality_entry_routes_to_real_search_and_refuses_unverified_reference(e2e):

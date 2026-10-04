@@ -5,3 +5,5 @@
 .artifact-location{display:flex;align-items:center;gap:10px}.artifact-location .result-artifact{flex:1;min-width:0}.artifact-location button{flex-shrink:0;font-size:11px}
 
 .quality-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+.open-directory{display:none}.native .open-directory{display:inline-block}
