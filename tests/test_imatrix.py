@@ -43,7 +43,9 @@ def _pad(data: bytes) -> bytes:
     return data + b"\0" * ((32 - len(data) % 32) % 32)
 
 
-def _write_imatrix(path: Path, *, omit_last_count: bool = False) -> None:
+def _write_imatrix(
+    path: Path, *, omit_last_count: bool = False, extra_companions: bool = False
+) -> None:
     fields = [
         _field_string("general.type", "imatrix"),
         _field_string_array("imatrix.datasets", ["fixture"]),
@@ -57,6 +59,15 @@ def _write_imatrix(path: Path, *, omit_last_count: bool = False) -> None:
     ]
     if not omit_last_count:
         descriptors.append(_tensor("blk.1.attn_q.weight.counts", (1,), 96))
+    if extra_companions:
+        # llama.cpp writes a legacy ".in_sum" and a ".stats" blob next to the
+        # in_sum2/counts pair.  Only the latter pair carries the importance
+        # data the quantizer consumes; the extras must be ignored rather than
+        # failing the whole load.
+        descriptors.append(_tensor("blk.0.attn_q.weight.in_sum", (2,), 0))
+        descriptors.append(_tensor("blk.0.attn_q.weight.stats", (1,), 32))
+        descriptors.append(_tensor("blk.1.attn_q.weight.in_sum", (2,), 64))
+        descriptors.append(_tensor("blk.1.attn_q.weight.stats", (1,), 96))
     metadata = b"GGUF" + struct.pack("<IQQ", 3, len(descriptors), len(fields))
     metadata += b"".join(fields) + b"".join(descriptors)
     data = _pad(struct.pack("<2f", 4.0, 16.0))
@@ -110,4 +121,37 @@ def test_rejects_mismatched_sum_count_pairs(tmp_path: Path):
     path = tmp_path / "broken.gguf"
     _write_imatrix(path, omit_last_count=True)
     with pytest.raises(GGUFError, match="Mismatched imatrix sums/counts pair"):
+        load_imatrix_profile(path)
+
+
+def test_ignores_extra_llama_cpp_companion_tensors(tmp_path: Path):
+    """Newer llama.cpp writes ".in_sum" and ".stats" beside the data pair.
+
+    They carry no importance data, so they must be skipped instead of
+    aborting the load with "Unexpected imatrix tensor suffix" -- which used
+    to block the whole quantization path.
+    """
+    path = tmp_path / "imatrix.gguf"
+    _write_imatrix(path, extra_companions=True)
+
+    profile = load_imatrix_profile(path)
+
+    assert len(profile.entries) == 2
+    assert profile.entry_map["blk.0.attn_q.weight"].mean == pytest.approx(2.5)
+    assert profile.entry_map["blk.1.attn_q.weight"].mean == pytest.approx(1.0)
+
+
+def test_still_rejects_an_unknown_tensor_suffix(tmp_path: Path):
+    """Skipping the known companions must not turn into skipping anything."""
+    path = tmp_path / "imatrix.gguf"
+    _write_imatrix(path)
+    data = bytearray(path.read_bytes())
+    # Rename one descriptor's ".in_sum2" to an unknown suffix in place.
+    marker = b"blk.0.attn_q.weight.in_sum2"
+    index = data.find(marker)
+    assert index > 0
+    data[index : index + len(marker)] = b"blk.0.attn_q.weight.weirdxx"
+    path.write_bytes(bytes(data))
+
+    with pytest.raises(GGUFError, match="Unexpected imatrix tensor suffix"):
         load_imatrix_profile(path)

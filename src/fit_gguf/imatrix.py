@@ -14,6 +14,11 @@ from fit_gguf.gguf import GGUFError, GGUFTensor, read_gguf_layout
 
 _IN_SUM2_SUFFIX = ".in_sum2"
 _COUNTS_SUFFIX = ".counts"
+# llama.cpp now writes two extra companion tensors next to the
+# in_sum2/counts pair: a legacy ".in_sum" and a ".stats" blob.  Only the
+# in_sum2/counts pair carries the importance data the quantizer consumes, so
+# the extras are ignored instead of failing the whole load.
+_IGNORED_SUFFIXES = (".in_sum", ".stats")
 _BLOCK_ROLE_RE = re.compile(r"^blk\.(?P<block>\d+)\.(?P<role>.+)\.weight$")
 
 
@@ -194,6 +199,8 @@ def load_imatrix_profile(path: str | Path) -> ImatrixProfile:
         elif tensor.name.endswith(_COUNTS_SUFFIX):
             base = tensor.name[: -len(_COUNTS_SUFFIX)]
             pairs.setdefault(base, [None, None])[1] = tensor
+        elif tensor.name.endswith(_IGNORED_SUFFIXES):
+            continue
         else:
             raise GGUFError(f"Unexpected imatrix tensor suffix: {tensor.name}")
 

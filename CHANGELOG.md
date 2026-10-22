@@ -27,6 +27,9 @@ All notable changes to FIT-GGUF. Format follows
   be dirtier than a smaller one — so a failing point above the smallest pass no
   longer inverts the bracket and aborts the search with `noise_inversion`
   before it has evaluated anything.
+- Importance-matrix loading ignores the extra `.in_sum` and `.stats` companion
+  tensors newer llama.cpp builds write next to the `.in_sum2`/`.counts` pair.
+  Unknown tensor suffixes are still rejected.
 - Model paths now synchronize between size and quality entries while typing.
 - Small GiB budgets retain byte precision instead of rounding to six decimal
   places, and update the exact target field immediately.
