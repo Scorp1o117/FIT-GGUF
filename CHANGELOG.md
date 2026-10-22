@@ -22,6 +22,14 @@ All notable changes to FIT-GGUF. Format follows
 
 ### Fixed
 
+- Model paths now synchronize between size and quality entries while typing.
+- Small GiB budgets retain byte precision instead of rounding to six decimal
+  places, and update the exact target field immediately.
+
+## [0.5.1] — 2026-10-22
+
+### Fixed
+
 - Fidelity Search takes the failing side of the crossing bracket from below the
   smallest passing point. A preset ladder is not monotone — a bigger preset can
   be dirtier than a smaller one — so a failing point above the smallest pass no
@@ -32,9 +40,6 @@ All notable changes to FIT-GGUF. Format follows
   Unknown tensor suffixes are still rejected.
 - Guard profiles accept a tier with no derived Same-top floor; the floor is
   reported as absent rather than as zero.
-- Model paths now synchronize between size and quality entries while typing.
-- Small GiB budgets retain byte precision instead of rounding to six decimal
-  places, and update the exact target field immediately.
 
 ## [0.5.0] — 2026-10-04
 
