@@ -238,9 +238,21 @@ def fidelity_search(
         return point
 
     def bracket() -> tuple[int | None, int | None]:
-        fails = [p.size_bytes for p in points if not p.passed]
+        """The crossing bracket: (largest FAIL below the smallest PASS, smallest PASS).
+
+        The FAIL side must be taken from BELOW the smallest observed PASS.  A
+        preset ladder is not monotone -- IQ4_XS can be both smaller and
+        cleaner than Q4_K_S -- so a FAIL at a size ABOVE the smallest PASS says
+        the curve dips there, not that the crossing is unknown.  Counting it as
+        the bracket floor inverts the bracket and makes the search report
+        noise_inversion before it has evaluated anything, which loses the whole
+        gap BELOW the smallest PASS that the search exists to fill.
+        """
         passes = [p.size_bytes for p in points if p.passed]
-        return (max(fails) if fails else None), (min(passes) if passes else None)
+        hi = min(passes) if passes else None
+        fails = [p.size_bytes for p in points if not p.passed]
+        below = [f for f in fails if hi is None or f < hi]
+        return (max(below) if below else None), hi
 
     def smallest_pass() -> SearchPoint | None:
         passes = [p for p in points if p.passed]

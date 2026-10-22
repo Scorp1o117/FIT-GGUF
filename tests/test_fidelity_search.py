@@ -269,6 +269,49 @@ def test_config_validation():
         fidelity_search(BALANCED, _curve(12.8), min_size=int(11 * G), max_size=int(15 * G), budget=0)
 
 
+# ------------------------------------------- a preset ladder is not monotone
+
+def test_non_monotone_ladder_does_not_invert_the_bracket():
+    """A bigger preset can be dirtier than a smaller one.
+
+    IQ4_XS is both smaller and cleaner than Q4_K_S on a real model, so a
+    ladder that FAILS above its smallest PASS is a curve that dips, not
+    noise.  The FAIL side of the crossing bracket must therefore be taken
+    from BELOW the smallest PASS: taking the largest FAIL overall inverts
+    the bracket and the search reports noise_inversion before it has
+    evaluated anything, losing the gap below the smallest PASS that the
+    search exists to fill.
+    """
+    def evaluate(size_bytes: int) -> EvalOutcome:
+        size_gib = size_bytes / G
+        return EvalOutcome(
+            size_bytes=size_bytes,
+            macro_kl=0.10 - 0.05 * (size_gib - 2.05),
+            same_top=0.93,
+        )
+
+    result = fidelity_search(
+        BALANCED,
+        evaluate,
+        seeds=(
+            Seed(size_bytes=int(2.0 * G), macro_kl=0.1025, same_top=0.93),  # FAIL, below
+            Seed(size_bytes=int(2.2 * G), macro_kl=0.0925, same_top=0.93),  # PASS, smallest
+            Seed(size_bytes=int(2.6 * G), macro_kl=0.3000, same_top=0.93),  # FAIL, ABOVE it
+        ),
+        min_size=int(1.9 * G),
+        max_size=int(2.3 * G),
+        tolerance_bytes=int(0.05 * G),
+        budget=6,
+    )
+
+    assert result.status != "noise_inversion"
+    assert result.bracket_fail_bytes < result.bracket_pass_bytes
+    assert result.best.passed
+    # The answer must come from the gap below the smallest PASS, not from
+    # the failing preset above it.
+    assert result.best.size_bytes < int(2.2 * G)
+
+
 # ------------------------------------- reproducing a preset-at-boundary answer
 
 A, B, C, D = 1_148_699_744, 1_226_310_752, 1_291_420_768, 1_423_508_576

@@ -22,6 +22,11 @@ All notable changes to FIT-GGUF. Format follows
 
 ### Fixed
 
+- Fidelity Search takes the failing side of the crossing bracket from below the
+  smallest passing point. A preset ladder is not monotone — a bigger preset can
+  be dirtier than a smaller one — so a failing point above the smallest pass no
+  longer inverts the bracket and aborts the search with `noise_inversion`
+  before it has evaluated anything.
 - Model paths now synchronize between size and quality entries while typing.
 - Small GiB budgets retain byte precision instead of rounding to six decimal
   places, and update the exact target field immediately.
