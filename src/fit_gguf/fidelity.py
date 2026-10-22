@@ -64,12 +64,15 @@ class GuardProfile:
     scope_identifier: str
     status: str
     kl_anchors: dict[str, float]
-    floors: dict[str, float]
+    # A tier whose calibration window was empty has no derived floor.  The
+    # value is None for such a tier, not 0.0: there is no floor to report,
+    # and the tier's gate is the global KL anchor alone.
+    floors: dict[str, float | None]
     source_sha256: str | None
     raw: dict
 
-    def floor_for(self, tier: str) -> float:
-        return self.floors[tier]
+    def floor_for(self, tier: str) -> float | None:
+        return self.floors.get(tier)
 
 
 def _canonical_content(profile: dict) -> str:
@@ -110,7 +113,11 @@ def validate_guard_profile(profile: dict) -> None:
     for tier, spec in tiers.items():
         if abs(float(spec.get("kl_anchor", -1)) - KL_ANCHORS[tier]) > 1e-9:
             raise GuardProfileError(f"tiers.{tier}.kl_anchor must be {KL_ANCHORS[tier]}")
-        floor = float(spec.get("same_top_floor", -1))
+        floor = spec.get("same_top_floor")
+        if floor is None:
+            # No floor derived for this tier (empty calibration window).
+            continue
+        floor = float(floor)
         if not 0.0 < floor <= 1.0:
             raise GuardProfileError(f"tiers.{tier}.same_top_floor out of range: {floor}")
     if not profile.get("guard_profile_id"):
@@ -134,7 +141,10 @@ def load_guard_profile(path: str | Path) -> GuardProfile:
         scope_identifier=profile["scope"]["identifier"],
         status=profile["status"],
         kl_anchors={t: float(s["kl_anchor"]) for t, s in profile["tiers"].items()},
-        floors={t: float(s["same_top_floor"]) for t, s in profile["tiers"].items()},
+        floors={
+            t: (float(s["same_top_floor"]) if s.get("same_top_floor") is not None else None)
+            for t, s in profile["tiers"].items()
+        },
         source_sha256=(profile.get("source_sha256") or None),
         raw=profile,
     )

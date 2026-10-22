@@ -97,3 +97,21 @@ def test_require_rejects_unknown_tier(tmp_path: Path):
     _profile(tmp_path)
     with pytest.raises(GuardProfileError, match="unknown fidelity tier"):
         require_guard_profile("test-model", "ultra", tmp_path)
+
+
+def test_tier_without_a_derived_floor_loads(tmp_path: Path):
+    """A tier whose calibration window was empty has no Same-top floor.
+
+    The floor is None, not 0.0: there is nothing to report, and the tier's
+    gate is the KL anchor alone.  A profile like this must still load.
+    """
+    profile = _profile_dict()
+    profile["tiers"]["quality"]["same_top_floor"] = None
+    profile["profile_hash"] = profile_hash(profile)
+    path = tmp_path / "guard-null-floor.yaml"
+    path.write_text(yaml.safe_dump(profile, sort_keys=True), encoding="utf-8")
+
+    loaded = load_guard_profile(path)
+
+    assert loaded.floor_for("quality") is None
+    assert loaded.floor_for("balanced") == 0.91

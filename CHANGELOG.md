@@ -30,6 +30,8 @@ All notable changes to FIT-GGUF. Format follows
 - Importance-matrix loading ignores the extra `.in_sum` and `.stats` companion
   tensors newer llama.cpp builds write next to the `.in_sum2`/`.counts` pair.
   Unknown tensor suffixes are still rejected.
+- Guard profiles accept a tier with no derived Same-top floor; the floor is
+  reported as absent rather than as zero.
 - Model paths now synchronize between size and quality entries while typing.
 - Small GiB budgets retain byte precision instead of rounding to six decimal
   places, and update the exact target field immediately.
